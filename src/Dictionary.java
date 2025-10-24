@@ -4,6 +4,9 @@ import java.io.*;
 public class Dictionary {
     private List<String> acceptedWords;
 
+    /**
+     * Constructor for Dictionary class.
+     */
     public Dictionary() {
         acceptedWords = new ArrayList<>();
     }

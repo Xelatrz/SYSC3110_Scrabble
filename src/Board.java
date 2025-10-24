@@ -2,6 +2,9 @@ public class Board {
     public static final int SIZE = 15;
     private Tile[][] grid =  new Tile[SIZE][SIZE];
 
+    /**
+     * Constructor for Board class.
+     */
     public Board() {
     }
 

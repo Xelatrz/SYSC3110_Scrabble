@@ -6,6 +6,10 @@ public class Player {
     ArrayList<Tile> hand = new ArrayList<>();
     static int HAND_SIZE = 7;
 
+    /**
+     * Constructor for Player class.
+     * @param name The name of the player being constructed
+     */
     public Player(String name) {
         this.name = name;
     }

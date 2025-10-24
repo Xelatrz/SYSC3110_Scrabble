@@ -1,14 +1,20 @@
 import java.util.*;
 import java.io.*;
 
-
 public class Game {
-    ArrayList<Player> players = new ArrayList<>();
-    ArrayList<String> acceptedWords = new  ArrayList<>(); //***in Dictionary class (not sure if it still needs to be here)***
+    private ArrayList<Player> players;
+    private Dictionary acceptedWords;
 
-
-
+    /**
+     * Constructor for Game class.
+     */
+    public Game() {
+        this.players = new ArrayList<>();
+        this.acceptedWords = new Dictionary();
+        acceptedWords.load("scrabble_acceptedwords.csv");
     }
 
     public static void main(String[] args) {
+        Game game = new Game();
+    }
 }

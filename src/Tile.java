@@ -4,6 +4,9 @@ public class Tile {
     String letter;
     static String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+    /**
+     * Constructor for Tile class.
+     */
     public Tile() {
     }
 
