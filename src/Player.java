@@ -162,9 +162,13 @@ public class Player {
             return false;
         }
 
-        //check to make sure the word is touching another word (go in more detail on how)*
+        //TO DO LIST:
 
-        //check to make sure surrounding words are still valid (go in more detail on how)*
+        //there may be pieces that add to the word (example, the 3rd tile was placed by someone else in a previous turn) check all tiles in the direction the word is going until a tile is null. This may change the current logic on how to check for a valid word.
+        //check to make sure the word is touching another word
+        //check to make sure surrounding words are still valid
+        //for first play of the game, add something to make sure it is valid despite not touching another word (example logic: a word is valid if it either touches a word or touches starting space)
+        //if the word is invalid, return the tiles to the player's hand
 
 
         //add score
