@@ -110,11 +110,23 @@ public class Player {
         board.display();
     }
 
+    private void removePlacedTiles(ArrayList<PlacedTile> placedTiles) {
+        for (PlacedTile placedTile : placedTiles) {
+            Board.removeTile(placedTile.row, placedTile.col, placedTile.tile);
+        }
+    }
+    private void returnPlacedTiles(ArrayList<PlacedTile> placedTiles) {
+        for (PlacedTile placedTile : placedTiles) {
+            hand.add(placedTile.tile);
+        }
+    }
+
     public boolean playWord(Board board) { //needs to be boolean so the player doesn't miss their turn if they placed something incorrectly
         Scanner input = new Scanner(System.in);
         boolean keepGoing = true;
         String choice;
         String placedLetters = "";
+        boolean success = true;
 
         placedTiles.clear(); //make sure placedTiles is empty.
 
@@ -136,7 +148,7 @@ public class Player {
             for (int i = 1; i < placedTiles.size(); i++) { //check for diagonals (diagonals not allowed).
                 if (placedTiles.get(i).col != placedTiles.get(i-1).col) {
                     System.out.println("You cannot place tiles diagonally");
-                    return false;
+                    success = false;
                 }
             }
             placedTiles.sort(Comparator.comparingInt(placedTile -> placedTile.row)); //place tiles in order from left to right.
@@ -144,7 +156,7 @@ public class Player {
             for (int i = 1; i < placedTiles.size(); i++) { //check for diagonals (diagonals not allowed).
                 if (placedTiles.get(i).row != placedTiles.get(i-1).row) {
                     System.out.println("You cannot place tiles diagonally");
-                    return false;
+                    success = false;
                 }
             }
             placedTiles.sort(Comparator.comparingInt(placedTile -> placedTile.col)); //place tiles in order from top to bottom.
@@ -156,10 +168,7 @@ public class Player {
 
         if (!Game.acceptedWords.checkWord(placedLetters)) { //check if word is an accepted word.
             System.out.println("Your word is invalid!");
-            for (PlacedTile placedTile : placedTiles) {
-                Board.removeTile(placedTile.row, placedTile.col, placedTile.tile);
-            }
-            return false;
+            success = false;
         }
 
         //TO DO LIST:
@@ -168,14 +177,16 @@ public class Player {
         //check to make sure the word is touching another word
         //check to make sure surrounding words are still valid
         //for first play of the game, add something to make sure it is valid despite not touching another word (example logic: a word is valid if it either touches a word or touches starting space)
-        //if the word is invalid, return the tiles to the player's hand
+        //add Javadocs where they haven't already been added
 
-
-        //add score
-        score += placedTiles.size();
-        //in the future, this will need to account for premium tiles. at that point we may want to make this an actual function.
-
-        return true;
+        if (success) {
+            score += placedTiles.size(); //add score
+            //in the future, this will need to account for premium tiles. at that point we may want to make this an actual function.
+        } else {
+            removePlacedTiles(placedTiles); //remove placed tiles from board.
+            returnPlacedTiles(placedTiles); //return placed tiles to hand.
+        }
+        return success;
     }
 }
 
