@@ -1,6 +1,6 @@
 public class Board {
     public static final int SIZE = 15;
-    private Tile[][] grid =  new Tile[SIZE][SIZE];
+    private static Tile[][] grid =  new Tile[SIZE][SIZE]; //CHANGE THIS TO PRIVATE STATIC IN UML
 
     /**
      * Constructor for Board class.
@@ -18,6 +18,18 @@ public class Board {
             return;
         }
         grid[row][col] = tile;
+    }
+
+    public static void removeTile(int row, int col, Tile tile) { //Update UML
+        if (row < 0 || col < 0 || row >= SIZE || col >= SIZE) {
+            System.out.println("Invalid coordinate");
+            return;
+        }
+        if (grid[row][col] == null) {
+            System.out.println("Tile already empty");
+            return;
+        }
+        grid[row][col] = null;
     }
 
     public void display() {
