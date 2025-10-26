@@ -25,7 +25,6 @@ public class Game {
         boolean turnComplete = false;
         boolean unanimousVote = false;
         boolean gameOver = false;
-        Player winner = null;
 
         //game loop.
         while (!gameOver) {
@@ -74,17 +73,21 @@ public class Game {
 
                 //game end.
                 if (gameOver) {
-                    winner = players.getFirst();
-                    for (int i = 1; i < players.size(); i++) {
-                        if (players.get(i-1).getScore() < players.get(i).getScore()) {
-                            winner = players.get(i);
-                        }
-                    }
-                    System.out.println("Game over. The winner is player " + winner.getName());
+                    endGame();
                 }
 
             }
         }
+    }
+
+    public static void endGame() {
+        Player winner = players.getFirst();
+        for (int i = 1; i < players.size(); i++) {
+            if (players.get(i-1).getScore() < players.get(i).getScore()) {
+                winner = players.get(i);
+            }
+        }
+        System.out.println("Game over. The winner is player " + winner.getName());
     }
 
     public static void main(String[] args) {
