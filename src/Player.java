@@ -32,7 +32,7 @@ public class Player {
     }
 
     public void showHand() {
-        System.out.print("Player " + name + "'s hand: ");
+        System.out.print(name + "'s hand: ");
         for (Tile tile : hand) {
             System.out.print(tile.getLetter() + ", ");
         }
@@ -46,7 +46,7 @@ public class Player {
             Tile tile = new Tile();
             tile.setLetter();
             hand.add(tile);
-            System.out.println("Player " + name + " drew: " + tile.getLetter());
+            System.out.println(name + " drew: " + tile.getLetter());
             return true;
         } else {
             System.out.println("Your hand is full");
@@ -58,24 +58,6 @@ public class Player {
         while (hand.size() < HAND_SIZE) {
             drawTile();
         }
-    }
-
-    public boolean passTurn() {
-        //skip the player's turn
-        Scanner input = new Scanner(System.in);
-        System.out.println(name + "are you sure you'd like to skip your turn? ");
-        String choice = input.nextLine().toLowerCase();
-        if (choice.equalsIgnoreCase("y")) {
-            return true;
-        } else if (choice.equalsIgnoreCase("yes")) {
-            return true;
-        } else if (choice.equalsIgnoreCase("no")) {
-            return false;
-        } else if (choice.equalsIgnoreCase("n")) {
-            return false;
-        }
-        System.out.println("Invalid choice");
-        return false;
     }
 
     public void placeTile(Board board) { //update UML parameters
@@ -98,10 +80,27 @@ public class Player {
             return;
         }
 
-        System.out.println("Select a row for the tile: ");
-        int row = Integer.parseInt(input.nextLine());
-        System.out.println("Select a column for the tile: ");
-        int col = Integer.parseInt(input.nextLine());
+        //place tile on desired board coordinate
+        int row;
+        while (true) {
+            try {
+                System.out.println("Select a row for the tile: ");
+                row = Integer.parseInt(input.nextLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input, row number must be an integer.");
+            }
+        }
+        int col;
+        while (true) {
+            try {
+                System.out.println("Select a column for the tile: ");
+                col = Integer.parseInt(input.nextLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input, column number must be an integer.");
+            }
+        }
 
         if (board.getTile(row, col) != null) {
             System.out.println("That spot is already occupied.");
@@ -117,7 +116,7 @@ public class Player {
         hand.remove(selectedTile);
         placedTiles.add(new PlacedTile(row, col, selectedTile));
 
-        System.out.println("Player " + name + " placed an " + selectedTile.getLetter() + " at " + row + "," + col + "!");
+        System.out.println(name + " placed an " + selectedTile.getLetter() + " at " + row + "," + col + "!");
         board.display();
     }
 
@@ -133,7 +132,7 @@ public class Player {
         }
     }
 
-    public boolean playWord(Board board) { //needs to be boolean so the player doesn't miss their turn if they placed something incorrectly
+    public boolean playWord(Board board) {
         Scanner input = new Scanner(System.in);
         boolean keepGoing = true;
         String choice;
@@ -147,15 +146,21 @@ public class Player {
             placeTile(board);
             System.out.println("Would you like to place another tile? (Y/N)");
             choice = input.nextLine().toLowerCase();
-            if (choice.equals("n") || choice.equals("no")) {
-                keepGoing = false;
+            while (true) {
+                if (choice.equals("n") || choice.equals("no")) { //assume word is complete if player no longer wants to place more tiles.
+                    keepGoing = false;
+                    break;
+                } else if (choice.equals("y") || choice.equals("yes")) {
+                    break;
+                }
+                System.out.println("Invalid input, please answer yes or no. (Y/N)");
             }
         }
+
         //check if tiles in placedTiles makes a valid word.
         //words can be left to right or top to bottom.
         //words must be attached to another word.
         //connected words must still be valid.
-
         if (placedTiles.get(0).row == placedTiles.get(1).row) {
             for (int i = 1; i < placedTiles.size(); i++) { //check for diagonals (diagonals not allowed).
                 if (placedTiles.get(i).col != placedTiles.get(i - 1).col) {
@@ -174,6 +179,7 @@ public class Player {
             placedTiles.sort(Comparator.comparingInt(placedTile -> placedTile.col)); //place tiles in order from top to bottom.
         }
 
+        //to fix current issue, maybe check first and last coordinate (row or col) and then check ALL BOARD TILES in that range, instead of the placed ones
         for (PlacedTile placedTile : placedTiles) { //create word from placed tiles.
             placedLetters += placedTile.tile.getLetter();
         }
@@ -204,15 +210,32 @@ public class Player {
         return success;
     }
 
+    public boolean passTurn() {
+        //skip the player's turn
+        Scanner input = new Scanner(System.in);
+        while (true) {
+            System.out.println(name + ", are you sure you'd like to skip your turn? (Y/N)");
+            String choice = input.nextLine().toLowerCase();
+            if (choice.equals("y") || choice.equals("yes")) {
+                return true;
+            } else if (choice.equals("n") || choice.equals("no")) {
+                return false;
+            }
+            System.out.println("Invalid input, please answer yes or no. (Y/N)");
+        }
+    }
+
     public boolean voteGameOver() {
         Scanner input = new Scanner(System.in);
-        System.out.println("Do you want to vote to end game (Y/N)");
+        System.out.println(name + ", do you want to vote to end game (Y/N)");
         String choice = input.nextLine().toLowerCase();
-        if (choice.equals("y") || choice.equals("yes")) {
-
-            return true;
-        } else {
-            return false;
+        while(true) {
+            if (choice.equals("y") || choice.equals("yes")) {
+                return true;
+            } else if (choice.equals("n") || choice.equals("no")) {
+                return false;
+            }
+            System.out.println("Invalid input, please answer yes or no. (Y/N)");
         }
     }
 }

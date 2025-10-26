@@ -48,7 +48,7 @@ public class Game {
                             turnComplete = true;
                             for (int i = 0; i < players.size(); i++) {
                                 if (players.get(i) != player) {
-                                    System.out.println("It is player " + players.get(i).getName() + "'s turn to vote.");
+                                    System.out.println("It is " + players.get(i).getName() + "'s turn to vote.");
                                     if(players.get(i).voteGameOver()) {
                                         numVotes ++;
                                     }
@@ -87,7 +87,7 @@ public class Game {
                 winner = players.get(i);
             }
         }
-        System.out.println("Game over. The winner is player " + winner.getName());
+        System.out.println("Game over. The winner is " + winner.getName());
     }
 
     public static void main(String[] args) {
