@@ -192,7 +192,7 @@ public class Player {
         //add Javadocs where they haven't already been added
         //add a "bag" list of tiles since there is a set number of tiles per game
         //in Player.fillHand() make sure not to draw tiles if bag is empty
-        //dictionary defined in Game class fails to locate scrabble_acceptedword.csv file found in src
+        //make sure all input scanners have a tolerance for invalid inputs
 
         if (success) {
             score += placedTiles.size(); //add score
