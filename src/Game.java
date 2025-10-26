@@ -15,7 +15,14 @@ public class Game {
     }
 
     public void addPlayer(Player player) {
-        players.add(player);
+        //doesn't add existing player and doesn't add too many players
+        if (players.size() < 5 && !players.contains(player)) {
+            players.add(player);
+        }
+    }
+
+    public static void startGame() {
+
     }
 
     public static void main(String[] args) {
@@ -36,10 +43,14 @@ public class Game {
         p3.fillHand();
         p4.fillHand();
 
+        startGame();
+
+        /*
         p1.showHand();
         p1.drawTile();
 
         p1.showHand();
         p1.playWord(board);
+        */
     }
 }
