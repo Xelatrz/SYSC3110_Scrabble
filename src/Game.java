@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;
 
 public class Game {
-    private ArrayList<Player> players;
+    private static ArrayList<Player> players;
     public static Dictionary acceptedWords; //CHANGED TO PUBLIC (update UML)
 
     /**
@@ -21,8 +21,71 @@ public class Game {
         }
     }
 
-    public static void startGame() {
+    public static void startGame(Board board) {
+        Scanner input = new Scanner(System.in);
+        boolean turnComplete = false;
+        boolean unanimousVote = false;
+        boolean gameOver = false;
+        Player winner = null;
 
+        //game loop.
+        while (!gameOver) {
+            for (Player player : players) {
+                System.out.println("It is player " + player.getName() + "'s turn.");
+                while (!turnComplete) { //loops if turn failed to complete an action.
+                    player.showHand();
+                    System.out.println("Would you like to PLAY, PASS, or VOTE to end game?");
+                    String choice = input.nextLine().toLowerCase(); //both toLowerCase() and equalsIgnoreCase() are used, should we only do one of these two?
+                    if (choice.equalsIgnoreCase("play")) {
+                        if (player.playWord(board)) {
+                            turnComplete = true;
+                        }
+                    } else if (choice.equalsIgnoreCase("pass")) {
+                        if (player.passTurn()) {
+                            turnComplete = true;
+                        }
+                    } else if (choice.equalsIgnoreCase("vote")) {
+                        if (player.voteGameOver()) {
+                            int numVotes = 1;
+                            turnComplete = true;
+                            for (int i = 0; i < players.size(); i++) {
+                                if (players.get(i) != player) {
+                                    System.out.println("It is player " + players.get(i).getName() + "'s turn to vote.");
+                                    if(players.get(i).voteGameOver()) {
+                                        numVotes ++;
+                                    }
+                                }
+                            }
+                            if (numVotes == players.size()) {
+                                unanimousVote = true;
+                            }
+                        }
+                    } else {
+                        System.out.println("Invalid choice.");
+                    }
+                }
+                player.fillHand();
+
+                //game end conditions.
+                if (player.emptyHand()) { //AND IF BAG IS EMPTY (add this condition)
+                    gameOver = true;
+                } else if (unanimousVote) {
+                    gameOver = true;
+                }
+
+                //game end.
+                if (gameOver) {
+                    winner = players.getFirst();
+                    for (int i = 1; i < players.size(); i++) {
+                        if (players.get(i-1).getScore() < players.get(i).getScore()) {
+                            winner = players.get(i);
+                        }
+                    }
+                    System.out.println("Game over. The winner is player " + winner.getName());
+                }
+
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -43,7 +106,7 @@ public class Game {
         p3.fillHand();
         p4.fillHand();
 
-        startGame();
+        startGame(board);
 
         /*
         p1.showHand();

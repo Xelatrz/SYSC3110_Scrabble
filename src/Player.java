@@ -3,19 +3,32 @@ import java.util.*;
 
 public class Player {
     private String name;
-    public int score;
+    private int score;
     private static int HAND_SIZE = 7;
     private ArrayList<Tile> hand;
-    private ArrayList<PlacedTile> placedTiles =  new ArrayList<>();
+    private ArrayList<PlacedTile> placedTiles = new ArrayList<>();
 
     /**
      * Constructor for Player class.
+     *
      * @param name The name of the player being constructed
      */
     public Player(String name) {
         this.name = name;
         score = 0;
         hand = new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public boolean emptyHand() {
+        return hand.isEmpty();
     }
 
     public void showHand() {
@@ -26,7 +39,7 @@ public class Player {
         System.out.println();
     }
 
-    public void drawTile() {
+    public boolean drawTile() { //update UML return type
         //can only have 7 tiles in scrabble
         if (hand.size() < HAND_SIZE) {
             //draw a tile
@@ -34,8 +47,10 @@ public class Player {
             tile.setLetter();
             hand.add(tile);
             System.out.println("Player " + name + " drew: " + tile.getLetter());
+            return true;
         } else {
             System.out.println("Your hand is full");
+            return false;
         }
     }
 
@@ -48,18 +63,15 @@ public class Player {
     public boolean passTurn() {
         //skip the player's turn
         Scanner input = new Scanner(System.in);
-        System.out.println(name + "you'd like to skip your turn? ");
-        String choice = input.nextLine();
+        System.out.println(name + "are you sure you'd like to skip your turn? ");
+        String choice = input.nextLine().toLowerCase();
         if (choice.equalsIgnoreCase("y")) {
             return true;
-        }
-        else if (choice.equalsIgnoreCase("yes")) {
+        } else if (choice.equalsIgnoreCase("yes")) {
             return true;
-        }
-        else if (choice.equalsIgnoreCase("no")) {
+        } else if (choice.equalsIgnoreCase("no")) {
             return false;
-        }
-        else if (choice.equalsIgnoreCase("n")) {
+        } else if (choice.equalsIgnoreCase("n")) {
             return false;
         }
         System.out.println("Invalid choice");
@@ -67,8 +79,7 @@ public class Player {
     }
 
     public void placeTile(Board board) { //update UML parameters
-        Scanner input =  new Scanner(System.in);
-        showHand(); //we may not want this here, but for now i'm leaving it.
+        Scanner input = new Scanner(System.in);
 
         //takes the user input for the tile
         System.out.println("Select a tile: ");
@@ -77,7 +88,7 @@ public class Player {
         //finds the tile in the hand
         Tile selectedTile = null;
         for (Tile tile : hand) {
-            if (tile.getLetter().equalsIgnoreCase(selectedLetter)) { //both lower and ignore case are used, should we only do one of these two?
+            if (tile.getLetter().equalsIgnoreCase(selectedLetter)) {
                 selectedTile = tile;
                 break;
             }
@@ -106,7 +117,7 @@ public class Player {
         hand.remove(selectedTile);
         placedTiles.add(new PlacedTile(row, col, selectedTile));
 
-        System.out.println("Player " + name + " placed an " +  selectedTile.getLetter() + " at " + row + "," + col + "!");
+        System.out.println("Player " + name + " placed an " + selectedTile.getLetter() + " at " + row + "," + col + "!");
         board.display();
     }
 
@@ -115,6 +126,7 @@ public class Player {
             Board.removeTile(placedTile.row, placedTile.col, placedTile.tile);
         }
     }
+
     private void returnPlacedTiles(ArrayList<PlacedTile> placedTiles) {
         for (PlacedTile placedTile : placedTiles) {
             hand.add(placedTile.tile);
@@ -131,14 +143,14 @@ public class Player {
         placedTiles.clear(); //make sure placedTiles is empty.
 
         while (keepGoing) { //let the user place as many tiles as they desire, validity will be determined after.
+            showHand();
             placeTile(board);
             System.out.println("Would you like to place another tile? (Y/N)");
             choice = input.nextLine().toLowerCase();
-            if (choice.equals("n")) {
+            if (choice.equals("n") || choice.equals("no")) {
                 keepGoing = false;
             }
         }
-
         //check if tiles in placedTiles makes a valid word.
         //words can be left to right or top to bottom.
         //words must be attached to another word.
@@ -146,7 +158,7 @@ public class Player {
 
         if (placedTiles.get(0).row == placedTiles.get(1).row) {
             for (int i = 1; i < placedTiles.size(); i++) { //check for diagonals (diagonals not allowed).
-                if (placedTiles.get(i).col != placedTiles.get(i-1).col) {
+                if (placedTiles.get(i).col != placedTiles.get(i - 1).col) {
                     System.out.println("You cannot place tiles diagonally");
                     success = false;
                 }
@@ -154,7 +166,7 @@ public class Player {
             placedTiles.sort(Comparator.comparingInt(placedTile -> placedTile.row)); //place tiles in order from left to right.
         } else {
             for (int i = 1; i < placedTiles.size(); i++) { //check for diagonals (diagonals not allowed).
-                if (placedTiles.get(i).row != placedTiles.get(i-1).row) {
+                if (placedTiles.get(i).row != placedTiles.get(i - 1).row) {
                     System.out.println("You cannot place tiles diagonally");
                     success = false;
                 }
@@ -178,6 +190,8 @@ public class Player {
         //check to make sure surrounding words are still valid
         //for first play of the game, add something to make sure it is valid despite not touching another word (example logic: a word is valid if it either touches a word or touches starting space)
         //add Javadocs where they haven't already been added
+        //add a "bag" list of tiles since there is a set number of tiles per game
+        //in Player.fillHand() make sure not to draw tiles if bag is empty
 
         if (success) {
             score += placedTiles.size(); //add score
@@ -187,6 +201,18 @@ public class Player {
             returnPlacedTiles(placedTiles); //return placed tiles to hand.
         }
         return success;
+    }
+
+    public boolean voteGameOver() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Do you want to vote to end game (Y/N)");
+        String choice = input.nextLine().toLowerCase();
+        if (choice.equals("y") || choice.equals("yes")) {
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 
