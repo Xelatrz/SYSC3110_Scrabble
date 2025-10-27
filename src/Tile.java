@@ -4,9 +4,6 @@
  * @author Cole Galway
  * @version 10/26/2025
  */
-
-import java.util.*;
-
 public class Tile {
     /**
      * The letter which will be assigned to the specific tile.
@@ -24,7 +21,7 @@ public class Tile {
 
     /**
      * Returns the letter of any tile.
-     * @return A string of letter of a specified tile
+     * @return A string of letter of a specified tile.
      */
     public String getLetter() {
         return letter;

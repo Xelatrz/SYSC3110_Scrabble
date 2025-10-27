@@ -1,3 +1,5 @@
+import java.util.*;
+
 /**
  * Models the game of Scrabble.
  * A few modifications are neccessary to fully encompass the entire game of scrabble, including a
@@ -9,9 +11,6 @@
  * @author Cole Galway
  * @version 10/27/2025
  */
-
-import java.util.*;
-
 public class Game {
     /**
      * The list of players who will be participating in the game.
@@ -20,14 +19,14 @@ public class Game {
     /**
      * The dictionary of accepted words for the game.
      */
-    public static Dictionary acceptedWords; //CHANGED TO PUBLIC (update UML)
+    public static Dictionary acceptedWords;
 
     /**
      * Constructs a new Game.
      */
     public Game() {
-        this.players = new ArrayList<>();
-        this.acceptedWords = new Dictionary();
+        players = new ArrayList<>();
+        acceptedWords = new Dictionary();
         acceptedWords.load("scrabble_acceptedwords.csv");
     }
 
@@ -46,14 +45,24 @@ public class Game {
     /**
      * Once called this method will start the game, and handle all the game logic and the general
      * game loop for each player and their turn.
-     * @param board A Board which is used for the game.
      */
-    public static void startGame(Board board) {
+    public static void startGame() {
+        Board board = new Board();
+        TileBag bag = new TileBag();
+
         Scanner input = new Scanner(System.in);
-        boolean turnComplete = false;
+        boolean turnComplete;
         boolean unanimousVote = false;
         boolean gameOver = false;
-        TileBag bag = new TileBag();
+
+        //game setup
+        if (players.size() < 2|| players.size() > 4) {//make sure there are 2 to 4 players
+            System.out.println("2-4 players are required to play Scrabble.");
+            return;
+        }
+        for (Player player : players) {
+            player.fillHand(bag);
+        }
 
         //game loop.
         while (!gameOver) {
@@ -64,16 +73,16 @@ public class Game {
                 while (!turnComplete) { //loops if turn failed to complete an action.
                     player.showHand();
                     System.out.println("Would you like to PLAY, PASS, or VOTE to end game?");
-                    String choice = input.nextLine().toLowerCase(); //both toLowerCase() and equalsIgnoreCase() are used, should we only do one of these two?
-                    if (choice.equalsIgnoreCase("play")) {
+                    String choice = input.nextLine().toLowerCase();
+                    if (choice.equals("play")) {
                         if (player.playWord(board)) {
                             turnComplete = true;
                         }
-                    } else if (choice.equalsIgnoreCase("pass")) {
-                        if (player.passTurn()) {
+                    } else if (choice.equals("pass")) {
+                        if (player.passTurn(bag)) {
                             turnComplete = true;
                         }
-                    } else if (choice.equalsIgnoreCase("vote")) {
+                    } else if (choice.equals("vote")) {
                         if (player.voteGameOver()) {
                             int numVotes = 1;
                             turnComplete = true;
@@ -96,7 +105,7 @@ public class Game {
                 player.fillHand(bag);
 
                 //game end conditions.
-                if (player.emptyHand() && bag.isEmpty()) { //AND IF BAG IS EMPTY (add this condition)
+                if (player.emptyHand() && bag.isEmpty()) {
                     gameOver = true;
                 } else if (unanimousVote) {
                     gameOver = true;
@@ -105,6 +114,7 @@ public class Game {
                 //game end.
                 if (gameOver) {
                     endGame();
+                    return;
                 }
 
             }
@@ -127,8 +137,6 @@ public class Game {
 
     public static void main(String[] args) {
         Game game = new Game();
-        Board board = new Board();
-        TileBag bag = new TileBag();
 
         Player p1 = new Player("Player 1");
         Player p2 = new Player("Player 2");
@@ -139,19 +147,6 @@ public class Game {
         game.addPlayer(p3);
         game.addPlayer(p4);
 
-        p1.fillHand(bag);
-        p2.fillHand(bag);
-        p3.fillHand(bag);
-        p4.fillHand(bag);
-
-        startGame(board);
-
-        /*
-        p1.showHand();
-        p1.drawTile();
-
-        p1.showHand();
-        p1.playWord(board);
-        */
+        startGame();
     }
 }

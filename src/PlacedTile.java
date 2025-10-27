@@ -7,7 +7,7 @@
  */
 public class PlacedTile {
     /**
-     * An integer representing the row where the tile is located
+     * An integer representing the row where the tile is located.
      */
     int row;
     /**
@@ -23,7 +23,7 @@ public class PlacedTile {
      * Constructs a new PlacedTile.
      * @param row An integer which corresponds to a row on the grid
      * @param col An integer which corresponds to a column on the grid
-     * @param tile A Tile object which is pulled from the player's hand.
+     * @param tile A Tile object which is pulled from the player's hand
      */
     public PlacedTile(int row, int col, Tile tile) {
         this.row = row;
