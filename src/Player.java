@@ -353,9 +353,9 @@ public class Player {
             System.out.println(name + ", are you sure you'd like to skip your turn? (Y/N)");
             String choice = input.nextLine().toLowerCase();
             if (choice.equals("y") || choice.equals("yes")) {
-                for (int i = 0; !emptyHand(); i++) {
-                    bag.addTiles(hand.get(i).getLetter(), 1);
-                    hand.remove(hand.get(i));
+                while (!emptyHand()) {
+                    bag.addTiles(hand.getFirst().getLetter(), 1);
+                    hand.remove(hand.getFirst());
                 }
                 fillHand(bag);
                 return true;
