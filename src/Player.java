@@ -39,12 +39,15 @@ public class Player {
         System.out.println();
     }
 
-    public boolean drawTile() { //update UML return type
+    public boolean drawTile(TileBag bag) { //update UML return type
         //can only have 7 tiles in scrabble
         if (hand.size() < HAND_SIZE) {
             //draw a tile
-            Tile tile = new Tile();
-            tile.setLetter();
+            Tile tile = bag.drawTile();
+            if (tile == null) {
+                System.out.println("No tiles left!");
+                return false;
+            }
             hand.add(tile);
             System.out.println(name + " drew: " + tile.getLetter());
             return true;
@@ -54,9 +57,9 @@ public class Player {
         }
     }
 
-    public void fillHand() {
-        while (hand.size() < HAND_SIZE) {
-            drawTile();
+    public void fillHand(TileBag bag) {
+        while (hand.size() < HAND_SIZE && !bag.isEmpty()) {
+            drawTile(bag);
         }
     }
 
@@ -120,9 +123,9 @@ public class Player {
         board.display();
     }
 
-    private void removePlacedTiles(ArrayList<PlacedTile> placedTiles) {
+    private void removePlacedTiles(Board board, ArrayList<PlacedTile> placedTiles) {
         for (PlacedTile placedTile : placedTiles) {
-            Board.removeTile(placedTile.row, placedTile.col, placedTile.tile);
+            board.removeTile(placedTile.row, placedTile.col, placedTile.tile);
         }
     }
 
@@ -144,9 +147,10 @@ public class Player {
         while (keepGoing) {
             showHand();
             placeTile(board);
-            System.out.println("Would you like to place another tile? (Y/N)");
-            choice = input.nextLine().toLowerCase();
+
             while (true) {
+                System.out.println("Would you like to place another tile? (Y/N)");
+                choice = input.nextLine().toLowerCase();
                 if (choice.equals("n") || choice.equals("no")) { //assume word is complete if player no longer wants to place more tiles.
                     keepGoing = false;
                     break;
@@ -154,6 +158,7 @@ public class Player {
                     break;
                 }
                 System.out.println("Invalid input, please answer yes or no. (Y/N)");
+
             }
         }
 
@@ -165,84 +170,99 @@ public class Player {
         int lastCoord = 0;
         int wordLength = 0;
         String placedLetters = "";
-        if (placedTiles.get(0).row == placedTiles.get(1).row) {
-            for (int i = 1; i < placedTiles.size(); i++) { //check for diagonals (diagonals not allowed).
-                if (placedTiles.get(i).col != placedTiles.get(i - 1).col) {
-                    System.out.println("You cannot place tiles diagonally");
-                    success = false;
+        if (placedTiles.size() == 1) { //doesn't check for diagonals on single tiles
+            success = true;
+        } else {
+            if (placedTiles.get(0).row == placedTiles.get(1).row) {
+                for (int i = 1; i < placedTiles.size(); i++) { //check for diagonals (diagonals not allowed).
+                    if (placedTiles.get(i).col != placedTiles.get(i - 1).col) {
+                        System.out.println("You cannot place tiles diagonally");
+                        success = false;
+                    }
+                }
+                placedTiles.sort(Comparator.comparingInt(placedTile -> placedTile.row)); //place tiles in order from left to right.
+
+                //check for tiles before/after placed tiles
+                int col = placedTiles.getFirst().col;
+                for (int i = 0; placedTiles.getFirst().row - i >= 0 && board.getTile(placedTiles.getFirst().row - i, col) != null; i++) {
+                    firstCoord = placedTiles.getFirst().row - i;
+                }
+                for (int i = 0; placedTiles.getLast().row + i <= 15 && board.getTile(placedTiles.getLast().row + i, col) != null; i++) {
+                    lastCoord = placedTiles.getLast().row + i;
+                }
+
+                //create word from placed tiles.
+                wordLength = lastCoord - firstCoord + 1;
+                for (int i = firstCoord; i < wordLength + firstCoord; i++) {
+                    placedLetters += board.getTile(i, col).getLetter();
+                }
+            } else {
+                for (int i = 1; i < placedTiles.size(); i++) { //check for diagonals (diagonals not allowed).
+                    if (placedTiles.get(i).row != placedTiles.get(i - 1).row) {
+                        System.out.println("You cannot place tiles diagonally");
+                        success = false;
+                    }
+                }
+                placedTiles.sort(Comparator.comparingInt(placedTile -> placedTile.col)); //place tiles in order from top to bottom.
+
+                //check for tiles before/after placed tiles
+                int row = placedTiles.getFirst().row;
+                for (int i = 0; board.getTile(row, placedTiles.getFirst().col - i) != null; i++) {
+                    firstCoord = placedTiles.getFirst().col - i;
+                }
+                for (int i = 0; board.getTile(row, placedTiles.getLast().col + i) != null; i++) {
+                    lastCoord = placedTiles.getLast().col + i;
+                }
+
+                //create word from placed tiles.
+                wordLength = lastCoord - firstCoord + 1;
+                for (int i = firstCoord; i < wordLength + firstCoord; i++) {
+                    placedLetters += board.getTile(row, i).getLetter();
                 }
             }
-            placedTiles.sort(Comparator.comparingInt(placedTile -> placedTile.row)); //place tiles in order from left to right.
 
-            //check for tiles before/after placed tiles
-            int col =  placedTiles.getFirst().col;
-            for (int i = 0; board.getTile(placedTiles.getFirst().row-i, col) != null; i++) {
-                firstCoord = placedTiles.getFirst().row-i;
-            }
-            for (int i = 0; board.getTile(placedTiles.getLast().row+i, col) != null; i++) {
-                lastCoord = placedTiles.getLast().row+i;
+            //check if word is an accepted word.
+            if (!Game.acceptedWords.checkWord(placedLetters)) {
+                System.out.println("Your word is not an accepted word!");
+                success = false;
             }
 
-            //create word from placed tiles.
-            wordLength = lastCoord - firstCoord + 1;
-            for (int i = firstCoord; i < wordLength + firstCoord; i++) {
-                placedLetters += board.getTile(i, col).getLetter();
-            }
-        } else {
-            for (int i = 1; i < placedTiles.size(); i++) { //check for diagonals (diagonals not allowed).
-                if (placedTiles.get(i).row != placedTiles.get(i - 1).row) {
-                    System.out.println("You cannot place tiles diagonally");
-                    success = false;
+            //check to make sure the word is touching another word.
+            boolean boardEmpty = true;
+            for (int r = 0; r < Board.SIZE; r++) {
+                for (int c = 0; c < Board.SIZE; c++) {
+                    if (board.getTile(r, c) != null ) {
+                        boardEmpty = false;
+                        break;
+                    }
+                }
+                if (!boardEmpty) {
+                    break;
                 }
             }
-            placedTiles.sort(Comparator.comparingInt(placedTile -> placedTile.col)); //place tiles in order from top to bottom.
-
-            //check for tiles before/after placed tiles
-            int row =  placedTiles.getFirst().row;
-            for (int i = 0; board.getTile(row, placedTiles.getFirst().col-i) != null; i++) {
-                firstCoord = placedTiles.getFirst().col-i;
-            }
-            for (int i = 0; board.getTile(row, placedTiles.getLast().col+i) != null; i++) {
-                lastCoord = placedTiles.getLast().col+i;
+            if (!boardEmpty && wordLength <= placedTiles.size()) {
+                System.out.println("Your word must be connected to another word");
+                success = false;
             }
 
-            //create word from placed tiles.
-            wordLength = lastCoord - firstCoord + 1;
-            for (int i = firstCoord; i < wordLength + firstCoord; i++) {
-                placedLetters += board.getTile(row, i).getLetter();
+
+            //TO DO LIST:
+
+            //if the player places only one tile to complete an almost existing word, the system will fail to determine the direction the word is going.
+            //check to make sure surrounding words are still valid
+            //for first play of the game, add something to make sure it is valid despite not touching another word (example logic: a word is valid if it either touches a word or touches starting space)
+            //add Javadocs where they haven't already been added
+
+            if (success) {
+                score += placedTiles.size(); //add score
+                //in the future, this will need to account for premium tiles. at that point we may want to make this an actual function.
+            } else {
+                removePlacedTiles(board, placedTiles); //remove placed tiles from board.
+                returnPlacedTiles(placedTiles); //return placed tiles to hand.
             }
         }
+            return success;
 
-        //check if word is an accepted word.
-        if (!Game.acceptedWords.checkWord(placedLetters)) {
-            System.out.println("Your word is not an accepted word!");
-            success = false;
-        }
-
-        //check to make sure the word is touching another word.
-        if (wordLength <= placedTiles.size()) {
-            System.out.println("Your word must be connected to another word");
-            success = false;
-        }
-
-
-        //TO DO LIST:
-
-        //if the player places only one tile to complete an almost existing word, the system will fail to determine the direction the word is going.
-        //check to make sure surrounding words are still valid
-        //for first play of the game, add something to make sure it is valid despite not touching another word (example logic: a word is valid if it either touches a word or touches starting space)
-        //add Javadocs where they haven't already been added
-        //add a "bag" list of tiles since there is a set number of tiles per game
-        //in Player.fillHand() make sure not to draw tiles if bag is empty
-
-        if (success) {
-            score += placedTiles.size(); //add score
-            //in the future, this will need to account for premium tiles. at that point we may want to make this an actual function.
-        } else {
-            removePlacedTiles(placedTiles); //remove placed tiles from board.
-            returnPlacedTiles(placedTiles); //return placed tiles to hand.
-        }
-        return success;
     }
 
     public boolean passTurn() {

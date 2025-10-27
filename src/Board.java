@@ -1,13 +1,31 @@
+/**
+ * A Board models a scrabble game board, taking a 15 x 15 grid shape to allow players to
+ * place tiles and create words.
+ *
+ * @author Cole Galway
+ * @author Taylor Brumwell
+ * @version 10/26/2025
+ */
+
 public class Board {
+    /** The size of the grid */
     public static final int SIZE = 15;
-    private static Tile[][] grid =  new Tile[SIZE][SIZE]; //CHANGE THIS TO PRIVATE STATIC IN UML
+    /** A 2-dimensional list of tiles, which is the specified grid size */
+    private Tile[][] grid =  new Tile[SIZE][SIZE]; //CHANGE THIS TO PRIVATE STATIC IN UML
+
 
     /**
-     * Constructor for Board class.
+     * Constructs a new Board with no parameters, builds the empty grid.
      */
     public Board() {
     }
 
+    /**
+     * This method is called when a Player attempts to place a tile on the grid
+     * @param row An integer which corresponds to a row on the grid
+     * @param col An integer which corresponds to a column on the grid
+     * @param tile A Tile object which is pulled from the player's hand.
+     */
     public void placeTile(int row, int col, Tile tile) {
         if (row < 0 || col < 0 || row >= SIZE || col >= SIZE) {
             System.out.println("Invalid coordinate");
@@ -20,7 +38,13 @@ public class Board {
         grid[row][col] = tile;
     }
 
-    public static void removeTile(int row, int col, Tile tile) { //Update UML
+    /**
+     * This method is called when a player attempts to remove a tile.
+     * @param row An integer which corresponds to a row on the grid
+     * @param col An integer which corresponds to a column on the grid
+     * @param tile A Tile object which is pulled from the player's hand.
+     */
+    public void removeTile(int row, int col, Tile tile) { //Update UML
         if (row < 0 || col < 0 || row >= SIZE || col >= SIZE) {
             System.out.println("Invalid coordinate");
             return;
@@ -32,6 +56,9 @@ public class Board {
         grid[row][col] = null;
     }
 
+    /**
+     * This method prints the grid board and whichever tiles are placed on the grid.
+     */
     public void display() {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
@@ -46,6 +73,12 @@ public class Board {
         }
     }
 
+    /**
+     * Returns the tile located at a specific row and column in the grid
+     * @param row An integer which corresponds to a row on the grid
+     * @param col An integer which corresponds to a column on the grid
+     * @return The tile located in the specified location on the game board.
+     */
     public Tile getTile(int row, int col) {
         if (row < 0 || col < 0 || row >= SIZE || col >= SIZE) {
             System.out.println("Invalid coordinate");

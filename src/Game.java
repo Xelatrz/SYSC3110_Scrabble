@@ -25,11 +25,14 @@ public class Game {
         boolean turnComplete = false;
         boolean unanimousVote = false;
         boolean gameOver = false;
+        TileBag bag = new TileBag();
 
         //game loop.
         while (!gameOver) {
             for (Player player : players) {
+                turnComplete = false;
                 System.out.println("It is player " + player.getName() + "'s turn.");
+
                 while (!turnComplete) { //loops if turn failed to complete an action.
                     player.showHand();
                     System.out.println("Would you like to PLAY, PASS, or VOTE to end game?");
@@ -62,10 +65,10 @@ public class Game {
                         System.out.println("Invalid choice.");
                     }
                 }
-                player.fillHand();
+                player.fillHand(bag);
 
                 //game end conditions.
-                if (player.emptyHand()) { //AND IF BAG IS EMPTY (add this condition)
+                if (player.emptyHand() && bag.isEmpty()) { //AND IF BAG IS EMPTY (add this condition)
                     gameOver = true;
                 } else if (unanimousVote) {
                     gameOver = true;
@@ -93,6 +96,7 @@ public class Game {
     public static void main(String[] args) {
         Game game = new Game();
         Board board = new Board();
+        TileBag bag = new TileBag();
 
         Player p1 = new Player("Player 1");
         Player p2 = new Player("Player 2");
@@ -103,10 +107,10 @@ public class Game {
         game.addPlayer(p3);
         game.addPlayer(p4);
 
-        p1.fillHand();
-        p2.fillHand();
-        p3.fillHand();
-        p4.fillHand();
+        p1.fillHand(bag);
+        p2.fillHand(bag);
+        p3.fillHand(bag);
+        p4.fillHand(bag);
 
         startGame(board);
 
