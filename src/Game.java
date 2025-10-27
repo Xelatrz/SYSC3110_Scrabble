@@ -54,6 +54,15 @@ public class Game {
         boolean gameOver = false;
         TileBag bag = new TileBag();
 
+        //game setup
+        if (players.size() < 2|| players.size() > 4) {//make sure there are 2 to 4 players
+            System.out.println("2-4 players are required to play Scrabble.");
+            return;
+        }
+        for (Player player : players) {
+            player.fillHand(bag);
+        }
+
         //game loop.
         while (!gameOver) {
             for (Player player : players) {
@@ -138,11 +147,6 @@ public class Game {
         game.addPlayer(p2);
         game.addPlayer(p3);
         game.addPlayer(p4);
-
-        p1.fillHand(bag);
-        p2.fillHand(bag);
-        p3.fillHand(bag);
-        p4.fillHand(bag);
 
         startGame(board);
     }
