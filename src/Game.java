@@ -1,11 +1,29 @@
+/**
+ * Models the game of Scrabble.
+ * A few modifications are neccessary to fully encompass the entire game of scrabble, including a
+ * method to add/remove players and have player's input their own names, a method to exchange all
+ * the tiles in the hand for another set of tiles in the bag, and a proper scoring system which
+ * accounts for tile weights.
+ *
+ * @author Taylor Brumwell
+ * @author Cole Galway
+ * @version 10/27/2025
+ */
+
 import java.util.*;
 
 public class Game {
+    /**
+     * The list of players who will be participating in the game.
+     */
     private static ArrayList<Player> players;
+    /**
+     * The dictionary of accepted words for the game.
+     */
     public static Dictionary acceptedWords; //CHANGED TO PUBLIC (update UML)
 
     /**
-     * Constructor for Game class.
+     * Constructs a new Game.
      */
     public Game() {
         this.players = new ArrayList<>();
@@ -13,6 +31,11 @@ public class Game {
         acceptedWords.load("scrabble_acceptedwords.csv");
     }
 
+    /**
+     * Adds a player into the game, ensuring that the amount of players does not exceed
+     * the maximum of five.
+     * @param player A Player who will be added into the game.
+     */
     public void addPlayer(Player player) {
         //doesn't add existing player and doesn't add too many players
         if (players.size() < 5 && !players.contains(player)) {
@@ -20,6 +43,11 @@ public class Game {
         }
     }
 
+    /**
+     * Once called this method will start the game, and handle all the game logic and the general
+     * game loop for each player and their turn.
+     * @param board A Board which is used for the game.
+     */
     public static void startGame(Board board) {
         Scanner input = new Scanner(System.in);
         boolean turnComplete = false;
@@ -83,6 +111,10 @@ public class Game {
         }
     }
 
+    /**
+     * Terminates the game upon being called, and determines the winner based off the score.
+     * Prints the winner of the game.
+     */
     public static void endGame() {
         Player winner = players.getFirst();
         for (int i = 1; i < players.size(); i++) {

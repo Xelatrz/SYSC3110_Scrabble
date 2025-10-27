@@ -1,11 +1,22 @@
+/**
+ * A Dictionary models the accepted English words from a standard scrabble game. It loads
+ * the accepted words from an external .csv file, allowing for updates to the accepted word list.
+ *
+ * @author Taylor Brumwell
+ * @version 10/26/2025
+ */
+
 import java.util.*;
 import java.io.*;
 
 public class Dictionary {
+    /**
+     * A list of strings which are the accepted words for the game.
+     */
     public ArrayList<String> acceptedWords;
 
     /**
-     * Constructor for Dictionary class.
+     * Constructs a new Dictionary, taking no parameters.
      */
     public Dictionary() {
         acceptedWords = new ArrayList<>();

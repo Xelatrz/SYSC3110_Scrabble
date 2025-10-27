@@ -7,9 +7,19 @@ import java.util.*;
  * @version 10/26/2025
  */
 public class TileBag {
+    /**
+     * A list of characters with each of the tiles and the number of them inside the bag.
+     */
     private final List <Character> tiles = new ArrayList<>();
+    /**
+     * A random variable from the Random class.
+     */
     private final Random rand = new Random();
 
+    /**
+     * Constructs a new TileBag, taking each letter from the English alphabet and assigning the number of
+     * times it appears in a standard scrabble game.
+     */
     public TileBag() {
         addTiles('E', 12);
         addTiles('A', 9);
@@ -38,6 +48,11 @@ public class TileBag {
         addTiles('Z', 1);
     }
 
+    /**
+     * Adds a tile into the TileBag, including the number of times that tile will be inside the bag.
+     * @param letter A character which represents the letter on the tile.
+     * @param count An integer representing the amount of each specific character is inside the bag.
+     */
     private void addTiles(char letter, int count) {
         for (int i = 0; i < count; i++) {
             tiles.add(letter);
@@ -57,6 +72,10 @@ public class TileBag {
         return new Tile(String.valueOf(letter));
     }
 
+    /**
+     * Returns true or false depending on if the bag of tiles has been emptied.
+     * @return true if the bag is empty, false if the bag is not empty.
+     */
     public boolean isEmpty() {
         return tiles.isEmpty();
     }
