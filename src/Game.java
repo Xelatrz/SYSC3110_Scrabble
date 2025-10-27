@@ -45,14 +45,15 @@ public class Game {
     /**
      * Once called this method will start the game, and handle all the game logic and the general
      * game loop for each player and their turn.
-     * @param board A Board which is used for the game.
      */
-    public static void startGame(Board board) {
+    public static void startGame() {
+        Board board = new Board();
+        TileBag bag = new TileBag();
+
         Scanner input = new Scanner(System.in);
         boolean turnComplete;
         boolean unanimousVote = false;
         boolean gameOver = false;
-        TileBag bag = new TileBag();
 
         //game setup
         if (players.size() < 2|| players.size() > 4) {//make sure there are 2 to 4 players
@@ -78,7 +79,7 @@ public class Game {
                             turnComplete = true;
                         }
                     } else if (choice.equals("pass")) {
-                        if (player.passTurn()) {
+                        if (player.passTurn(bag)) {
                             turnComplete = true;
                         }
                     } else if (choice.equals("vote")) {
@@ -136,8 +137,6 @@ public class Game {
 
     public static void main(String[] args) {
         Game game = new Game();
-        Board board = new Board();
-        TileBag bag = new TileBag();
 
         Player p1 = new Player("Player 1");
         Player p2 = new Player("Player 2");
@@ -148,6 +147,6 @@ public class Game {
         game.addPlayer(p3);
         game.addPlayer(p4);
 
-        startGame(board);
+        startGame();
     }
 }
