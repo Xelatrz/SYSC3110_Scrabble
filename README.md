@@ -140,7 +140,7 @@ Player 1 placed an A at 7,7!
 
 - First word must be at least 2 letters long
 
-### Contributors
+## Contributors
 - Daniel Esenwa  101199099 (Readme)
 - Cole Galway 101302762 (UML and Sequence Diagrams)
 - Matthew Gibeault 101323772 (Main code)
