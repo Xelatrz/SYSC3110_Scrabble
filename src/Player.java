@@ -207,6 +207,7 @@ public class Player {
         boolean success = true;
         String choice;
         String word = "";
+        boolean firstTurn = board.isEmpty(board); //check before placing tiles
 
         placedTiles.clear(); //make sure placedTiles is empty.
 
@@ -297,10 +298,10 @@ public class Player {
         }
 
         // check that words connect (except on the first play)
-        if (!board.isEmpty(board) && word.length() <= placedTiles.size() && word.length() > 1) {
+        if ((!firstTurn) && (word.length() <= placedTiles.size()) && (word.length() > 1)) {
             System.out.println("Your word must be connected to another word");
             success = false;
-        } else if (board.isEmpty(board)) {
+        } else if (firstTurn) {
             //(TO BE IMPLEMENTED when special board spaces are added).
             //make sure word touches the board's starting space
             if (placedTiles.size() <= 1) { //make sure more than one tile is placed on first turn
@@ -311,6 +312,7 @@ public class Player {
 
         //(TO BE IMPLEMENTED).
         //check to make sure the surrounding words are still valid.
+        //account for blank spaces in the word.
 
         //placeholder for scoring
         if (success) {
