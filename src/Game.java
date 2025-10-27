@@ -64,15 +64,15 @@ public class Game {
                     player.showHand();
                     System.out.println("Would you like to PLAY, PASS, or VOTE to end game?");
                     String choice = input.nextLine().toLowerCase();
-                    if (choice.equalsIgnoreCase("play")) {
+                    if (choice.equals("play")) {
                         if (player.playWord(board)) {
                             turnComplete = true;
                         }
-                    } else if (choice.equalsIgnoreCase("pass")) {
+                    } else if (choice.equals("pass")) {
                         if (player.passTurn()) {
                             turnComplete = true;
                         }
-                    } else if (choice.equalsIgnoreCase("vote")) {
+                    } else if (choice.equals("vote")) {
                         if (player.voteGameOver()) {
                             int numVotes = 1;
                             turnComplete = true;

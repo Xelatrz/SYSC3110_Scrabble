@@ -119,12 +119,12 @@ public class Player {
 
         //takes the user input for the tile
         System.out.println("Select a tile: ");
-        String selectedLetter = input.nextLine().toLowerCase();
+        String selectedLetter = input.nextLine().toUpperCase();
 
         //finds the tile in the hand
         Tile selectedTile = null;
         for (Tile tile : hand) {
-            if (tile.getLetter().equalsIgnoreCase(selectedLetter)) {
+            if (tile.getLetter().equals(selectedLetter)) {
                 selectedTile = tile;
                 break;
             }
@@ -139,7 +139,7 @@ public class Player {
         while (true) {
             try {
                 System.out.println("Select a row for the tile: ");
-                row = Integer.parseInt(input.nextLine());
+                row = Integer.parseInt(input.nextLine().toLowerCase());
                 break;
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input, row number must be an integer.");
@@ -149,7 +149,7 @@ public class Player {
         while (true) {
             try {
                 System.out.println("Select a column for the tile: ");
-                col = Integer.parseInt(input.nextLine());
+                col = Integer.parseInt(input.nextLine().toLowerCase());
                 break;
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input, column number must be an integer.");
@@ -213,15 +213,18 @@ public class Player {
         while (keepGoing) {
             showHand();
             placeTile(board);
-
-            System.out.println("Would you like to place another tile? (Y/N)");
-            choice = input.nextLine().toLowerCase();
-            if (choice.equals("n") ||  choice.equals("no")) {
-                keepGoing = false;
-            } else if (choice.equals("y") || choice.equals("yes")) {
-                keepGoing = true;
-            } else {
-                System.out.println("Invalid input, please answer yes or no. (Y/N)");
+            while (true) { //make sure input is valid.
+                System.out.println("Would you like to place another tile? (Y/N)");
+                choice = input.nextLine().toLowerCase();
+                if (choice.equals("n") ||  choice.equals("no")) {
+                    keepGoing = false;
+                    break;
+                } else if (choice.equals("y") || choice.equals("yes")) {
+                    keepGoing = true;
+                    break;
+                } else {
+                    System.out.println("Invalid input, please answer yes or no. (Y/N)");
+                }
             }
         }
 
@@ -253,13 +256,11 @@ public class Player {
                         lastCol++;
                     }
 
-                    ArrayList<PlacedTile> wordTiles = new ArrayList<>();
                     //build the word from the tiles
                     for (int c = firstCol; c <= lastCol; c++) {
                         Tile tile = board.getTile(row, c);
                         if (tile != null) {
                             word += tile.getLetter();
-                            wordTiles.add(new PlacedTile(row, c, tile));
                         }
                     }
                 } else { //vertical word
@@ -278,13 +279,11 @@ public class Player {
                         lastRow++;
                     }
 
-                    ArrayList<PlacedTile> wordTiles = new ArrayList<>();
                     //build the word from the tiles
                     for (int r = firstRow; r <= lastRow; r++) {
                         Tile tile = board.getTile(r, col);
                         if (tile != null) {
                             word += tile.getLetter();
-                            wordTiles.add(new PlacedTile(r, col, tile));
                         }
                     }
                 }
