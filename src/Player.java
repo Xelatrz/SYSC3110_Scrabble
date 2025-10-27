@@ -314,7 +314,9 @@ public class Player {
 
         //placeholder for scoring
         if (success) {
-            score += placedTiles.size(); //add score
+            int pointsGained = placedTiles.size();
+            score += pointsGained; //add score
+            System.out.println(name + " scored " + pointsGained + " points. " + name + "'s score is now " + score);
             //in the future, this will need to account for premium tiles. at that point we may want to make this an actual function.
         } else {
             removePlacedTiles(board, placedTiles); //remove placed tiles from board.

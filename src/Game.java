@@ -104,6 +104,7 @@ public class Game {
                 //game end.
                 if (gameOver) {
                     endGame();
+                    return;
                 }
 
             }
