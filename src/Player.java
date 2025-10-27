@@ -333,15 +333,21 @@ public class Player {
     /**
      * Skips a player's turn upon their request
      * Returns if the turn was skipped.
+     * @param bag the bag that unwanted tiles will be returned to, and where new tiles will be drawn from
      * @return true if the turn was skipped, false otherwise.
      */
-    public boolean passTurn() {
+    public boolean passTurn(TileBag bag) {
         //skip the player's turn
         Scanner input = new Scanner(System.in);
         while (true) {
             System.out.println(name + ", are you sure you'd like to skip your turn? (Y/N)");
             String choice = input.nextLine().toLowerCase();
             if (choice.equals("y") || choice.equals("yes")) {
+                for (int i = 0; !emptyHand(); i++) {
+                    bag.addTiles(hand.get(i).getLetter(), 1);
+                    hand.remove(hand.get(i));
+                }
+                fillHand(bag);
                 return true;
             } else if (choice.equals("n") || choice.equals("no")) {
                 return false;
