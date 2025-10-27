@@ -326,6 +326,7 @@ public class Player {
             removePlacedTiles(board, placedTiles); //remove placed tiles from board.
             returnPlacedTiles(placedTiles); //return placed tiles to hand.
         }
+        board.display();
         return success;
     }
 
