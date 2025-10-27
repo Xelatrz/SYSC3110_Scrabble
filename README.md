@@ -3,14 +3,14 @@
 A complete Scrabble game implementation in Java that supports multiple players, word validation, and classic Scrabble rules.
 
 ## Project Files
- - Board.java # Game board management
- - Dictionary.java' # Word validation system
- - Game.java' # Main game controller
- - Player.java' # Player logic and actions
- - Tile.java' # Tile representation
- - TileBag.java' # Tile distribution and drawing
- - PlacedTile.java' # Track placed tiles
- - scrabble_acceptedwords.csv' # Dictionary file
+ - `Board.java` # Game board management
+ - `Dictionary.java` # Word validation system
+ - `Game.java` # Main game controller
+ - `Player.java` # Player logic and actions
+ - `Tile.java` # Tile representation
+ - `TileBag.java` # Tile distribution and drawing
+ - `PlacedTile.java` # Track placed tiles
+ - `scrabble_acceptedwords.csv` # Dictionary file
 
 ## Features
 
