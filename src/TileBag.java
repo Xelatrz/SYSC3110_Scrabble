@@ -11,7 +11,7 @@ public class TileBag {
     /**
      * A list of characters with each of the tiles and the number of them inside the bag.
      */
-    private final List <String> tiles = new ArrayList<>();
+    public final List <String> tiles = new ArrayList<>();
     /**
      * A random variable from the Random class.
      */

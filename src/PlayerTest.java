@@ -1,3 +1,10 @@
+/**
+ * Test for the Player class
+ *
+ * @author Cole Galway
+ * @version 10/27/2025
+ */
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -82,19 +89,4 @@ class PlayerTest {
         org.junit.jupiter.api.Assertions.assertEquals(p1.hand.size(), 7);
     }
 
-    @Test
-    public void placeTile() {
-    }
-
-    @Test
-    public void playWord() {
-    }
-
-    @Test
-    public void passTurn() {
-    }
-
-    @Test
-    public void voteGameOver() {
-    }
 }

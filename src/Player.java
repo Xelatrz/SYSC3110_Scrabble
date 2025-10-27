@@ -23,7 +23,7 @@ public class Player {
     /**
      * A List of tiles which is the hand of the player.
      */
-    private ArrayList<Tile> hand;
+    public ArrayList<Tile> hand; //changed to public for testing
     /**
      * A list of the tiles that have been placed on the board.
      */
@@ -54,6 +54,14 @@ public class Player {
      */
     public int getScore() {
         return score;
+    }
+
+    /**
+     * Sets the player's score to a specified value. (CURRENTLY ONLY USED FOR TESTING)
+     * @param score An int of the score the player will have.
+     */
+    public void setScore(int score) {
+        this.score = score;
     }
 
     /**

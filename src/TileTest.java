@@ -1,3 +1,10 @@
+/**
+ * Test for Tile class
+ *
+ * @author Cole Galway
+ * @version 10/27/2025
+ */
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

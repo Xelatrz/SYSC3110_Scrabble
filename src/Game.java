@@ -15,7 +15,7 @@ public class Game {
     /**
      * The list of players who will be participating in the game.
      */
-    private static ArrayList<Player> players;
+    public static ArrayList<Player> players;
     /**
      * The dictionary of accepted words for the game.
      */
