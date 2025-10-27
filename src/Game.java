@@ -49,7 +49,7 @@ public class Game {
      */
     public static void startGame(Board board) {
         Scanner input = new Scanner(System.in);
-        boolean turnComplete = false;
+        boolean turnComplete;
         boolean unanimousVote = false;
         boolean gameOver = false;
         TileBag bag = new TileBag();

@@ -231,9 +231,7 @@ public class Player {
         }
 
         //if only 1 tile is placed, skip diagonal check
-        if (placedTiles.size() == 1) {
-            success = true;
-        } else {
+        if (placedTiles.size() != 1) {
             boolean sameRow = placedTiles.stream().allMatch(t -> t.row == placedTiles.getFirst().row);
             boolean sameCol = placedTiles.stream().allMatch(t -> t.col == placedTiles.getFirst().col);
 
@@ -288,13 +286,13 @@ public class Player {
                         }
                     }
                 }
-
-                //check dictionary to see if the word is valid
-                if (!Game.acceptedWords.checkWord(word)) {
-                    System.out.println("Your word is not an accepted word!");
-                    success = false;
-                }
             }
+        }
+
+        //check dictionary to see if the word is valid
+        if (!Game.acceptedWords.checkWord(word)) {
+            System.out.println("Your word is not an accepted word!");
+            success = false;
         }
 
         // check that words connect (except on the first play)
@@ -322,6 +320,7 @@ public class Player {
             int pointsGained = placedTiles.size();
             score += pointsGained; //add score
             System.out.println(name + " scored " + pointsGained + " points. " + name + "'s score is now " + score);
+            //(TO BE IMPLEMENTED).
             //in the future, this will need to account for premium tiles. at that point we may want to make this an actual function.
         } else {
             removePlacedTiles(board, placedTiles); //remove placed tiles from board.
