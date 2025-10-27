@@ -19,14 +19,14 @@ public class Game {
     /**
      * The dictionary of accepted words for the game.
      */
-    public static Dictionary acceptedWords; //CHANGED TO PUBLIC (update UML)
+    public static Dictionary acceptedWords;
 
     /**
      * Constructs a new Game.
      */
     public Game() {
-        this.players = new ArrayList<>();
-        this.acceptedWords = new Dictionary();
+        players = new ArrayList<>();
+        acceptedWords = new Dictionary();
         acceptedWords.load("scrabble_acceptedwords.csv");
     }
 

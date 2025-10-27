@@ -1,3 +1,6 @@
+import java.util.*;
+import java.io.*;
+
 /**
  * A Dictionary models the accepted English words from a standard scrabble game. It loads
  * the accepted words from an external .csv file, allowing for updates to the accepted word list.
@@ -5,10 +8,6 @@
  * @author Taylor Brumwell
  * @version 10/26/2025
  */
-
-import java.util.*;
-import java.io.*;
-
 public class Dictionary {
     /**
      * A list of strings which are the accepted words for the game.
@@ -33,9 +32,6 @@ public class Dictionary {
             while ((word = br.readLine()) != null) { //reads one line
                 word = word.trim(); //remove undesired trailing characters (spaces)
                 if (!word.isEmpty()) {
-
-                    //MAY want to check for duplicates first
-
                     acceptedWords.add(word.toLowerCase()); //add word to dictionary
                 }
             }

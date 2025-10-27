@@ -50,7 +50,7 @@ public class Player {
 
     /**
      * Returns the player's score.
-     * @return A integer containing the player's score.
+     * @return An integer containing the player's score.
      */
     public int getScore() {
         return score;
@@ -298,7 +298,10 @@ public class Player {
         }
 
         // check that words connect (except on the first play)
-        if ((!firstTurn) && (word.length() <= placedTiles.size()) && (word.length() > 1)) {
+        if (!firstTurn && word.length() <= placedTiles.size() && word.length() > 1) {
+            System.out.println("Your word must be connected to another word");
+            success = false;
+        } else if (!firstTurn && word.length() == 1 && !isConnected(board)) {
             System.out.println("Your word must be connected to another word");
             success = false;
         } else if (firstTurn) {
@@ -364,7 +367,26 @@ public class Player {
             }
             System.out.println("Invalid input, please answer yes or no. (Y/N)");
         }
+    }
 
+    /**
+     * Checks to see if the placed word is connected to another word.
+     * Returns if a word is connected to another word on the board.
+     * @param board A Board which is being used for the game.
+     * @return true if the word is connected, false otherwise.
+     */
+    private boolean isConnected(Board board) {
+        for (PlacedTile placedTile : placedTiles) {
+            int row =  placedTile.row;
+            int col =  placedTile.col;
+
+            //check all 4 adjacent spots
+            if ((row > 0 && board.getTile(row - 1, col) != null) || (row < board.SIZE - 1 && board.getTile(row + 1, col) != null)
+                    || (col > 0 && board.getTile(row, col - 1) != null) ||  (col < board.SIZE - 1 && board.getTile(row, col + 1) != null)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
