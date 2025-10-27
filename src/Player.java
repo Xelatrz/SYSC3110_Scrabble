@@ -206,6 +206,7 @@ public class Player {
         boolean keepGoing = true;
         boolean success = true;
         String choice;
+        String word = "";
 
         placedTiles.clear(); //make sure placedTiles is empty.
 
@@ -239,7 +240,6 @@ public class Player {
                 System.out.println("You cannot place tiles diagonally");
                 success = false;
             } else {
-                String word = "";
                 if (sameRow) { //horizontal word
                     int row = placedTiles.getFirst().row;
                     // sort by column
@@ -297,12 +297,20 @@ public class Player {
         }
 
         // check that words connect (except on the first play)
-        if (!board.isEmpty(board) && !isConnected(board)) {
+        if (!board.isEmpty(board) && word.length() <= placedTiles.size() && word.length() > 1) {
             System.out.println("Your word must be connected to another word");
             success = false;
         } else if (board.isEmpty(board)) {
-            //make sure word touches the board's starting space (TO BE IMPLEMENTED when special board spaces are added)
+            //(TO BE IMPLEMENTED when special board spaces are added).
+            //make sure word touches the board's starting space
+            if (placedTiles.size() <= 1) { //make sure more than one tile is placed on first turn
+                System.out.println("First word of the game must be longer than one tile.");
+                success = false;
+            }
         }
+
+        //(TO BE IMPLEMENTED).
+        //check to make sure the surrounding words are still valid.
 
         //placeholder for scoring
         if (success) {
@@ -353,26 +361,6 @@ public class Player {
             System.out.println("Invalid input, please answer yes or no. (Y/N)");
         }
 
-    }
-
-    /**
-     * Checks to see if the placed word is connected to another word.
-     * Returns if a word is connected to another word on the board.
-     * @param board A Board which is being used for the game.
-     * @return true if the word is connected, false otherwise.
-     */
-    private boolean isConnected(Board board) {
-        for (PlacedTile placedTile : placedTiles) {
-            int row =  placedTile.row;
-            int col =  placedTile.col;
-
-            //check all 4 adjacent spots
-            if ((row > 0 && board.getTile(row - 1, col) != null) || (row < board.SIZE - 1 && board.getTile(row + 1, col) != null)
-            || (col > 0 && board.getTile(row, col - 1) != null) ||  (col < board.SIZE - 1 && board.getTile(row, col + 1) != null)) {
-                return true;
-            }
-        }
-        return false;
     }
 }
 
