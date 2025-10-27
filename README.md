@@ -142,6 +142,6 @@ Player 1 placed an A at 7,7!
 
 ## Contributors
 - Daniel Esenwa  101199099 (Readme)
-- Cole Galway 101302762 (UML and Sequence Diagrams)
-- Matthew Gibeault 101323772 (Main code)
+- Cole Galway 101302762 (Main code & unit tests)
+- Matthew Gibeault 101323772 (UML and Sequence Diagrams)
 - Taylor Brumwell 101302386 (Main code)
