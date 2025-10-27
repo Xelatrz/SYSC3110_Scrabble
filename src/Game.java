@@ -1,3 +1,5 @@
+import java.util.*;
+
 /**
  * Models the game of Scrabble.
  * A few modifications are neccessary to fully encompass the entire game of scrabble, including a
@@ -9,9 +11,6 @@
  * @author Cole Galway
  * @version 10/27/2025
  */
-
-import java.util.*;
-
 public class Game {
     /**
      * The list of players who will be participating in the game.
@@ -64,7 +63,7 @@ public class Game {
                 while (!turnComplete) { //loops if turn failed to complete an action.
                     player.showHand();
                     System.out.println("Would you like to PLAY, PASS, or VOTE to end game?");
-                    String choice = input.nextLine().toLowerCase(); //both toLowerCase() and equalsIgnoreCase() are used, should we only do one of these two?
+                    String choice = input.nextLine().toLowerCase();
                     if (choice.equalsIgnoreCase("play")) {
                         if (player.playWord(board)) {
                             turnComplete = true;
@@ -96,7 +95,7 @@ public class Game {
                 player.fillHand(bag);
 
                 //game end conditions.
-                if (player.emptyHand() && bag.isEmpty()) { //AND IF BAG IS EMPTY (add this condition)
+                if (player.emptyHand() && bag.isEmpty()) {
                     gameOver = true;
                 } else if (unanimousVote) {
                     gameOver = true;
@@ -145,13 +144,5 @@ public class Game {
         p4.fillHand(bag);
 
         startGame(board);
-
-        /*
-        p1.showHand();
-        p1.drawTile();
-
-        p1.showHand();
-        p1.playWord(board);
-        */
     }
 }

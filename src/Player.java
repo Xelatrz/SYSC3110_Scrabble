@@ -1,3 +1,5 @@
+import java.util.*;
+
 /**
  * Models a player from a game of scrabble, storing the player name, score, and their hand of tiles.
  *
@@ -5,25 +7,21 @@
  * @author Taylor Brumwell
  * @version 10/27/2025
  */
-
-import java.util.*;
-
-
 public class Player {
     /**
-     * The player's name, representing as a string
+     * The player's name, representing as a string.
      */
     private String name;
     /**
-     * The player's score, representing as an integer
+     * The player's score, representing as an integer.
      */
     private int score;
     /**
-     * Standard scrabble hand only has a max of  7 tiles
+     * Standard scrabble hand only has a max of  7 tiles.
      */
     private static int HAND_SIZE = 7;
     /**
-     * A List of tiles which is the hand of the player
+     * A List of tiles which is the hand of the player.
      */
     private ArrayList<Tile> hand;
     /**
@@ -51,7 +49,7 @@ public class Player {
     }
 
     /**
-     * Returns the player's score
+     * Returns the player's score.
      * @return A integer containing the player's score.
      */
     public int getScore() {
@@ -59,7 +57,7 @@ public class Player {
     }
 
     /**
-     * Returns if the player's hand is empty
+     * Returns if the player's hand is empty.
      * @return True if the hand is empty, false otherwise.
      */
     public boolean emptyHand() {
@@ -81,9 +79,9 @@ public class Player {
      * Draws a tile from the bag of tiles and adds it to the player's hand.
      * Returns if the tile was added to the player's hand or not.
      * @param bag A TileBag containing a specific amount of tiles
-     * @return True if the tile was added, false if not
+     * @return True if the tile was added, false if not.
      */
-    public boolean drawTile(TileBag bag) { //update UML return type
+    public boolean drawTile(TileBag bag) {
         //can only have 7 tiles in scrabble
         if (hand.size() < HAND_SIZE) {
             //draw a tile
@@ -104,7 +102,7 @@ public class Player {
     /**
      * When called this method will fill the player's hand with tiles, until they have a full hand.
      * It will not fill the player's hand if their hand is full, or the bag is empty.
-     * @param bag The TileBag which contains the specific tiles and their quantities.
+     * @param bag The TileBag which contains the specific tiles and their quantities
      */
     public void fillHand(TileBag bag) {
         while (hand.size() < HAND_SIZE && !bag.isEmpty()) {
@@ -114,9 +112,9 @@ public class Player {
 
     /**
      * Places a tile onto a specific location on the board based on the player's input.
-     * @param board The specific game board which the players are using.
+     * @param board The specific game board which the players are using
      */
-    public void placeTile(Board board) { //update UML parameters
+    public void placeTile(Board board) {
         Scanner input = new Scanner(System.in);
 
         //takes the user input for the tile
@@ -188,7 +186,7 @@ public class Player {
     }
 
     /**
-     * Returns the tiles that were placed into the player's hand.
+     * Gives back the tiles that were placed into the player's hand.
      * @param placedTiles A List of the tiles that have been placed on the board.
      */
     private void returnPlacedTiles(ArrayList<PlacedTile> placedTiles) {
@@ -296,29 +294,15 @@ public class Player {
                     System.out.println("Your word is not an accepted word!");
                     success = false;
                 }
-
-
-            }
-
-        }
-        //check if the board was empty before this
-        boolean boardEmpty = true;
-        for (int r = 0; r < board.SIZE; r++) {
-            for (int c = 0; c < board.SIZE; c++) {
-                if (board.getTile(r, c) != null) {
-                    boardEmpty = false;
-                    break;
-                }
-            }
-            if (!boardEmpty) {
-                break;
             }
         }
 
         // check that words connect (except on the first play)
-        if (!boardEmpty && !isConnected(board)) {
+        if (!board.isEmpty(board) && !isConnected(board)) {
             System.out.println("Your word must be connected to another word");
             success = false;
+        } else if (board.isEmpty(board)) {
+            //make sure word touches the board's starting space (TO BE IMPLEMENTED when special board spaces are added)
         }
 
         //placeholder for scoring
@@ -330,99 +314,6 @@ public class Player {
             returnPlacedTiles(placedTiles); //return placed tiles to hand.
         }
         return success;
-
-        /*
-        //check if tiles in placedTiles makes a valid word.
-        //words can be left to right or top to bottom.
-        //words must be attached to another word.
-        //connected words must still be valid.
-        int firstCoord = 0;
-        int lastCoord = 0;
-        int wordLength = 0;
-        String placedLetters = "";
-        if (placedTiles.size() == 1) { //doesn't check for diagonals on single tiles
-            success = true;
-        } else {
-            if (placedTiles.get(0).row == placedTiles.get(1).row) {
-                for (int i = 1; i < placedTiles.size(); i++) { //check for diagonals (diagonals not allowed).
-                    if (placedTiles.get(i).col != placedTiles.get(i - 1).col) {
-                        System.out.println("You cannot place tiles diagonally");
-                        success = false;
-                    }
-                }
-                placedTiles.sort(Comparator.comparingInt(placedTile -> placedTile.row)); //place tiles in order from left to right.
-
-                //check for tiles before/after placed tiles
-                int col = placedTiles.getFirst().col;
-                for (int i = 0; placedTiles.getFirst().row - i >= 0 && board.getTile(placedTiles.getFirst().row - i, col) != null; i++) {
-                    firstCoord = placedTiles.getFirst().row - i;
-                }
-                for (int i = 0; placedTiles.getLast().row + i <= 15 && board.getTile(placedTiles.getLast().row + i, col) != null; i++) {
-                    lastCoord = placedTiles.getLast().row + i;
-                }
-
-                //create word from placed tiles.
-                wordLength = lastCoord - firstCoord + 1;
-                for (int i = firstCoord; i < wordLength + firstCoord; i++) {
-                    placedLetters += board.getTile(i, col).getLetter();
-                }
-            } else {
-                for (int i = 1; i < placedTiles.size(); i++) { //check for diagonals (diagonals not allowed).
-                    if (placedTiles.get(i).row != placedTiles.get(i - 1).row) {
-                        System.out.println("You cannot place tiles diagonally");
-                        success = false;
-                    }
-                }
-                placedTiles.sort(Comparator.comparingInt(placedTile -> placedTile.col)); //place tiles in order from top to bottom.
-
-                //check for tiles before/after placed tiles
-                int row = placedTiles.getFirst().row;
-                for (int i = 0; board.getTile(row, placedTiles.getFirst().col - i) != null; i++) {
-                    firstCoord = placedTiles.getFirst().col - i;
-                }
-                for (int i = 0; board.getTile(row, placedTiles.getLast().col + i) != null; i++) {
-                    lastCoord = placedTiles.getLast().col + i;
-                }
-
-                //create word from placed tiles.
-                wordLength = lastCoord - firstCoord + 1;
-                for (int i = firstCoord; i < wordLength + firstCoord; i++) {
-                    placedLetters += board.getTile(row, i).getLetter();
-                }
-            }
-
-            //check if word is an accepted word.
-            if (!Game.acceptedWords.checkWord(placedLetters)) {
-                System.out.println("Your word is not an accepted word!");
-                success = false;
-            }
-
-            //check to make sure the word is touching another word.
-            boolean boardEmpty = true;
-            for (int r = 0; r < Board.SIZE; r++) {
-                for (int c = 0; c < Board.SIZE; c++) {
-                    if (board.getTile(r, c) != null ) {
-                        boardEmpty = false;
-                        break;
-                    }
-                }
-                if (!boardEmpty) {
-                    break;
-                }
-            }
-            if (!boardEmpty && wordLength <= placedTiles.size()) {
-                System.out.println("Your word must be connected to another word");
-                success = false;
-            }
-
-
-            //TO DO LIST:
-
-            //if the player places only one tile to complete an almost existing word, the system will fail to determine the direction the word is going.
-            //check to make sure surrounding words are still valid
-            //for first play of the game, add something to make sure it is valid despite not touching another word (example logic: a word is valid if it either touches a word or touches starting space)
-            //add Javadocs where they haven't already been added
-            */
     }
 
     /**

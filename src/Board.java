@@ -6,12 +6,11 @@
  * @author Taylor Brumwell
  * @version 10/26/2025
  */
-
 public class Board {
     /** The size of the grid */
     public static final int SIZE = 15;
     /** A 2-dimensional list of tiles, which is the specified grid size */
-    private Tile[][] grid =  new Tile[SIZE][SIZE]; //CHANGE THIS TO PRIVATE STATIC IN UML
+    private Tile[][] grid =  new Tile[SIZE][SIZE];
 
 
     /**
@@ -21,7 +20,7 @@ public class Board {
     }
 
     /**
-     * This method is called when a Player attempts to place a tile on the grid
+     * This method is called when a Player attempts to place a tile on the grid.
      * @param row An integer which corresponds to a row on the grid
      * @param col An integer which corresponds to a column on the grid
      * @param tile A Tile object which is pulled from the player's hand.
@@ -44,7 +43,7 @@ public class Board {
      * @param col An integer which corresponds to a column on the grid
      * @param tile A Tile object which is pulled from the player's hand.
      */
-    public void removeTile(int row, int col, Tile tile) { //Update UML
+    public void removeTile(int row, int col, Tile tile) {
         if (row < 0 || col < 0 || row >= SIZE || col >= SIZE) {
             System.out.println("Invalid coordinate");
             return;
@@ -74,7 +73,7 @@ public class Board {
     }
 
     /**
-     * Returns the tile located at a specific row and column in the grid
+     * Finds the tile located at a specific row and column in the grid.
      * @param row An integer which corresponds to a row on the grid
      * @param col An integer which corresponds to a column on the grid
      * @return The tile located in the specified location on the game board.
@@ -85,5 +84,21 @@ public class Board {
             return null;
         }
         return grid[row][col];
+    }
+
+    /**
+     * Determines whether the board is currently empty
+     * @param board
+     * @return True if the board is empty, false otherwise.
+     */
+    public boolean isEmpty(Board board) {
+        for (int r = 0; r < board.SIZE; r++) {
+            for (int c = 0; c < board.SIZE; c++) {
+                if (board.getTile(r, c) != null) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
