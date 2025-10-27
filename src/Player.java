@@ -303,8 +303,10 @@ public class Player {
             System.out.println("Your word must be connected to another word");
             success = false;
         } else if (firstTurn) {
-            //(TO BE IMPLEMENTED when special board spaces are added).
-            //make sure word touches the board's starting space
+            if (board.getTile(board.CENTER, board.CENTER) == null) {
+                System.out.println("First word of the game must touch the starting space.");
+                success = false;
+            }
             if (placedTiles.size() <= 1) { //make sure more than one tile is placed on first turn
                 System.out.println("First word of the game must be longer than one tile.");
                 success = false;

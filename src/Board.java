@@ -11,6 +11,8 @@ public class Board {
     public static final int SIZE = 15;
     /** A 2-dimensional list of tiles, which is the specified grid size */
     private Tile[][] grid =  new Tile[SIZE][SIZE];
+    /** Starting space */
+    public static final int CENTER = 8;
 
 
     /**
