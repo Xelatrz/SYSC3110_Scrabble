@@ -14,7 +14,7 @@ A complete Scrabble game implementation in Java that supports multiple players, 
 
 ## Features
 
-- **Multiplayer Support**: 2-4 players (up to 5 supported)
+- **Multiplayer Support**: 2-4 players
 - **Word Validation**: Uses comprehensive dictionary from CSV file
 - **Classic Rules**: 
   - 15×15 game board
@@ -36,12 +36,12 @@ A complete Scrabble game implementation in Java that supports multiple players, 
 ## Game Rules Implementation
 ### Setup
 - Players are initialized with 7 tiles each
-- First word must be 2+ letters and placed horizontally/vertically
+- First word must be 2+ letters and placed horizontally/vertically and touch the starting space
 - Subsequent words must connect to existing tiles
 
 ### Turn Options
 - PLAY: Place tiles to form valid words
-- PASS: Skip your turn
+- PASS: Skip your turn and replace your hand
 - VOTE: Propose ending the game (requires unanimous vote)
 
 ### Word Validation
@@ -51,7 +51,7 @@ A complete Scrabble game implementation in Java that supports multiple players, 
 
 - Words must connect to existing tiles (after first turn)
 
-- Multiple words can be formed in single play
+- On first turn, tiles must touch the starting space
 
 ### End Conditions
 - A player uses all tiles AND the tile bag is empty
@@ -116,9 +116,7 @@ computer
 
 - Word Intersection Validation: Check all affected words
 
-- Blank Tiles: Wildcard tile implementation
-
-- Challenge System: Word challenge mechanics
+- Blank Tiles: Wildcard tile implementation, also check for empty spaces in a word which isn't allowed
 
 Gameplay Example
 ```
