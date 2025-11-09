@@ -1,11 +1,11 @@
-# Scrabble Game - Java Implementation
+# Scrabble GameModel - Java Implementation
 
-A complete Scrabble game implementation in Java that supports multiple players, word validation, and classic Scrabble rules.
+A complete Scrabble gameModel implementation in Java that supports multiple players, word validation, and classic Scrabble rules.
 
 ## Project Files
- - `Board.java` # Game board management
+ - `Board.java` # GameModel board management
  - `Dictionary.java` # Word validation system
- - `Game.java` # Main game controller
+ - `GameModel.java` # Main gameModel controller
  - `Player.java` # Player logic and actions
  - `Tile.java` # Tile representation
  - `TileBag.java` # Tile distribution and drawing
@@ -17,14 +17,14 @@ A complete Scrabble game implementation in Java that supports multiple players, 
 - **Multiplayer Support**: 2-4 players
 - **Word Validation**: Uses comprehensive dictionary from CSV file
 - **Classic Rules**: 
-  - 15×15 game board
+  - 15×15 gameModel board
   - Standard tile distribution
   - Valid word placement checks
   - Scoring system
-- **Game Flow**:
+- **GameModel Flow**:
   - Turn-based gameplay
   - Tile drawing and hand management
-  - Pass and end game voting options
+  - Pass and end gameModel voting options
   - Win condition detection
 
 ## How to Run
@@ -33,7 +33,7 @@ A complete Scrabble game implementation in Java that supports multiple players, 
 - Java JDK 21 or higher
 - `scrabble_acceptedwords.csv` file in project directory
 
-## Game Rules Implementation
+## GameModel Rules Implementation
 ### Setup
 - Players are initialized with 7 tiles each
 - First word must be 2+ letters and placed horizontally/vertically and touch the starting space
@@ -42,7 +42,7 @@ A complete Scrabble game implementation in Java that supports multiple players, 
 ### Turn Options
 - PLAY: Place tiles to form valid words
 - PASS: Skip your turn and replace your hand
-- VOTE: Propose ending the game (requires unanimous vote)
+- VOTE: Propose ending the gameModel (requires unanimous vote)
 
 ### Word Validation
 - Words must exist in the dictionary
@@ -56,13 +56,13 @@ A complete Scrabble game implementation in Java that supports multiple players, 
 ### End Conditions
 - A player uses all tiles AND the tile bag is empty
 
-- All players unanimously vote to end the game
+- All players unanimously vote to end the gameModel
 
 ### Class Responsibilities
-**Game.java**
-- Main game loop and flow control
+**GameModel.java**
+- Main gameModel loop and flow control
 - Player management
-- End game conditions and scoring
+- End gameModel conditions and scoring
 
 **Board.java**
 - 15×15 grid management
@@ -122,7 +122,7 @@ Gameplay Example
 ```
 It is player Player 1's turn.
 Player 1's hand: A, B, C, D, E, F, G,
-Would you like to PLAY, PASS, or VOTE to end game?
+Would you like to PLAY, PASS, or VOTE to end gameModel?
 > play
 Select a tile: A
 Select a row for the tile: 7
@@ -132,7 +132,7 @@ Player 1 placed an A at 7,7!
 ## Notes
 - Currently uses simple scoring (1 point per tile)
 
-- Dictionary file path is hardcoded in Game.java
+- Dictionary file path is hardcoded in GameModel.java
 
 - Maximum 5 players supported
 

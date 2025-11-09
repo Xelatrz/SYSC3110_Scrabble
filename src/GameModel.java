@@ -11,7 +11,7 @@ import java.util.*;
  * @author Cole Galway
  * @version 10/27/2025
  */
-public class Game {
+public class GameModel {
     /**
      * The list of players who will be participating in the game.
      */
@@ -24,7 +24,7 @@ public class Game {
     /**
      * Constructs a new Game.
      */
-    public Game() {
+    public GameModel() {
         players = new ArrayList<>();
         acceptedWords = new Dictionary();
         acceptedWords.load("scrabble_acceptedwords.csv");
@@ -136,16 +136,16 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        Game game = new Game();
+        GameModel gameModel = new GameModel();
 
         Player p1 = new Player("Player 1");
         Player p2 = new Player("Player 2");
         Player p3 = new Player("Player 3");
         Player p4 = new Player("Player 4");
-        game.addPlayer(p1);
-        game.addPlayer(p2);
-        game.addPlayer(p3);
-        game.addPlayer(p4);
+        gameModel.addPlayer(p1);
+        gameModel.addPlayer(p2);
+        gameModel.addPlayer(p3);
+        gameModel.addPlayer(p4);
 
         startGame();
     }

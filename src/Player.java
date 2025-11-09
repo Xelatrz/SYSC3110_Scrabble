@@ -298,7 +298,7 @@ public class Player {
         }
 
         //check dictionary to see if the word is valid
-        if (!Game.acceptedWords.checkWord(word)) {
+        if (!GameModel.acceptedWords.checkWord(word)) {
             System.out.println("Your word is not an accepted word!");
             success = false;
         }
