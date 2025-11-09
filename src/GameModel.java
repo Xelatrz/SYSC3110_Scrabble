@@ -21,6 +21,8 @@ public class GameModel {
      */
     public static Dictionary acceptedWords;
 
+    public static TileBag bag;
+
     /**
      * Constructs a new Game.
      */
@@ -48,7 +50,7 @@ public class GameModel {
      */
     public static void startGame() {
         Board board = new Board();
-        TileBag bag = new TileBag();
+        bag = new TileBag();
 
         Scanner input = new Scanner(System.in);
         boolean turnComplete;

@@ -79,4 +79,8 @@ public class TileBag {
     public boolean isEmpty() {
         return tiles.isEmpty();
     }
+
+    public int  size() {
+        return tiles.size();
+    }
 }
