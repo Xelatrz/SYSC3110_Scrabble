@@ -289,7 +289,6 @@ public class Player {
         if (!GameModel.acceptedWords.checkWord(String.valueOf(word).toLowerCase())) {
             success = false;
         }
-
         /*
         //check connected
         if (!firstTurn){
@@ -300,7 +299,6 @@ public class Player {
                 success = false;
             }
         }
-        */
 
         //first has to touch center space
         if (firstTurn) {
@@ -315,6 +313,8 @@ public class Player {
                 success = false;
             }
         }
+
+         */
 
         if (success) {
             score += placedTiles.size();
@@ -379,8 +379,8 @@ public class Player {
             int col =  placedTile.col;
 
             //check all 4 adjacent spots
-            if ((row > 0 && board.getTile(row - 1, col) != null) || (row < board.SIZE - 1 && board.getTile(row + 1, col) != null)
-                    || (col > 0 && board.getTile(row, col - 1) != null) ||  (col < board.SIZE - 1 && board.getTile(row, col + 1) != null)) {
+            if ((row > 0 && board.grid[row - 1][col] != null) || (row < board.SIZE - 1 && board.grid[row + 1][col] != null)
+                    || (col > 0 && board.grid[row][col - 1] != null) ||  (col < board.SIZE - 1 && board.grid[row][col + 1] != null)) {
                 return true;
             }
         }

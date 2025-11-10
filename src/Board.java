@@ -12,7 +12,7 @@ public class Board {
     /** The size of the grid */
     public static final int SIZE = 15;
     /** A 2-dimensional list of tiles, which is the specified grid size */
-    private Tile[][] grid =  new Tile[SIZE][SIZE];
+    Tile[][] grid =  new Tile[SIZE][SIZE];
     private Tile[][] tempGrid = new Tile[SIZE][SIZE];
     /** Starting space */
     public static final int CENTER = 8;
@@ -98,7 +98,7 @@ public class Board {
     public boolean isEmpty() {
         for (int r = 0; r < this.SIZE; r++) {
             for (int c = 0; c < this.SIZE; c++) {
-                if (this.getTile(r, c) != null) {
+                if (this.grid[r][c] != null) {
                     return false;
                 }
             }
