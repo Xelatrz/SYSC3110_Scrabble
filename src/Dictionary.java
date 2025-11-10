@@ -6,14 +6,14 @@ import java.io.*;
  * the accepted words from an external .csv file, allowing for updates to the accepted word list.
  *
  * @author Taylor Brumwell
- * @version 10/26/2025
+ * @author Cole Galway
+ * @version 11/10/2025
  */
 public class Dictionary {
     /**
      * A list of strings which are the accepted words for the game.
      */
     public ArrayList<String> acceptedWords;
-    public ArrayList<String> tempWords = new ArrayList<>();
 
     /**
      * Constructs a new Dictionary, taking no parameters.
@@ -53,13 +53,12 @@ public class Dictionary {
         return acceptedWords.contains(word.toLowerCase());
     }
 
+    /**
+     * Manually adds words into the accepted word list.
+     * @param word A String containing the word to be added.
+     */
     public void addWord(String word) {
         acceptedWords.add(word.toLowerCase());
     }
 
-    public void temporaryWords(ArrayList<String> tempWords) {
-        for (String word : tempWords) {
-            acceptedWords.add(word.toLowerCase());
-        }
-    }
 }

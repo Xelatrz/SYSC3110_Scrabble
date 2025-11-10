@@ -9,7 +9,7 @@ import java.util.*;
  *
  * @author Taylor Brumwell
  * @author Cole Galway
- * @version 10/27/2025
+ * @version 11/10/2025
  */
 public class GameModel {
     /**
@@ -24,6 +24,7 @@ public class GameModel {
     public TileBag bag;
     public Board board;
 
+    /** An integer containing the index of the current player */
     private int currentPlayerIndex = 0;
 
     private List<GameView> views = new ArrayList<>();
@@ -52,6 +53,10 @@ public class GameModel {
         }
     }
 
+    /**
+     * Sets up a new game with all the neccesary components, and resets the grid, player
+     * index and other relevant values to defaults.
+     */
     public void setupGame() {
         board = new Board();
         bag  = new TileBag();
@@ -64,17 +69,25 @@ public class GameModel {
         notifyViews();
     }
 
+    /**
+     * Return the current player.
+     * @return Player who is currently playing; whose turn it is.
+     */
     public Player getCurrentPlayer() {
         if (players.isEmpty()) {return null;}
         return players.get(currentPlayerIndex);
     }
 
+    /**
+     * Advances to the next player in the game, skipping the current player.
+     */
     public void nextPlayer() {
         if (players.isEmpty()) {return;}
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         notifyViews();
     }
 
+    /*
     public boolean placeTile(Player p, Tile tile, int row, int col) {
         notifyViews();
         if (p == null || tile == null || board == null) {
@@ -94,21 +107,14 @@ public class GameModel {
         return true;
     }
 
-    public void completeMove(Player p, int tileIndex) {
-        Tile removed = p.removeTileByIndex(tileIndex);
-        scorePlacedTiles(p);
-
-        p.fillHand(bag);
-        placedTiles.clear();
-
-        nextPlayer();
-    }
+     */
 
     //very simple scoring logic, needs to be fully implemented later!
     private void scorePlacedTiles(Player p) {
         p.setScore(placedTiles.size());
     }
 
+    //logic for swapping tiles --> needs to be fixed because of a few bugs but almost completed.
     /*
     public void swapTiles(Player p, int tileIndex){
         if (bag.tiles.isEmpty()) {
@@ -135,18 +141,17 @@ public class GameModel {
 
      */
 
-    public int tilesRemaning() {
-        return bag == null ? 0 : bag.tiles.size();
-    }
-
-    public Tile getBoardTile(int row, int col) {
-        return board.getTile(row, col);
-    }
-
+    /**
+     * Adds the view to the game model to be able to obverse changes.
+     * @param v The GameView used for the GUI.
+     */
     public void addView(GameView v) {
         views.add(v);
     }
 
+    /**
+     * Notifies the view of a change in the model/game state
+     */
     private void notifyViews() {
         for (GameView view : views) {
             view.update(this);
@@ -154,7 +159,7 @@ public class GameModel {
     }
 
 
-    /*
+    /* the old game logic!
     /**
      * Once called this method will start the game, and handle all the game logic and the general
      * game loop for each player and their turn.

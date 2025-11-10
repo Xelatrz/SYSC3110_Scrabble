@@ -254,10 +254,18 @@ public class GameFrame extends JFrame implements GameView {
         }
     }
 
+    /**
+     * Displays the error messages when a player incorrectly chooses an option.
+     * @param message the error message that is to be displayed
+     */
     public void showError(String message) {
         JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
+    /**
+     * Updates the game board to display tile changes.
+     * @param model A GameModel that contains all of the game logic
+     */
     public void updateBoard(GameModel model) {
         for (int row = 0; row < model.board.SIZE; row++) {
             for (int col = 0; col < model.board.SIZE; col++) {
@@ -267,6 +275,10 @@ public class GameFrame extends JFrame implements GameView {
         }
     }
 
+    /**
+     * Updates the game window from the view.
+     * @param model A GameModel containing all the game logic.
+     */
     public void update(GameModel model) {
         updateBoard(model);
         updatePlayerScore();

@@ -6,13 +6,14 @@ import java.util.ArrayList;
  *
  * @author Cole Galway
  * @author Taylor Brumwell
- * @version 10/26/2025
+ * @version 11/10/2025
  */
 public class Board {
     /** The size of the grid */
     public static final int SIZE = 15;
     /** A 2-dimensional list of tiles, which is the specified grid size */
     Tile[][] grid =  new Tile[SIZE][SIZE];
+    /** A 2-dimensional list of temporary tiles. */
     private Tile[][] tempGrid = new Tile[SIZE][SIZE];
     /** Starting space */
     public static final int CENTER = 8;
@@ -106,6 +107,12 @@ public class Board {
         return true;
     }
 
+    /**
+     * Places a tile on the temporary grid
+     * @param row An integer with the row where the tile is to be placed
+     * @param col An integer with the column where the tile is to be placed
+     * @param tile The tile that is to be placed on the temporary grid.
+     */
     public void placeTempTile(int row, int col, Tile tile) {
         if (row < 0 || col < 0 || row >= SIZE || col >= SIZE) {
             return;
@@ -124,12 +131,20 @@ public class Board {
         tempGrid[row][col] = null;
     }
 
+    /**
+     * Places the tiles from the temporary grid into the main game grid.
+     * @param placedTiles An arraylist of tiles placed in the turn.
+     */
     public void commitTiles(ArrayList<PlacedTile> placedTiles) {
         for (PlacedTile placedTile : placedTiles) {
             grid[placedTile.row][placedTile.col] = placedTile.tile;
             tempGrid[placedTile.row][placedTile.col] = null;
         }
     }
+
+    /**
+     * Clears the temporary grid of all tiles.
+     */
     public void clearTempGrid() {
         for (int row = 0; row < SIZE; row++) {
             for (int col = 0; col < SIZE; col++) {

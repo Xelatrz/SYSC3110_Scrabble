@@ -5,7 +5,7 @@ import java.util.*;
  *
  * @author Cole Galway
  * @author Taylor Brumwell
- * @version 10/27/2025
+ * @version 11/10/2025
  */
 public class Player {
     /**
@@ -121,6 +121,7 @@ public class Player {
      * Places a tile onto a specific location on the board based on the player's input.
      * @param board The specific game board which the players are using
      */
+    /*
     public void placeTile(Board board) {
         Scanner input = new Scanner(System.in);
 
@@ -180,32 +181,38 @@ public class Player {
         System.out.println(name + " placed an " + selectedTile.getLetter() + " at " + row + "," + col + "!");
         board.display();
     }
+     */
 
     /**
      * Removes placed tiles from the board.
      * @param board A Board for the game which is being used by the players
      * @param placedTiles A List of tiles that have been placed on the board
      */
+    /*
     private void removePlacedTiles(Board board, ArrayList<PlacedTile> placedTiles) {
         for (PlacedTile placedTile : placedTiles) {
             board.removeTile(placedTile.row, placedTile.col, placedTile.tile);
         }
     }
-
+     */
     /**
      * Gives back the tiles that were placed into the player's hand.
      * @param placedTiles A List of the tiles that have been placed on the board.
      */
+    /*
     private void returnPlacedTiles(ArrayList<PlacedTile> placedTiles) {
         for (PlacedTile placedTile : placedTiles) {
             hand.add(placedTile.tile);
         }
     }
 
+     */
+
     /**
      * Returns if a word was played on the board or not, allows a player to place tiles on the board
      * and validates if the tiles are correctly placed and if they form a valid word.
      * @param board A Board which is being used for the game
+     * @param placedTiles An ArrayList that contains the tiles placed during the turn.
      * @return true if the word was valid and the play was completed, false otherwise.
      */
     public boolean playWord(Board board, ArrayList<PlacedTile> placedTiles) {
@@ -328,6 +335,7 @@ public class Player {
      * @param bag the bag that unwanted tiles will be returned to, and where new tiles will be drawn from
      * @return true if the turn was skipped, false otherwise.
      */
+    /*
     public boolean passTurn(TileBag bag) {
         //skip the player's turn
         Scanner input = new Scanner(System.in);
@@ -347,12 +355,13 @@ public class Player {
             System.out.println("Invalid input, please answer yes or no. (Y/N)");
         }
     }
-
+    */
     /**
      * Allows player's to vote to end the game.
      * Returns if the game was voted to be ended.
      * @return true if the game is voted to be ended by unanimous vote, false otherwise.
      */
+    /*
     public boolean voteGameOver() {
         Scanner input = new Scanner(System.in);
         System.out.println(name + ", do you want to vote to end game (Y/N)");
@@ -366,6 +375,8 @@ public class Player {
             System.out.println("Invalid input, please answer yes or no. (Y/N)");
         }
     }
+
+     */
 
     /**
      * Checks to see if the placed word is connected to another word.
@@ -387,10 +398,18 @@ public class Player {
         return false;
     }
 
+    /**
+     * Returns the hand of the players
+     */
     public ArrayList<Tile> getHand() {
         return hand;
     }
 
+    /**
+     * Removes a tile by its index in the player's hand
+     * @param index The index of the tile to be removed
+     * @return The tile that was removed
+     */
     public Tile removeTileByIndex(int index) {
         if (index < 0 || index >= hand.size()) {
             return null;
@@ -398,14 +417,14 @@ public class Player {
         return hand.remove(index);
     }
 
+    /**
+     * Adds a tile to the player's hand
+     * @param t the tile to be added.
+     */
     public void addTile(Tile t) {
         if (t!= null) {
             hand.add(t);
         }
-    }
-
-    public int getHandSize() {
-        return hand.size();
     }
 }
 
