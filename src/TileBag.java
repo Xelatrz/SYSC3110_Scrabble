@@ -11,11 +11,11 @@ public class TileBag {
     /**
      * A list of characters with each of the tiles and the number of them inside the bag.
      */
-    public final List <String> tiles = new ArrayList<>();
+    public final List <String> TILES = new ArrayList<>();
     /**
      * A random variable from the Random class.
      */
-    private final Random rand = new Random();
+    private final Random RAND = new Random();
 
     /**
      * Constructs a new TileBag, taking each letter from the English alphabet and assigning the number of
@@ -56,7 +56,7 @@ public class TileBag {
      */
     public void addTiles(String letter, int count) {
         for (int i = 0; i < count; i++) {
-            tiles.add(letter);
+            TILES.add(letter);
         }
     }
 
@@ -65,10 +65,10 @@ public class TileBag {
      * @return Tile which has been selected at random from the bag
      */
     public Tile drawTile() {
-        if (tiles.isEmpty()) {
+        if (TILES.isEmpty()) {
             return null; //no tiles are left in the bag
         }
-        String letter = tiles.remove(rand.nextInt(tiles.size()));
+        String letter = TILES.remove(RAND.nextInt(TILES.size()));
         return new Tile(String.valueOf(letter));
     }
 
@@ -77,10 +77,10 @@ public class TileBag {
      * @return true if the bag is empty, false if the bag is not empty.
      */
     public boolean isEmpty() {
-        return tiles.isEmpty();
+        return TILES.isEmpty();
     }
 
     public int  size() {
-        return tiles.size();
+        return TILES.size();
     }
 }

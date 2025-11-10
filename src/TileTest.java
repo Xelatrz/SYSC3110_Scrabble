@@ -20,7 +20,7 @@ class TileTest {
         p1.hand.getFirst().getLetter();
         //test to mirror result
         System.out.println("Test Case");
-        System.out.println(p1.hand.getFirst().letter);
+        System.out.println(p1.hand.getFirst().getLetter());
 
     }
 }

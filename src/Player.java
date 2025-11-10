@@ -19,15 +19,11 @@ public class Player {
     /**
      * Standard scrabble hand only has a max of  7 tiles.
      */
-    private static int HAND_SIZE = 7;
+    private static final int HAND_SIZE = 7;
     /**
      * A List of tiles which is the hand of the player.
      */
     public ArrayList<Tile> hand; //changed to public for testing
-    /**
-     * A list of the tiles that have been placed on the board.
-     */
-    private ArrayList<PlacedTile> placedTiles = new ArrayList<>();
 
     /**
      * Constructs a new Player.
@@ -116,97 +112,6 @@ public class Player {
             drawTile(bag);
         }
     }
-
-    /**
-     * Places a tile onto a specific location on the board based on the player's input.
-     * @param board The specific game board which the players are using
-     */
-    /*
-    public void placeTile(Board board) {
-        Scanner input = new Scanner(System.in);
-
-        //takes the user input for the tile
-        System.out.println("Select a tile: ");
-        String selectedLetter = input.nextLine().toUpperCase();
-
-        //finds the tile in the hand
-        Tile selectedTile = null;
-        for (Tile tile : hand) {
-            if (tile.getLetter().equals(selectedLetter)) {
-                selectedTile = tile;
-                break;
-            }
-        }
-        if (selectedTile == null) {
-            System.out.println("That tile isn't in " + name + "'s hand!");
-            return;
-        }
-
-        //place tile on desired board coordinate
-        int row;
-        while (true) {
-            try {
-                System.out.println("Select a row for the tile: ");
-                row = Integer.parseInt(input.nextLine().toLowerCase());
-                break;
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input, row number must be an integer.");
-            }
-        }
-        int col;
-        while (true) {
-            try {
-                System.out.println("Select a column for the tile: ");
-                col = Integer.parseInt(input.nextLine().toLowerCase());
-                break;
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input, column number must be an integer.");
-            }
-        }
-
-        if (board.getTile(row, col) != null) {
-            System.out.println("That spot is already occupied.");
-            return;
-        }
-
-        if (row < 0 || col < 0 || row >= board.SIZE || col >= board.SIZE) {
-            System.out.print("That spot is out of bounds.");
-            return;
-        }
-
-        board.placeTile(row, col, selectedTile);
-        hand.remove(selectedTile);
-        placedTiles.add(new PlacedTile(row, col, selectedTile));
-
-        System.out.println(name + " placed an " + selectedTile.getLetter() + " at " + row + "," + col + "!");
-        board.display();
-    }
-     */
-
-    /**
-     * Removes placed tiles from the board.
-     * @param board A Board for the game which is being used by the players
-     * @param placedTiles A List of tiles that have been placed on the board
-     */
-    /*
-    private void removePlacedTiles(Board board, ArrayList<PlacedTile> placedTiles) {
-        for (PlacedTile placedTile : placedTiles) {
-            board.removeTile(placedTile.row, placedTile.col, placedTile.tile);
-        }
-    }
-     */
-    /**
-     * Gives back the tiles that were placed into the player's hand.
-     * @param placedTiles A List of the tiles that have been placed on the board.
-     */
-    /*
-    private void returnPlacedTiles(ArrayList<PlacedTile> placedTiles) {
-        for (PlacedTile placedTile : placedTiles) {
-            hand.add(placedTile.tile);
-        }
-    }
-
-     */
 
     /**
      * Returns if a word was played on the board or not, allows a player to place tiles on the board
@@ -327,75 +232,6 @@ public class Player {
             score += placedTiles.size();
         }
         return success;
-    }
-
-    /**
-     * Skips a player's turn upon their request
-     * Returns if the turn was skipped.
-     * @param bag the bag that unwanted tiles will be returned to, and where new tiles will be drawn from
-     * @return true if the turn was skipped, false otherwise.
-     */
-    /*
-    public boolean passTurn(TileBag bag) {
-        //skip the player's turn
-        Scanner input = new Scanner(System.in);
-        while (true) {
-            System.out.println(name + ", are you sure you'd like to skip your turn? (Y/N)");
-            String choice = input.nextLine().toLowerCase();
-            if (choice.equals("y") || choice.equals("yes")) {
-                while (!emptyHand()) {
-                    bag.addTiles(hand.getFirst().getLetter(), 1);
-                    hand.remove(hand.getFirst());
-                }
-                fillHand(bag);
-                return true;
-            } else if (choice.equals("n") || choice.equals("no")) {
-                return false;
-            }
-            System.out.println("Invalid input, please answer yes or no. (Y/N)");
-        }
-    }
-    */
-    /**
-     * Allows player's to vote to end the game.
-     * Returns if the game was voted to be ended.
-     * @return true if the game is voted to be ended by unanimous vote, false otherwise.
-     */
-    /*
-    public boolean voteGameOver() {
-        Scanner input = new Scanner(System.in);
-        System.out.println(name + ", do you want to vote to end game (Y/N)");
-        String choice = input.nextLine().toLowerCase();
-        while(true) {
-            if (choice.equals("y") || choice.equals("yes")) {
-                return true;
-            } else if (choice.equals("n") || choice.equals("no")) {
-                return false;
-            }
-            System.out.println("Invalid input, please answer yes or no. (Y/N)");
-        }
-    }
-
-     */
-
-    /**
-     * Checks to see if the placed word is connected to another word.
-     * Returns if a word is connected to another word on the board.
-     * @param board A Board which is being used for the game.
-     * @return true if the word is connected, false otherwise.
-     */
-    private boolean isConnected(Board board, ArrayList<PlacedTile> placedTiles) {
-        for (PlacedTile placedTile : placedTiles) {
-            int row =  placedTile.row;
-            int col =  placedTile.col;
-
-            //check all 4 adjacent spots
-            if ((row > 0 && board.grid[row - 1][col] != null) || (row < board.SIZE - 1 && board.grid[row + 1][col] != null)
-                    || (col > 0 && board.grid[row][col - 1] != null) ||  (col < board.SIZE - 1 && board.grid[row][col + 1] != null)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**

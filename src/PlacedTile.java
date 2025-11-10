@@ -9,15 +9,15 @@ public class PlacedTile {
     /**
      * An integer representing the row where the tile is located.
      */
-    int row;
+    public int row;
     /**
      * An integer representing the column where the tile is located.
      */
-    int col;
+    public int col;
     /**
      * The tile which has been placed on the board from the player's hand.
      */
-    Tile tile;
+    public Tile tile;
 
     /**
      * Constructs a new PlacedTile.

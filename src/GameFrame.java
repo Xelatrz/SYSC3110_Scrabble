@@ -14,9 +14,6 @@ public class GameFrame extends JFrame implements GameView {
     private JButton[] colMarkers;
     private JButton[] rowMarkers;
     private Board gameBoard;
-    private JButton play;
-    private JButton swap;
-    private JButton pass;
     private JPanel tilePanel;
     private JLabel bagLabel;
     private GameModel model;
@@ -27,7 +24,6 @@ public class GameFrame extends JFrame implements GameView {
     private ArrayList<JPanel> playerHand;
 
     private JPanel bottom;
-    private JLabel statusLabel;
 
     /**
      * Constructs a new GameFrame, taking no parameters.

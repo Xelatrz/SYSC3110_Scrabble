@@ -15,67 +15,11 @@ public class Board {
     Tile[][] grid =  new Tile[SIZE][SIZE];
     /** A 2-dimensional list of temporary tiles. */
     private Tile[][] tempGrid = new Tile[SIZE][SIZE];
-    /** Starting space */
-    public static final int CENTER = 8;
-
 
     /**
      * Constructs a new Board with no parameters, builds the empty grid.
      */
     public Board() {
-    }
-
-    /**
-     * This method is called when a Player attempts to place a tile on the grid.
-     * @param row An integer which corresponds to a row on the grid
-     * @param col An integer which corresponds to a column on the grid
-     * @param tile A Tile object which is pulled from the player's hand.
-     */
-    public void placeTile(int row, int col, Tile tile) {
-        if (row < 0 || col < 0 || row >= SIZE || col >= SIZE) {
-            System.out.println("Invalid coordinate");
-            return;
-        }
-        if (grid[row][col] != null) {
-            System.out.println("Tile already occupied!");
-            return;
-        }
-        grid[row][col] = tile;
-    }
-
-    /**
-     * This method is called when a player attempts to remove a tile.
-     * @param row An integer which corresponds to a row on the grid
-     * @param col An integer which corresponds to a column on the grid
-     * @param tile A Tile object which is pulled from the player's hand.
-     */
-    public void removeTile(int row, int col, Tile tile) {
-        if (row < 0 || col < 0 || row >= SIZE || col >= SIZE) {
-            System.out.println("Invalid coordinate");
-            return;
-        }
-        if (grid[row][col] == null) {
-            System.out.println("Tile already empty");
-            return;
-        }
-        grid[row][col] = null;
-    }
-
-    /**
-     * This method prints the grid board and whichever tiles are placed on the grid.
-     */
-    public void display() {
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                if (grid[i][j] == null) {
-                    System.out.print("-");
-                }
-                else {
-                    System.out.print(grid[i][j].getLetter());
-                }
-            }
-            System.out.println();
-        }
     }
 
     /**
@@ -122,13 +66,6 @@ public class Board {
             return;
         }
         tempGrid[row][col] = tile;
-    }
-
-    public void removeTempTile(int row, int col) {
-        if (row < 0 || col < 0 || row >= SIZE || col >= SIZE) {
-            return;
-        }
-        tempGrid[row][col] = null;
     }
 
     /**
