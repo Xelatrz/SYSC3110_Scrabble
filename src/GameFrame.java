@@ -1,3 +1,10 @@
+/**
+ * The JFrame for the user interface for the Scrabble Game.
+ *
+ * @author Cole Galway
+ * @version November 10th, 2025
+ */
+
 import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -12,28 +19,39 @@ public class GameFrame extends JFrame implements GameView {
     private JButton pass;
     private JPanel tilePanel;
     private JLabel bagLabel;
-    GameModel model;
+    private GameModel model;
+    private GameController controller;
 
     private JPanel playerInfo;
     private ArrayList<JLabel> playerScore;
     private ArrayList<JPanel> playerHand;
 
     private JPanel bottom;
+    private JLabel statusLabel;
 
+    /**
+     * Constructs a new GameFrame, taking no parameters.
+     */
     public GameFrame() {
         super ("Scrabble");
-        gameBoard = new Board();
         model = new GameModel();
-        model.bag = new TileBag();
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        model.acceptedWords.load("scrabble_acceptedwords.csv");
+        this.setLayout(new BorderLayout());
 
         int numPlayers = askPlayerCount();
         askPlayerName(model, numPlayers);
 
+        model.setupGame();
+        gameBoard = model.board;
+
+
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel panel =  new JPanel();
         panel.setSize(800, 600);
         panel.setLayout(new GridLayout(gameBoard.SIZE + 1, gameBoard.SIZE + 1));
-        GameController controller = new GameController();
+
+        controller = new GameController(model, this);
+        model.addView(this);
 
         grid = new JButton[gameBoard.SIZE][gameBoard.SIZE];
         colMarkers = new JButton[gameBoard.SIZE];
@@ -74,12 +92,20 @@ public class GameFrame extends JFrame implements GameView {
         this.add(playerInfo, BorderLayout.EAST);
         setUpPlayerOptions();
         this.add(bottom, BorderLayout.SOUTH);
+        updateRemainingTiles();
+        updateTilePanel(model);
+
         this.add(panel);
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 
+    /**
+     * Prints a menu which will ask the player how many players wish to play the game, and stores
+     * this numeral data in an integer.
+     * @return An int of the number of players
+     */
     private int askPlayerCount() {
         while (true) {
             String input = JOptionPane.showInputDialog(this, "Enter your number of players (2-4: ", JOptionPane.QUESTION_MESSAGE);
@@ -97,6 +123,12 @@ public class GameFrame extends JFrame implements GameView {
         }
     }
 
+    /**
+     * Asks the players for their names.
+     * @param model The GameModel which contains all game behaviour
+     * @param count The number of players in the current game.
+     */
+
     private void askPlayerName(GameModel model, int count) {
         for (int i = 1; i <= count; i++) {
             String name = JOptionPane.showInputDialog(this, "Enter the player name " + i + ":" ,"Player Name", JOptionPane.QUESTION_MESSAGE);
@@ -108,6 +140,10 @@ public class GameFrame extends JFrame implements GameView {
 
     }
 
+    /**
+     * Sets up the player panel on the right side of the game window. Contains information about player name, score
+     * and the tiles left in the bag.
+     */
     private void setUpPlayerInfo() {
         playerInfo = new JPanel();
         playerInfo.setLayout(new BoxLayout(playerInfo, BoxLayout.Y_AXIS));
@@ -135,20 +171,16 @@ public class GameFrame extends JFrame implements GameView {
 
     }
 
+    /**
+     * Sets up the player options panel on the bottom of the game window. Contains the buttons for play, swap and pass
+     * and the tiles in each player's hand.
+     */
     private void setUpPlayerOptions() {
         bottom = new JPanel(new BorderLayout());
         bottom.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         tilePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         tilePanel.setPreferredSize(new Dimension(400,60));
-
-        /*
-        for (Player p: model.players) {
-            JLabel label = new JLabel(p.getName() + "'s tiles:");
-            tilePanel.add(label);
-        }
-
-         */
         bottom.add(tilePanel, BorderLayout.CENTER);
 
         //play, swap, pass buttons
@@ -160,6 +192,14 @@ public class GameFrame extends JFrame implements GameView {
         swap.setBackground(Color.YELLOW);
         pass.setBackground(Color.RED);
 
+        play.setActionCommand("Play");
+        swap.setActionCommand("Swap");
+        pass.setActionCommand("Pass");
+
+        play.addActionListener(controller);
+        swap.addActionListener(controller);
+        pass.addActionListener(controller);
+
         buttonPanel.add(play);
         buttonPanel.add(swap);
         buttonPanel.add(pass);
@@ -167,11 +207,93 @@ public class GameFrame extends JFrame implements GameView {
         bottom.add(buttonPanel, BorderLayout.WEST);
     }
 
+    /**
+     * Updates the number of tiles remaining in the TileBag.
+     */
     public void updateRemainingTiles() {
         bagLabel.setText("Tiles remaining" + model.bag.size());
     }
+
+    /**
+     * Updates the player's hand after a turn has been exectued.
+     * @param model The GameModel where all the game logic is stored.
+     */
+    public void updateTilePanel(GameModel model) {
+        tilePanel.removeAll();
+
+        Player current = model.getCurrentPlayer();
+
+        JLabel playerLabel = new  JLabel(current.getName() + "'s tiles: ", SwingConstants.CENTER);
+        tilePanel.add(playerLabel);
+
+        tilePanel.add(Box.createVerticalStrut(10));
+
+        ArrayList<Tile> hand = current.getHand();
+
+        for (int i = 0; i < hand.size(); i++) {
+            Tile t = hand.get(i);
+
+            JButton button = new JButton(t.getLetter());
+            button.setActionCommand("TILE:" + i);
+            button.addActionListener(controller);
+
+            tilePanel.add(button);
+
+        }
+        tilePanel.revalidate();
+        tilePanel.repaint();
+    }
+
+    /**
+     * Updates the player's score displayed in the player panel.
+     */
+    public void updatePlayerScore() {
+        for (int i = 0; i < model.players.size(); i++) {
+            Player p = model.players.get(i);
+            playerScore.get(i).setText(p.getName() + "'s Score: " + p.getScore());
+        }
+    }
+
+    public void showError(String message) {
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void updateBoard(GameModel model) {
+        for (int row = 0; row < model.board.SIZE; row++) {
+            for (int col = 0; col < model.board.SIZE; col++) {
+                Tile t = model.board.getTile(row, col);
+                grid[row][col].setText(t == null ? " " : t.getLetter());
+            }
+        }
+    }
+
+    public void update(GameModel model) {
+        updateBoard(model);
+        updatePlayerScore();
+        updateTilePanel(model);
+        updateRemainingTiles();
+        revalidate();
+        repaint();
+
+    }
+
+
     public static void main(String[] args) {
         GameFrame frame = new GameFrame();
+        Dictionary dict = new Dictionary();
+        dict.addWord("able");
+        dict.addWord("cat");
+        dict.addWord("dog");
+        dict.addWord("table");
+        dict.addWord("a");
+        dict.addWord("b");
+        dict.addWord("c");
+        dict.addWord("d");
+        dict.addWord("e");
+        dict.addWord("f");
+        dict.addWord("g");
+        dict.addWord("h");
+        System.out.println(dict.acceptedWords.contains("cat"));
     }
 
 }

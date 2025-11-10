@@ -99,7 +99,6 @@ public class Player {
                 return false;
             }
             hand.add(tile);
-            System.out.println(name + " drew: " + tile.getLetter());
             return true;
         } else {
             System.out.println("Your hand is full");
@@ -209,134 +208,117 @@ public class Player {
      * @param board A Board which is being used for the game
      * @return true if the word was valid and the play was completed, false otherwise.
      */
-    public boolean playWord(Board board) {
-        Scanner input = new Scanner(System.in);
-        boolean keepGoing = true;
+    public boolean playWord(Board board, ArrayList<PlacedTile> placedTiles) {
+        if (placedTiles.isEmpty()) {
+            return false;
+        }
+        int baseRow = placedTiles.getFirst().row;
+        int baseCol = placedTiles.getFirst().col;
+        boolean sameRow = true;
+        boolean sameCol = true;
+
         boolean success = true;
-        String choice;
-        String word = "";
-        boolean firstTurn = board.isEmpty(board); //check before placing tiles
+        StringBuilder word = new StringBuilder();
+        boolean firstTurn = board.isEmpty(); //check before placing tiles
 
-        placedTiles.clear(); //make sure placedTiles is empty.
+        for (PlacedTile placedTile : placedTiles) {
+            if (placedTile.row != baseRow) {
+                sameRow = false;
+            }
+            if (placedTile.col != baseCol) {
+                sameCol = false;
+            }
+        }
+        if (!sameRow && !sameCol) {
+            return false;
+        }
+        if (sameRow) {
+            int startCol = baseCol;
+            int endCol = baseCol;
 
-        //let the user place as many tiles as they desire, validity will be determined after.
-        while (keepGoing) {
-            showHand();
-            placeTile(board);
-            while (true) { //make sure input is valid.
-                System.out.println("Would you like to place another tile? (Y/N)");
-                choice = input.nextLine().toLowerCase();
-                if (choice.equals("n") ||  choice.equals("no")) {
-                    keepGoing = false;
-                    break;
-                } else if (choice.equals("y") || choice.equals("yes")) {
-                    keepGoing = true;
-                    break;
-                } else {
-                    System.out.println("Invalid input, please answer yes or no. (Y/N)");
+            for (PlacedTile placed : placedTiles) {
+                if (placed.col < startCol) {
+                    startCol = placed.col;
+                }
+                if (placed.col > endCol) {
+                    endCol = placed.col;
                 }
             }
-        }
+            while (startCol > 0 && board.getTile(baseRow, startCol - 1) != null) {
+                startCol--;
+            }
+            while (endCol < board.SIZE - 1 && board.getTile(baseRow, endCol + 1) != null) {
+                endCol++;
+            }
 
-        //if only 1 tile is placed, skip diagonal check
-        if (placedTiles.size() != 1) {
-            boolean sameRow = placedTiles.stream().allMatch(t -> t.row == placedTiles.getFirst().row);
-            boolean sameCol = placedTiles.stream().allMatch(t -> t.col == placedTiles.getFirst().col);
-
-            if (!sameRow && !sameCol) {
-                System.out.println("You cannot place tiles diagonally");
-                success = false;
-            } else {
-                if (sameRow) { //horizontal word
-                    int row = placedTiles.getFirst().row;
-                    // sort by column
-                    placedTiles.sort(Comparator.comparingInt(t -> t.col));
-
-                    //find first and last column
-                    int firstCol = placedTiles.getFirst().col;
-                    int lastCol = placedTiles.getLast().col;
-
-                    while (firstCol > 0 && board.getTile(row, firstCol - 1) != null) {
-                        firstCol--;
-                    }
-                    while (lastCol < board.SIZE - 1 && board.getTile(row, lastCol + 1) != null) {
-                        lastCol++;
-                    }
-
-                    //build the word from the tiles
-                    for (int c = firstCol; c <= lastCol; c++) {
-                        Tile tile = board.getTile(row, c);
-                        if (tile != null) {
-                            word += tile.getLetter();
-                        }
-                    }
-                } else { //vertical word
-                    int col = placedTiles.getFirst().col;
-                    // sort by row
-                    placedTiles.sort(Comparator.comparingInt(t -> t.row));
-
-                    //find first and last column
-                    int firstRow = placedTiles.getFirst().row;
-                    int lastRow = placedTiles.getLast().row;
-
-                    while (firstRow > 0 && board.getTile(firstRow - 1 ,col) != null) {
-                        firstRow--;
-                    }
-                    while (lastRow < board.SIZE - 1 && board.getTile(lastRow + 1,col) != null) {
-                        lastRow++;
-                    }
-
-                    //build the word from the tiles
-                    for (int r = firstRow; r <= lastRow; r++) {
-                        Tile tile = board.getTile(r, col);
-                        if (tile != null) {
-                            word += tile.getLetter();
-                        }
-                    }
+            //build the word
+            for (int c = startCol; c <= endCol; c++) {
+                Tile t = board.getTile(baseRow, c);
+                if (t != null) {
+                    word.append(t.getLetter());
                 }
             }
-        }
-
-        //check dictionary to see if the word is valid
-        if (!GameModel.acceptedWords.checkWord(word)) {
-            System.out.println("Your word is not an accepted word!");
-            success = false;
-        }
-
-        // check that words connect (except on the first play)
-        if (!firstTurn && word.length() <= placedTiles.size() && word.length() > 1) {
-            System.out.println("Your word must be connected to another word");
-            success = false;
-        } else if (!firstTurn && word.length() == 1 && !isConnected(board)) {
-            System.out.println("Your word must be connected to another word");
-            success = false;
-        } else if (firstTurn) {
-            if (board.getTile(board.CENTER, board.CENTER) == null) {
-                System.out.println("First word of the game must touch the starting space.");
-                success = false;
-            }
-            if (placedTiles.size() <= 1) { //make sure more than one tile is placed on first turn
-                System.out.println("First word of the game must be longer than one tile.");
-                success = false;
-            }
-        }
-
-        //(TO BE IMPLEMENTED).
-        //check to make sure the surrounding words are still valid.
-        //account for blank spaces in the word.
-
-        //placeholder for scoring
-        if (success) {
-            int pointsGained = placedTiles.size();
-            score += pointsGained; //add score
-            System.out.println(name + " scored " + pointsGained + " points. " + name + "'s score is now " + score);
-            //(TO BE IMPLEMENTED).
-            //in the future, this will need to account for premium tiles. at that point we may want to make this an actual function.
         } else {
-            removePlacedTiles(board, placedTiles); //remove placed tiles from board.
-            returnPlacedTiles(placedTiles); //return placed tiles to hand.
+            int startRow = baseRow;
+            int endRow = baseRow;
+            for (PlacedTile placed : placedTiles) {
+                if (placed.row < startRow) {
+                    startRow = placed.row;
+                }
+                if (placed.row > endRow) {
+                    endRow = placed.row;
+                }
+            }
+            while (startRow > 0 && board.getTile(startRow - 1, baseCol) != null) {
+                startRow--;
+            }
+            while (endRow < board.SIZE - 1 && board.getTile(endRow + 1, baseCol) != null) {
+                endRow++;
+            }
+
+
+            //build the word
+            for (int r = startRow; r <= endRow; r++) {
+                Tile t = board.getTile(r, baseCol);
+                if (t != null) {
+                    word.append(t.getLetter());
+                }
+            }
         }
-        board.display();
+        //check dictionary
+        if (!GameModel.acceptedWords.checkWord(String.valueOf(word).toLowerCase())) {
+            success = false;
+        }
+
+        /*
+        //check connected
+        if (!firstTurn){
+            if(word.length() <= placedTiles.size() && word.length() > 1) {
+                success = false;
+
+            } else if (word.length() == 1 && !isConnected(board, placedTiles)) {
+                success = false;
+            }
+        }
+        */
+
+        //first has to touch center space
+        if (firstTurn) {
+            boolean touchCenter = false;
+            for (PlacedTile pt : placedTiles) {
+                if (pt.row == Board.CENTER && pt.col == Board.CENTER) {
+                    touchCenter = true;
+                    break;
+                }
+            }
+            if (!touchCenter) {
+                success = false;
+            }
+        }
+
+        if (success) {
+            score += placedTiles.size();
+        }
         return success;
     }
 
@@ -391,7 +373,7 @@ public class Player {
      * @param board A Board which is being used for the game.
      * @return true if the word is connected, false otherwise.
      */
-    private boolean isConnected(Board board) {
+    private boolean isConnected(Board board, ArrayList<PlacedTile> placedTiles) {
         for (PlacedTile placedTile : placedTiles) {
             int row =  placedTile.row;
             int col =  placedTile.col;
@@ -405,8 +387,8 @@ public class Player {
         return false;
     }
 
-    public List<Tile> getHand() {
-        return Collections.unmodifiableList(hand);
+    public ArrayList<Tile> getHand() {
+        return hand;
     }
 
     public Tile removeTileByIndex(int index) {

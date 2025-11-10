@@ -13,6 +13,7 @@ public class Dictionary {
      * A list of strings which are the accepted words for the game.
      */
     public ArrayList<String> acceptedWords;
+    public ArrayList<String> tempWords = new ArrayList<>();
 
     /**
      * Constructs a new Dictionary, taking no parameters.
@@ -50,5 +51,15 @@ public class Dictionary {
             return false;
         }
         return acceptedWords.contains(word.toLowerCase());
+    }
+
+    public void addWord(String word) {
+        acceptedWords.add(word.toLowerCase());
+    }
+
+    public void temporaryWords(ArrayList<String> tempWords) {
+        for (String word : tempWords) {
+            acceptedWords.add(word.toLowerCase());
+        }
     }
 }

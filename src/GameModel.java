@@ -26,6 +26,9 @@ public class GameModel {
 
     private int currentPlayerIndex = 0;
 
+    private List<GameView> views = new ArrayList<>();
+    private List<PlacedTile> placedTiles = new ArrayList<>();
+
     /**
      * Constructs a new Game.
      */
@@ -34,6 +37,7 @@ public class GameModel {
         acceptedWords = new Dictionary();
         acceptedWords.load("scrabble_acceptedwords.csv");
         bag = new TileBag();
+        board = new Board();
     }
 
     /**
@@ -50,11 +54,14 @@ public class GameModel {
 
     public void setupGame() {
         board = new Board();
-        if (bag == null) {bag = new TileBag();}
+        bag  = new TileBag();
+        currentPlayerIndex = 0;
+
         for (Player player : players) {
             player.fillHand(bag);
         }
-        currentPlayerIndex = 0;
+        placedTiles.clear();
+        notifyViews();
     }
 
     public Player getCurrentPlayer() {
@@ -65,19 +72,93 @@ public class GameModel {
     public void nextPlayer() {
         if (players.isEmpty()) {return;}
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        notifyViews();
     }
 
     public boolean placeTile(Player p, Tile tile, int row, int col) {
-        if (p == null || tile == null || board == null) {return false;}
-        if (row < 0 || col < 0 || row >= Board.SIZE || col >= Board.SIZE) {return false;}
-        if (board.getTile(row, col) != null) {return false;}
+        notifyViews();
+        if (p == null || tile == null || board == null) {
+            return false;
+        }
+        if (row < 0 || col < 0 || row >= Board.SIZE || col >= Board.SIZE) {
+            return false;
+        }
+        if (board.getTile(row, col) != null) {
+            return false;
+        }
+
         board.placeTile(row, col, tile);
+        placedTiles.add(new PlacedTile(row, col, tile));
+
+        notifyViews();
         return true;
     }
+
+    public void completeMove(Player p, int tileIndex) {
+        Tile removed = p.removeTileByIndex(tileIndex);
+        scorePlacedTiles(p);
+
+        p.fillHand(bag);
+        placedTiles.clear();
+
+        nextPlayer();
+    }
+
+    //very simple scoring logic, needs to be fully implemented later!
+    private void scorePlacedTiles(Player p) {
+        p.setScore(placedTiles.size());
+    }
+
+    /*
+    public void swapTiles(Player p, int tileIndex){
+        if (bag.tiles.isEmpty()) {
+            return f
+        }
+        if (p == null || tilesToSwap == null || tilesToSwap.isEmpty()) {return;}
+        Collections.sort(tilesToSwap, Collections.reverseOrder());
+        int removed = 0;
+        for (int index : tilesToSwap) {
+            if (index >= 0 && index < p.hand.size()) {
+                Tile t = p.removeTileByIndex(index);
+                if (t != null) {
+                    bag.addTiles(t.getLetter(), 1);
+                    removed++;
+                }
+            }
+        }
+        for (int i = 0; i < removed; i++) {
+            Tile t = bag.drawTile();
+            if (t == null) {break;}
+            p.addTile(t);
+        }
+    }
+
+     */
+
+    public int tilesRemaning() {
+        return bag == null ? 0 : bag.tiles.size();
+    }
+
+    public Tile getBoardTile(int row, int col) {
+        return board.getTile(row, col);
+    }
+
+    public void addView(GameView v) {
+        views.add(v);
+    }
+
+    private void notifyViews() {
+        for (GameView view : views) {
+            view.update(this);
+        }
+    }
+
+
+    /*
     /**
      * Once called this method will start the game, and handle all the game logic and the general
      * game loop for each player and their turn.
-     */
+
     public void startGame() {
         Board board = new Board();
         bag = new TileBag();
@@ -156,7 +237,7 @@ public class GameModel {
     /**
      * Terminates the game upon being called, and determines the winner based off the score.
      * Prints the winner of the game.
-     */
+
     public void endGame() {
         Player winner = players.getFirst();
         for (int i = 1; i < players.size(); i++) {
@@ -181,4 +262,6 @@ public class GameModel {
 
         startGame();
     }
+
+     */
 }

@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * A Board models a scrabble game board, taking a 15 x 15 grid shape to allow players to
  * place tiles and create words.
@@ -11,6 +13,7 @@ public class Board {
     public static final int SIZE = 15;
     /** A 2-dimensional list of tiles, which is the specified grid size */
     private Tile[][] grid =  new Tile[SIZE][SIZE];
+    private Tile[][] tempGrid = new Tile[SIZE][SIZE];
     /** Starting space */
     public static final int CENTER = 8;
 
@@ -85,22 +88,53 @@ public class Board {
             System.out.println("Invalid coordinate");
             return null;
         }
-        return grid[row][col];
+        return grid[row][col] != null ? grid[row][col] : tempGrid[row][col];
     }
 
     /**
      * Determines whether the board is currently empty
-     * @param board
      * @return True if the board is empty, false otherwise.
      */
-    public boolean isEmpty(Board board) {
-        for (int r = 0; r < board.SIZE; r++) {
-            for (int c = 0; c < board.SIZE; c++) {
-                if (board.getTile(r, c) != null) {
+    public boolean isEmpty() {
+        for (int r = 0; r < this.SIZE; r++) {
+            for (int c = 0; c < this.SIZE; c++) {
+                if (this.getTile(r, c) != null) {
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    public void placeTempTile(int row, int col, Tile tile) {
+        if (row < 0 || col < 0 || row >= SIZE || col >= SIZE) {
+            return;
+        }
+        //space is already occupied
+        if (grid[row][col] != null) {
+            return;
+        }
+        tempGrid[row][col] = tile;
+    }
+
+    public void removeTempTile(int row, int col) {
+        if (row < 0 || col < 0 || row >= SIZE || col >= SIZE) {
+            return;
+        }
+        tempGrid[row][col] = null;
+    }
+
+    public void commitTiles(ArrayList<PlacedTile> placedTiles) {
+        for (PlacedTile placedTile : placedTiles) {
+            grid[placedTile.row][placedTile.col] = placedTile.tile;
+            tempGrid[placedTile.row][placedTile.col] = null;
+        }
+    }
+    public void clearTempGrid() {
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                tempGrid[row][col] = null;
+            }
+        }
     }
 }
