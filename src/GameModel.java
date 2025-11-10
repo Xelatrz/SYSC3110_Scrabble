@@ -15,13 +15,16 @@ public class GameModel {
     /**
      * The list of players who will be participating in the game.
      */
-    public static ArrayList<Player> players;
+    public ArrayList<Player> players;
     /**
      * The dictionary of accepted words for the game.
      */
     public static Dictionary acceptedWords;
 
-    public static TileBag bag;
+    public TileBag bag;
+    public Board board;
+
+    private int currentPlayerIndex = 0;
 
     /**
      * Constructs a new Game.
@@ -30,6 +33,7 @@ public class GameModel {
         players = new ArrayList<>();
         acceptedWords = new Dictionary();
         acceptedWords.load("scrabble_acceptedwords.csv");
+        bag = new TileBag();
     }
 
     /**
@@ -44,11 +48,37 @@ public class GameModel {
         }
     }
 
+    public void setupGame() {
+        board = new Board();
+        if (bag == null) {bag = new TileBag();}
+        for (Player player : players) {
+            player.fillHand(bag);
+        }
+        currentPlayerIndex = 0;
+    }
+
+    public Player getCurrentPlayer() {
+        if (players.isEmpty()) {return null;}
+        return players.get(currentPlayerIndex);
+    }
+
+    public void nextPlayer() {
+        if (players.isEmpty()) {return;}
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+    }
+
+    public boolean placeTile(Player p, Tile tile, int row, int col) {
+        if (p == null || tile == null || board == null) {return false;}
+        if (row < 0 || col < 0 || row >= Board.SIZE || col >= Board.SIZE) {return false;}
+        if (board.getTile(row, col) != null) {return false;}
+        board.placeTile(row, col, tile);
+        return true;
+    }
     /**
      * Once called this method will start the game, and handle all the game logic and the general
      * game loop for each player and their turn.
      */
-    public static void startGame() {
+    public void startGame() {
         Board board = new Board();
         bag = new TileBag();
 
@@ -127,7 +157,7 @@ public class GameModel {
      * Terminates the game upon being called, and determines the winner based off the score.
      * Prints the winner of the game.
      */
-    public static void endGame() {
+    public void endGame() {
         Player winner = players.getFirst();
         for (int i = 1; i < players.size(); i++) {
             if (players.get(i-1).getScore() < players.get(i).getScore()) {
@@ -137,7 +167,7 @@ public class GameModel {
         System.out.println("Game over. The winner is " + winner.getName());
     }
 
-    public static void main(String[] args) {
+    public void main(String[] args) {
         GameModel gameModel = new GameModel();
 
         Player p1 = new Player("Player 1");

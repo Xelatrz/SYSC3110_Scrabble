@@ -404,5 +404,26 @@ public class Player {
         }
         return false;
     }
+
+    public List<Tile> getHand() {
+        return Collections.unmodifiableList(hand);
+    }
+
+    public Tile removeTileByIndex(int index) {
+        if (index < 0 || index >= hand.size()) {
+            return null;
+        }
+        return hand.remove(index);
+    }
+
+    public void addTile(Tile t) {
+        if (t!= null) {
+            hand.add(t);
+        }
+    }
+
+    public int getHandSize() {
+        return hand.size();
+    }
 }
 
