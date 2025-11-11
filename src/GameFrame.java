@@ -288,20 +288,6 @@ public class GameFrame extends JFrame implements GameView {
 
     public static void main(String[] args) {
         GameFrame frame = new GameFrame();
-        Dictionary dict = new Dictionary(); //this and onwards can probably be deleted
-        dict.addWord("able");
-        dict.addWord("cat");
-        dict.addWord("dog");
-        dict.addWord("table");
-        dict.addWord("a");
-        dict.addWord("b");
-        dict.addWord("c");
-        dict.addWord("d");
-        dict.addWord("e");
-        dict.addWord("f");
-        dict.addWord("g");
-        dict.addWord("h");
-        System.out.println(dict.acceptedWords.contains("cat"));
     }
 
 }
