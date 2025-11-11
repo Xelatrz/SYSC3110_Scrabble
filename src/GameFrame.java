@@ -31,7 +31,7 @@ public class GameFrame extends JFrame implements GameView {
     public GameFrame() {
         super ("Scrabble");
         model = new GameModel();
-        model.acceptedWords.load("scrabble_acceptedwords.csv");
+        model.acceptedWords.load("scrabble_acceptedwords.csv"); //are we able to remove this (happens in model already)
         this.setLayout(new BorderLayout());
 
         int numPlayers = askPlayerCount();
@@ -288,7 +288,7 @@ public class GameFrame extends JFrame implements GameView {
 
     public static void main(String[] args) {
         GameFrame frame = new GameFrame();
-        Dictionary dict = new Dictionary();
+        Dictionary dict = new Dictionary(); //this and onwards can probably be deleted
         dict.addWord("able");
         dict.addWord("cat");
         dict.addWord("dog");
