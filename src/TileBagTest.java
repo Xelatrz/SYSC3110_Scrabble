@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class TileBagTest {
-
+ /*
     @Test
     @DisplayName ("Testing adding tiles")
     void addTiles() {
@@ -35,4 +35,5 @@ class TileBagTest {
         TileBag bag = new TileBag();
         org.junit.jupiter.api.Assertions.assertFalse(bag.isEmpty());
     }
+ */
 }

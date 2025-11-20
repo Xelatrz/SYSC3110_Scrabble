@@ -13,6 +13,10 @@ public class Player {
      */
     private String name;
     /**
+     * Boolean representing whether the player is human or AI
+     */
+    private boolean human;
+    /**
      * The player's score, representing as an integer.
      */
     private int score;
@@ -30,8 +34,9 @@ public class Player {
      *
      * @param name The name of the player being constructed
      */
-    public Player(String name) {
+    public Player(String name, boolean human) {
         this.name = name;
+        this.human = human;
         score = 0;
         hand = new ArrayList<>();
     }

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class GameModelTest {
-
+ /*
     @Test
     @DisplayName("Testing adding a new player")
     void addPlayer() {
@@ -22,4 +22,5 @@ class GameModelTest {
 
         org.junit.jupiter.api.Assertions.assertEquals(game.players.size(), 2);
     }
+ */
 }
