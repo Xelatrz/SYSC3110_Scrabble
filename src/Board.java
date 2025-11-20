@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A Board models a scrabble game board, taking a 15 x 15 grid shape to allow players to
@@ -12,9 +13,14 @@ public class Board {
     /** The size of the grid */
     public static final int SIZE = 15;
     /** A 2-dimensional list of tiles, which is the specified grid size */
-    Tile[][] grid =  new Tile[SIZE][SIZE];
+    private Tile[][] grid =  new Tile[SIZE][SIZE];
     /** A 2-dimensional list of temporary tiles. */
     private Tile[][] tempGrid = new Tile[SIZE][SIZE];
+    /**
+     * Center of the board.
+     */
+    public static final int CENTRE = 8;
+
 
     /**
      * Constructs a new Board with no parameters, builds the empty grid.
@@ -88,5 +94,59 @@ public class Board {
                 tempGrid[row][col] = null;
             }
         }
+    }
+
+    public char[] extractPattern(int i, boolean horizontal) {
+        char[] pattern = new char[SIZE];
+        for (int j = 0; j <= SIZE; j++) {
+            Tile tile;
+            if (horizontal) {
+                tile = grid[i][j];
+            } else {
+                tile = grid[j][i];
+            }
+            //turn it into string now that indexes are properly filled? (or use array of strings?)
+            if (tile == null) {
+                pattern[j] = '_';
+            } else {
+                pattern[j] = tile.getLetter();
+            }
+        }
+        return pattern;
+    }
+
+    public List<Integer> findAnchors(char[] pattern) {
+        List<Integer> anchors = new ArrayList<>();
+
+        for (int i = 0; i < pattern.length; i++) {
+            if (pattern[i] != '_') {
+                continue; //cannot place on existing tiles
+            }
+
+            boolean touching;
+            if ((i > 0 && pattern[i - 1] != '_') || (i < pattern.length - 1 && pattern[i + 1] != '_')) {
+                touching = true;
+            } else {
+                touching = false;
+            }
+            if (touching) {
+                anchors.add(i);
+            }
+        }
+        return anchors;
+    }
+
+    public int simulateScore(List<PlacedTile> placedTiles) {
+        //place temp
+        for (PlacedTile pt : placedTiles) {
+            tempGrid[pt.row][pt.col] = pt.tile;
+        }
+        //test score
+        //int score = CALCULATE SCORE (IMPLEMENT THIS)
+        //remove temp
+        for (PlacedTile pt : placedTiles) {
+            tempGrid[pt.row][pt.col] = null;
+        }
+        return score;
     }
 }

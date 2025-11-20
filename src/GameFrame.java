@@ -2,6 +2,7 @@
  * The JFrame for the user interface for the Scrabble Game.
  *
  * @author Cole Galway
+ * @author Taylor Brumwell
  * @version November 10th, 2025
  */
 

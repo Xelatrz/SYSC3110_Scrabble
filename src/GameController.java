@@ -2,12 +2,15 @@
  * The controller for the Scrabble game, handles all UI cases and user inputs
  *
  * @author Cole Galway
+ * @author Taylor Brumwell
  * @version 11/10/2025
  */
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
+import java.util.List;
 
 public class GameController implements ActionListener {
     private GameModel model;
@@ -147,4 +150,80 @@ public class GameController implements ActionListener {
         selectedRow = -1;
         selectedCol = -1;
     }
+
+    //MUST IMPLEMENT SOMETHING TO TELL WHEN TO PLAY AI VS HUMAN TURN
+    private void handleAITurn(AIPlayer ai) {
+        Move bestMove = ai.findBestMove(model.board);
+
+        if (bestMove == null) {
+            handlePass();
+            model.nextPlayer(); //check if we call this here. Also, handle whether that player is AI or human
+            return;
+        }
+
+        for (PlacedTile pt: placedTiles) {
+            model.board.placeTempTile(pt.row, pt.col, pt.tile);
+        }
+
+        //WILL LIKELY NEED TO ADJUST THIS SCORING SYSTEM
+        //find score for this play
+        //add score
+
+        model.board.commitTiles(placedTiles);
+        ai.fillHand(model.bag);
+        model.nextPlayer();
+    }
+
+    /*
+    //first AI attempt (not currently used, but keeping it for now in case some logic proves useful later).
+    private void handleAITurn(AIPlayer ai) {
+        if (model.board.isEmpty()) {
+            Tile bestTile = ai.hand.stream().max(Comparator.ComparingInt(Tile::getValue)).get();
+            model.board.placeTempTile(model.board.CENTRE, model.board.CENTRE, bestTile);
+            placedTiles.add(new PlacedTile(model.board.CENTRE, model.board.CENTRE, bestTile));
+            model.board.commitTiles(placedTiles); //treat this as an anchor, but DON'T COMMIT YET****
+        }
+
+        ArrayList<Point> anchors = findAnchors(model.board);
+        List<List<Tile>> permutations = getAllPermutations(ai.hand);
+
+        int bestScore = -1;
+        ArrayList<Tile> bestPlay = null;
+
+        for (Point p: anchors) {
+            int row = anchor.x;
+            int col = anchor.y;
+
+            for (List<Tile> permutation: permutations) {
+                //horizontal
+                ArrayList<PlacedTile> horizontal = tryPlacement(row, col, permutation, true, ai);
+                if (horizontal != null) {
+                    int score = scoreHorizontal(row, col, model.board);
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestPlay = horizontal;
+                    }
+                }
+                model.board.clearTempGrid();
+
+                //vertical
+                ArrayList<PlacedTile> vertical = tryPlacement(row, col, permutation, false, ai);
+                if (vertical != null) {
+                    int score = scoreVertical(row, col, model.board);
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestPlay = vertical;
+                    }
+                }
+                model.board.clearTempGrid();
+            }
+        }
+
+        if (bestPlay == null) {
+            handlePass();
+            return;
+        }
+        model.board.commitTiles(bestPlay); //must first play the word, then verify. Input takes PlacedTile, not Tile.
+    }
+    */
 }
