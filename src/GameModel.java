@@ -25,7 +25,7 @@ public class GameModel {
     public Board board;
 
     /** An integer containing the index of the current player */
-    private int currentPlayerIndex = 0;
+    public int currentPlayerIndex = 0;
 
     private List<GameView> views = new ArrayList<>();
     private List<PlacedTile> placedTiles = new ArrayList<>();
@@ -78,15 +78,6 @@ public class GameModel {
         return players.get(currentPlayerIndex);
     }
 
-    /**
-     * Advances to the next player in the game, skipping the current player.
-     */
-    public void nextPlayer() {
-        if (players.isEmpty()) {return;}
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-        notifyViews();
-    }
-
     //very simple scoring logic, needs to be fully implemented later!
     private void scorePlacedTiles(Player p) {
         p.setScore(placedTiles.size());
@@ -130,7 +121,7 @@ public class GameModel {
     /**
      * Notifies the view of a change in the model/game state
      */
-    private void notifyViews() {
+    public void notifyViews() {
         for (GameView view : views) {
             view.update(this);
         }

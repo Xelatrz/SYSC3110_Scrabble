@@ -7,10 +7,10 @@
 
 import java.util.*;
 
-public class AIPlayer extends Player { //MAKE SURE the methods that loop NUM PLAYERS counts AIPlayers as Players
+public class AIPlayer extends Player {
 
     public AIPlayer(String name) {
-        super(name, false);
+        super(name);
     }
 
      public Move findBestMove(Board board) {
@@ -54,5 +54,8 @@ public class AIPlayer extends Player { //MAKE SURE the methods that loop NUM PLA
 
      private Move tryBuildWords(Board board, String[] pattern, int anchor, int i, boolean horizontal) {
          //BUILD THIS
+         ArrayList<PlacedTile> placedTiles = new ArrayList<PlacedTile>();
+         int score = 0;
+         return new Move(placedTiles, score);
      }
 }

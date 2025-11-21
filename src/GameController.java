@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
-import java.util.List;
 
 public class GameController implements ActionListener {
     private GameModel model;
@@ -73,6 +72,18 @@ public class GameController implements ActionListener {
     }
 
     /**
+     * Advances to the next player in the game, skipping the current player.
+     */
+    public void nextPlayer() {
+        if (model.players.isEmpty()) {return;}
+        model.currentPlayerIndex = (model.currentPlayerIndex + 1) % model.players.size();
+        model.notifyViews();
+        if (model.getCurrentPlayer() instanceof AIPlayer) {
+            handleAITurn();
+        }
+    }
+
+    /**
      * Places a tile on the temporary grid until confirmation and validation by the
      * play button.
      */
@@ -106,7 +117,7 @@ public class GameController implements ActionListener {
         if (valid) {
             model.board.commitTiles(placedTiles);
             p.fillHand(model.bag);
-            model.nextPlayer();
+            nextPlayer();
         } else {
             for (PlacedTile pt: placedTiles) {
                 p.addTile(pt.tile);
@@ -138,7 +149,7 @@ public class GameController implements ActionListener {
      */
     private void handlePass() {
         placedTiles.clear();
-        model.nextPlayer();
+        nextPlayer();
         clearSelections();
     }
 
@@ -151,13 +162,13 @@ public class GameController implements ActionListener {
         selectedCol = -1;
     }
 
-    //MUST IMPLEMENT SOMETHING TO TELL WHEN TO PLAY AI VS HUMAN TURN
-    private void handleAITurn(AIPlayer ai) {
+    private void handleAITurn() {
+        AIPlayer ai = (AIPlayer) model.getCurrentPlayer();
         Move bestMove = ai.findBestMove(model.board);
 
         if (bestMove == null) {
             handlePass();
-            model.nextPlayer(); //check if we call this here. Also, handle whether that player is AI or human
+            nextPlayer(); //check if we call this here. Also, handle whether that player is AI or human
             return;
         }
 
@@ -171,7 +182,7 @@ public class GameController implements ActionListener {
 
         model.board.commitTiles(placedTiles);
         ai.fillHand(model.bag);
-        model.nextPlayer();
+        nextPlayer();
     }
 
     /*
