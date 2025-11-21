@@ -96,8 +96,8 @@ public class Board {
         }
     }
 
-    public char[] extractPattern(int i, boolean horizontal) {
-        char[] pattern = new char[SIZE];
+    public String[] extractPattern(int i, boolean horizontal) {
+        String[] pattern = new String[SIZE];
         for (int j = 0; j <= SIZE; j++) {
             Tile tile;
             if (horizontal) {
@@ -107,7 +107,7 @@ public class Board {
             }
             //turn it into string now that indexes are properly filled? (or use array of strings?)
             if (tile == null) {
-                pattern[j] = '_';
+                pattern[j] = "_";
             } else {
                 pattern[j] = tile.getLetter();
             }
@@ -115,16 +115,16 @@ public class Board {
         return pattern;
     }
 
-    public List<Integer> findAnchors(char[] pattern) {
+    public List<Integer> findAnchors(String[] pattern) {
         List<Integer> anchors = new ArrayList<>();
 
         for (int i = 0; i < pattern.length; i++) {
-            if (pattern[i] != '_') {
+            if (!pattern[i].equals("_")) {
                 continue; //cannot place on existing tiles
             }
 
             boolean touching;
-            if ((i > 0 && pattern[i - 1] != '_') || (i < pattern.length - 1 && pattern[i + 1] != '_')) {
+            if ((i > 0 && !pattern[i - 1].equals("_")) || (i < pattern.length - 1 && !pattern[i + 1].equals("_"))) {
                 touching = true;
             } else {
                 touching = false;

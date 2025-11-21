@@ -35,7 +35,7 @@ public class AIPlayer extends Player { //MAKE SURE the methods that loop NUM PLA
 
      private Move tryLine(Board board, int i, boolean horizontal) {
          //might not want the following functions in board, but rather in one of the Game files.
-         char[] pattern = board.extractPattern(i, horizontal);
+         String[] pattern = board.extractPattern(i, horizontal);
          List<Integer> anchors = board.findAnchors(pattern);
          Move bestMove = null;
 
@@ -48,7 +48,7 @@ public class AIPlayer extends Player { //MAKE SURE the methods that loop NUM PLA
          return bestMove;
      }
 
-     private Move tryBuildWords(Board board, char[] pattern, int anchor, int i, boolean horizontal) {
+     private Move tryBuildWords(Board board, String[] pattern, int anchor, int i, boolean horizontal) {
          //BUILD THIS
      }
 }
