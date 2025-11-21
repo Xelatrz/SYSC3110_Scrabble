@@ -142,6 +142,7 @@ public class Board {
             tempGrid[pt.row][pt.col] = pt.tile;
         }
         //test score
+        int score = 0; //temporary so that the rest of the program can run
         //int score = CALCULATE SCORE (IMPLEMENT THIS)
         //remove temp
         for (PlacedTile pt : placedTiles) {

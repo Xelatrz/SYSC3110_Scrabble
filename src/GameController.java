@@ -168,7 +168,6 @@ public class GameController implements ActionListener {
 
         if (bestMove == null) {
             handlePass();
-            nextPlayer(); //check if we call this here. Also, handle whether that player is AI or human
             return;
         }
 

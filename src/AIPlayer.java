@@ -54,6 +54,8 @@ public class AIPlayer extends Player {
 
      private Move tryBuildWords(Board board, String[] pattern, int anchor, int i, boolean horizontal) {
          //BUILD THIS
+
+         //temporary so that the rest of the program can run
          ArrayList<PlacedTile> placedTiles = new ArrayList<PlacedTile>();
          int score = 0;
          return new Move(placedTiles, score);
