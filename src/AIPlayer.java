@@ -9,6 +9,10 @@ import java.util.*;
 
 public class AIPlayer extends Player { //MAKE SURE the methods that loop NUM PLAYERS counts AIPlayers as Players
 
+    public AIPlayer(String name) {
+        super(name, false);
+    }
+
      public Move findBestMove(Board board) {
          Move bestMove = null;
 
