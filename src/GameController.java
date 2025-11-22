@@ -171,13 +171,13 @@ public class GameController implements ActionListener {
             return;
         }
 
-        for (PlacedTile pt: placedTiles) {
+        for (PlacedTile pt: bestMove.placedTiles) {
             model.board.placeTempTile(pt.row, pt.col, pt.tile);
         }
 
-        //WILL LIKELY NEED TO ADJUST THIS SCORING SYSTEM
-        //find score for this play
-        //add score
+        //REVISE AFTER EDITS: this will eventually call a method to set the score (most likely, but maybe this will stay the same)
+        int moveScore = bestMove.score;
+        ai.setScore(moveScore);
 
         model.board.commitTiles(placedTiles);
         ai.fillHand(model.bag);

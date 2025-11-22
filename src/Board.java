@@ -119,7 +119,7 @@ public class Board {
         List<Integer> anchors = new ArrayList<>();
 
         for (int i = 0; i < pattern.length; i++) {
-            if (!pattern[i].equals("_")) {
+            if (!pattern[i].equals("_")) {  //CHECK DETAILS, this may need to be null rather than "_" (probably defined in pattern[])
                 continue; //cannot place on existing tiles
             }
 
@@ -142,7 +142,7 @@ public class Board {
             tempGrid[pt.row][pt.col] = pt.tile;
         }
         //test score
-        int score = 0; //temporary so that the rest of the program can run
+        int score = 1; //temporary so that the rest of the program can run
         //int score = CALCULATE SCORE (IMPLEMENT THIS)
         //remove temp
         for (PlacedTile pt : placedTiles) {
