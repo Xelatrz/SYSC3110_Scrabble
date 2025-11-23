@@ -11,6 +11,7 @@ public class AIPlayer extends Player {
 
     public AIPlayer(String name) {
         super(name);
+
     }
 
      public Move findBestMove(Board board) {
@@ -73,7 +74,8 @@ public class AIPlayer extends Player {
                  continue;
              }
 
-             int score = GameModel.simulateScore(placedTiles); //REVISE
+             int score = 1; //TEMP FILLER FOR BELOW WHICH HAS ERROR
+             //int score = GameModel.simulateScore(placedTiles); //REVISE
              if (bestMove == null || score > bestMove.score) {
                  bestMove = new Move(placedTiles, score);
              }

@@ -15,18 +15,23 @@ public class GameController implements ActionListener {
     private GameModel model;
     private GameView view;
 
-    /** The tile selected by the user */
+    /**
+     * The tile selected by the user
+     */
     private Integer selectedTileIndex = null;
     private int selectedRow = -1;
     private int selectedCol = -1;
 
-    /**An array of tiles that have been placed by a player in their turn*/
+    /**
+     * An array of tiles that have been placed by a player in their turn
+     */
     private ArrayList<PlacedTile> placedTiles = new ArrayList<>();
 
     /**
      * Constructs a new GameController, taking the Model and View as parameters
+     *
      * @param model A GameModel that contains all of the game logic
-     * @param view A GameView interface that updates the model
+     * @param view  A GameView interface that updates the model
      */
     public GameController(GameModel model, GameView view) {
         this.model = model;
@@ -35,24 +40,28 @@ public class GameController implements ActionListener {
 
     /**
      * Overrides the existing actionPerformed method to handle the game specifications
+     *
      * @param e the event to be processed
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        String command =  e.getActionCommand();
-        if (command.equals(null)) {return;}
+        String command = e.getActionCommand();
+        if (command.equals(null)) {
+            return;
+        }
 
         if (command.startsWith("TILE:")) {
             String num = command.substring(5);
             try {
-                int index =  Integer.parseInt(num);
+                int index = Integer.parseInt(num);
                 selectedTileIndex = index;
-            } catch (NumberFormatException ex) {}
+            } catch (NumberFormatException ex) {
+            }
             return;
         }
 
         if (command.contains(",")) {
-            String [] coord = command.split(",");
+            String[] coord = command.split(",");
             selectedRow = Integer.parseInt(coord[0]);
             selectedCol = Integer.parseInt(coord[1]);
             placeTileTemporarily();
@@ -75,7 +84,9 @@ public class GameController implements ActionListener {
      * Advances to the next player in the game, skipping the current player.
      */
     public void nextPlayer() {
-        if (model.players.isEmpty()) {return;}
+        if (model.players.isEmpty()) {
+            return;
+        }
         model.currentPlayerIndex = (model.currentPlayerIndex + 1) % model.players.size();
         model.notifyViews();
         if (model.getCurrentPlayer() instanceof AIPlayer) {
@@ -107,7 +118,7 @@ public class GameController implements ActionListener {
      * The actions which occurs after the "play" button is pressed.
      */
     private void handlePlay() {
-        if (placedTiles.isEmpty()){
+        if (placedTiles.isEmpty()) {
             view.showError("Please place a tile");
             return;
         }
@@ -119,7 +130,7 @@ public class GameController implements ActionListener {
             p.fillHand(model.bag);
             nextPlayer();
         } else {
-            for (PlacedTile pt: placedTiles) {
+            for (PlacedTile pt : placedTiles) {
                 p.addTile(pt.tile);
             }
             model.board.clearTempGrid();
@@ -171,7 +182,7 @@ public class GameController implements ActionListener {
             return;
         }
 
-        for (PlacedTile pt: bestMove.placedTiles) {
+        for (PlacedTile pt : bestMove.placedTiles) {
             model.board.placeTempTile(pt.row, pt.col, pt.tile);
         }
 
@@ -183,61 +194,8 @@ public class GameController implements ActionListener {
         ai.setScore(moveScore);
 
         placedTiles.clear();
-        clearSelections();
+        clearSelections(); //probably useless but never hurts to be safe
         view.update(model);
         nextPlayer();
     }
-
-    /*
-    //first AI attempt (not currently used, but keeping it for now in case some logic proves useful later).
-    private void handleAITurn(AIPlayer ai) {
-        if (model.board.isEmpty()) {
-            Tile bestTile = ai.hand.stream().max(Comparator.ComparingInt(Tile::getValue)).get();
-            model.board.placeTempTile(model.board.CENTRE, model.board.CENTRE, bestTile);
-            placedTiles.add(new PlacedTile(model.board.CENTRE, model.board.CENTRE, bestTile));
-            model.board.commitTiles(placedTiles); //treat this as an anchor, but DON'T COMMIT YET****
-        }
-
-        ArrayList<Point> anchors = findAnchors(model.board);
-        List<List<Tile>> permutations = getAllPermutations(ai.hand);
-
-        int bestScore = -1;
-        ArrayList<Tile> bestPlay = null;
-
-        for (Point p: anchors) {
-            int row = anchor.x;
-            int col = anchor.y;
-
-            for (List<Tile> permutation: permutations) {
-                //horizontal
-                ArrayList<PlacedTile> horizontal = tryPlacement(row, col, permutation, true, ai);
-                if (horizontal != null) {
-                    int score = scoreHorizontal(row, col, model.board);
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestPlay = horizontal;
-                    }
-                }
-                model.board.clearTempGrid();
-
-                //vertical
-                ArrayList<PlacedTile> vertical = tryPlacement(row, col, permutation, false, ai);
-                if (vertical != null) {
-                    int score = scoreVertical(row, col, model.board);
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestPlay = vertical;
-                    }
-                }
-                model.board.clearTempGrid();
-            }
-        }
-
-        if (bestPlay == null) {
-            handlePass();
-            return;
-        }
-        model.board.commitTiles(bestPlay); //must first play the word, then verify. Input takes PlacedTile, not Tile.
-    }
-    */
 }
