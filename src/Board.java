@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * A Board models a scrabble game board, taking a 15 x 15 grid shape to allow players to
