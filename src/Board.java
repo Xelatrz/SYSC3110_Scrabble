@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * A Board models a scrabble game board, taking a 15 x 15 grid shape to allow players to
@@ -12,70 +12,19 @@ public class Board {
     /** The size of the grid */
     public static final int SIZE = 15;
     /** A 2-dimensional list of tiles, which is the specified grid size */
-    Tile[][] grid =  new Tile[SIZE][SIZE];
+    private Tile[][] grid =  new Tile[SIZE][SIZE];
     /** A 2-dimensional list of temporary tiles. */
     private Tile[][] tempGrid = new Tile[SIZE][SIZE];
-    /** Starting space */
-    public static final int CENTER = 8;
+    /**
+     * Center of the board.
+     */
+    public static final int CENTRE = 8;
 
 
     /**
      * Constructs a new Board with no parameters, builds the empty grid.
      */
     public Board() {
-    }
-
-    /**
-     * This method is called when a Player attempts to place a tile on the grid.
-     * @param row An integer which corresponds to a row on the grid
-     * @param col An integer which corresponds to a column on the grid
-     * @param tile A Tile object which is pulled from the player's hand.
-     */
-    public void placeTile(int row, int col, Tile tile) {
-        if (row < 0 || col < 0 || row >= SIZE || col >= SIZE) {
-            System.out.println("Invalid coordinate");
-            return;
-        }
-        if (grid[row][col] != null) {
-            System.out.println("Tile already occupied!");
-            return;
-        }
-        grid[row][col] = tile;
-    }
-
-    /**
-     * This method is called when a player attempts to remove a tile.
-     * @param row An integer which corresponds to a row on the grid
-     * @param col An integer which corresponds to a column on the grid
-     * @param tile A Tile object which is pulled from the player's hand.
-     */
-    public void removeTile(int row, int col, Tile tile) {
-        if (row < 0 || col < 0 || row >= SIZE || col >= SIZE) {
-            System.out.println("Invalid coordinate");
-            return;
-        }
-        if (grid[row][col] == null) {
-            System.out.println("Tile already empty");
-            return;
-        }
-        grid[row][col] = null;
-    }
-
-    /**
-     * This method prints the grid board and whichever tiles are placed on the grid.
-     */
-    public void display() {
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                if (grid[i][j] == null) {
-                    System.out.print("-");
-                }
-                else {
-                    System.out.print(grid[i][j].getLetter());
-                }
-            }
-            System.out.println();
-        }
     }
 
     /**
@@ -128,13 +77,6 @@ public class Board {
         tempGrid[row][col] = tile;
     }
 
-    public void removeTempTile(int row, int col) {
-        if (row < 0 || col < 0 || row >= SIZE || col >= SIZE) {
-            return;
-        }
-        tempGrid[row][col] = null;
-    }
-
     /**
      * Places the tiles from the temporary grid into the main game grid.
      * @param placedTiles An arraylist of tiles placed in the turn.
@@ -155,5 +97,45 @@ public class Board {
                 tempGrid[row][col] = null;
             }
         }
+    }
+
+    public String[] extractPattern(int i, boolean horizontal) {
+        String[] pattern = new String[SIZE];
+        for (int j = 0; j <= SIZE; j++) {
+            Tile tile;
+            if (horizontal) {
+                tile = grid[i][j];
+            } else {
+                tile = grid[j][i];
+            }
+            //turn it into string now that indexes are properly filled? (or use array of strings?)
+            if (tile == null) {
+                pattern[j] = "_";
+            } else {
+                pattern[j] = tile.getLetter();
+            }
+        }
+        return pattern;
+    }
+
+    public List<Integer> findAnchors(String[] pattern) {
+        List<Integer> anchors = new ArrayList<>();
+
+        for (int i = 0; i < pattern.length; i++) {
+            if (!pattern[i].equals("_")) {  //CHECK DETAILS, this may need to be null rather than "_" (probably defined in pattern[])
+                continue; //cannot place on existing tiles
+            }
+
+            boolean touching;
+            if ((i > 0 && !pattern[i - 1].equals("_")) || (i < pattern.length - 1 && !pattern[i + 1].equals("_"))) {
+                touching = true;
+            } else {
+                touching = false;
+            }
+            if (touching) {
+                anchors.add(i);
+            }
+        }
+        return anchors;
     }
 }

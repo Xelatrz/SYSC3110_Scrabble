@@ -13,7 +13,7 @@ public class Dictionary {
     /**
      * A list of strings which are the accepted words for the game.
      */
-    public ArrayList<String> acceptedWords;
+    private ArrayList<String> acceptedWords;
 
     /**
      * Constructs a new Dictionary, taking no parameters.
@@ -61,4 +61,20 @@ public class Dictionary {
         acceptedWords.add(word.toLowerCase());
     }
 
+    /**
+     * Finds the size of the dictionary
+     * @return Dictionary size.
+     */
+    public int size() {
+        return acceptedWords.size();
+    }
+
+    /**
+     * Finds the word at the give index
+     * @param index The index of the desired word.
+     * @return The desired word at the given index
+     */
+    public String getWord(int index) {
+        return acceptedWords.get(index);
+    }
 }

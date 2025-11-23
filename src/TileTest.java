@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class TileTest {
-
+ /*
     @Test
     @DisplayName ("Testing that the correct letter is returned")
     void getLetter() {
@@ -20,7 +20,8 @@ class TileTest {
         p1.hand.getFirst().getLetter();
         //test to mirror result
         System.out.println("Test Case");
-        System.out.println(p1.hand.getFirst().letter);
+        System.out.println(p1.hand.getFirst().getLetter());
 
     }
+ */
 }

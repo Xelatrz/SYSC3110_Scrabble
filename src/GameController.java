@@ -2,9 +2,11 @@
  * The controller for the Scrabble game, handles all UI cases and user inputs
  *
  * @author Cole Galway
+ * @author Taylor Brumwell
  * @version 11/10/2025
  */
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
@@ -13,18 +15,23 @@ public class GameController implements ActionListener {
     private GameModel model;
     private GameView view;
 
-    /** The tile selected by the user */
+    /**
+     * The tile selected by the user
+     */
     private Integer selectedTileIndex = null;
     private int selectedRow = -1;
     private int selectedCol = -1;
 
-    /**An array of tiles that have been placed by a player in their turn*/
+    /**
+     * An array of tiles that have been placed by a player in their turn
+     */
     private ArrayList<PlacedTile> placedTiles = new ArrayList<>();
 
     /**
      * Constructs a new GameController, taking the Model and View as parameters
+     *
      * @param model A GameModel that contains all of the game logic
-     * @param view A GameView interface that updates the model
+     * @param view  A GameView interface that updates the model
      */
     public GameController(GameModel model, GameView view) {
         this.model = model;
@@ -33,24 +40,28 @@ public class GameController implements ActionListener {
 
     /**
      * Overrides the existing actionPerformed method to handle the game specifications
+     *
      * @param e the event to be processed
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        String command =  e.getActionCommand();
-        if (command.equals(null)) {return;}
+        String command = e.getActionCommand();
+        if (command.equals(null)) {
+            return;
+        }
 
         if (command.startsWith("TILE:")) {
             String num = command.substring(5);
             try {
-                int index =  Integer.parseInt(num);
+                int index = Integer.parseInt(num);
                 selectedTileIndex = index;
-            } catch (NumberFormatException ex) {}
+            } catch (NumberFormatException ex) {
+            }
             return;
         }
 
         if (command.contains(",")) {
-            String [] coord = command.split(",");
+            String[] coord = command.split(",");
             selectedRow = Integer.parseInt(coord[0]);
             selectedCol = Integer.parseInt(coord[1]);
             placeTileTemporarily();
@@ -66,6 +77,20 @@ public class GameController implements ActionListener {
             case "Pass":
                 handlePass();
             default:
+        }
+    }
+
+    /**
+     * Advances to the next player in the game, skipping the current player.
+     */
+    public void nextPlayer() {
+        if (model.players.isEmpty()) {
+            return;
+        }
+        model.currentPlayerIndex = (model.currentPlayerIndex + 1) % model.players.size();
+        model.notifyViews();
+        if (model.getCurrentPlayer() instanceof AIPlayer) {
+            handleAITurn();
         }
     }
 
@@ -93,7 +118,7 @@ public class GameController implements ActionListener {
      * The actions which occurs after the "play" button is pressed.
      */
     private void handlePlay() {
-        if (placedTiles.isEmpty()){
+        if (placedTiles.isEmpty()) {
             view.showError("Please place a tile");
             return;
         }
@@ -103,9 +128,9 @@ public class GameController implements ActionListener {
         if (valid) {
             model.board.commitTiles(placedTiles);
             p.fillHand(model.bag);
-            model.nextPlayer();
+            nextPlayer();
         } else {
-            for (PlacedTile pt: placedTiles) {
+            for (PlacedTile pt : placedTiles) {
                 p.addTile(pt.tile);
             }
             model.board.clearTempGrid();
@@ -135,7 +160,7 @@ public class GameController implements ActionListener {
      */
     private void handlePass() {
         placedTiles.clear();
-        model.nextPlayer();
+        nextPlayer();
         clearSelections();
     }
 
@@ -146,5 +171,31 @@ public class GameController implements ActionListener {
         selectedTileIndex = null;
         selectedRow = -1;
         selectedCol = -1;
+    }
+
+    private void handleAITurn() {
+        AIPlayer ai = (AIPlayer) model.getCurrentPlayer();
+        Move bestMove = ai.findBestMove(model.board);
+
+        if (bestMove == null) {
+            handlePass();
+            return;
+        }
+
+        for (PlacedTile pt : bestMove.placedTiles) {
+            model.board.placeTempTile(pt.row, pt.col, pt.tile);
+        }
+
+        model.board.commitTiles(placedTiles);
+        ai.fillHand(model.bag);
+
+        //REVISE AFTER EDITS: this will eventually call a method to set the score (most likely, but maybe this will stay the same)
+        int moveScore = bestMove.score;
+        ai.setScore(moveScore);
+
+        placedTiles.clear();
+        clearSelections(); //probably useless but never hurts to be safe
+        view.update(model);
+        nextPlayer();
     }
 }

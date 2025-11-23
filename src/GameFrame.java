@@ -2,6 +2,7 @@
  * The JFrame for the user interface for the Scrabble Game.
  *
  * @author Cole Galway
+ * @author Taylor Brumwell
  * @version November 10th, 2025
  */
 
@@ -14,9 +15,6 @@ public class GameFrame extends JFrame implements GameView {
     private JButton[] colMarkers;
     private JButton[] rowMarkers;
     private Board gameBoard;
-    private JButton play;
-    private JButton swap;
-    private JButton pass;
     private JPanel tilePanel;
     private JLabel bagLabel;
     private GameModel model;
@@ -27,7 +25,6 @@ public class GameFrame extends JFrame implements GameView {
     private ArrayList<JPanel> playerHand;
 
     private JPanel bottom;
-    private JLabel statusLabel;
 
     /**
      * Constructs a new GameFrame, taking no parameters.
@@ -35,11 +32,11 @@ public class GameFrame extends JFrame implements GameView {
     public GameFrame() {
         super ("Scrabble");
         model = new GameModel();
-        model.acceptedWords.load("scrabble_acceptedwords.csv");
+        model.acceptedWords.load("scrabble_acceptedwords.csv"); //are we able to remove this (happens in model already)
         this.setLayout(new BorderLayout());
 
         int numPlayers = askPlayerCount();
-        askPlayerName(model, numPlayers);
+        askPlayerInfo(model, numPlayers);
 
         model.setupGame();
         gameBoard = model.board;
@@ -129,13 +126,26 @@ public class GameFrame extends JFrame implements GameView {
      * @param count The number of players in the current game.
      */
 
-    private void askPlayerName(GameModel model, int count) {
+    private void askPlayerInfo(GameModel model, int count) {
         for (int i = 1; i <= count; i++) {
-            String name = JOptionPane.showInputDialog(this, "Enter the player name " + i + ":" ,"Player Name", JOptionPane.QUESTION_MESSAGE);
-            if (name.equals(null) ||  name.isEmpty()) {
-                name = "Player" + i;
+            boolean human = false;
+            String name;
+
+            String input = JOptionPane.showInputDialog(this, "Will player " + i + " be human or AI", "Human or AI", JOptionPane.QUESTION_MESSAGE);
+            input = input.toLowerCase();
+            if (input.equals("human")) { //else AI (defaults to AI since it's possible to play with other AI players, but not with extra humans that don't exist)
+                human = true;
             }
-            model.addPlayer(new Player(name));
+            if (human) {
+                name = JOptionPane.showInputDialog(this, "Enter the player name " + i + ":" ,"Player Name", JOptionPane.QUESTION_MESSAGE);
+                if (name.equals(null) ||  name.isEmpty()) {
+                    name = "Player" + i;
+                }
+                model.addPlayer(new Player(name));
+            } else {
+                name = "AIPlayer" + i;
+                model.addPlayer(new AIPlayer(name));
+            }
         }
 
     }
@@ -292,20 +302,6 @@ public class GameFrame extends JFrame implements GameView {
 
     public static void main(String[] args) {
         GameFrame frame = new GameFrame();
-        Dictionary dict = new Dictionary();
-        dict.addWord("able");
-        dict.addWord("cat");
-        dict.addWord("dog");
-        dict.addWord("table");
-        dict.addWord("a");
-        dict.addWord("b");
-        dict.addWord("c");
-        dict.addWord("d");
-        dict.addWord("e");
-        dict.addWord("f");
-        dict.addWord("g");
-        dict.addWord("h");
-        System.out.println(dict.acceptedWords.contains("cat"));
     }
 
 }

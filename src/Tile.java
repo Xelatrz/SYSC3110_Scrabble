@@ -8,7 +8,7 @@ public class Tile {
     /**
      * The letter which will be assigned to the specific tile.
      */
-    String letter;
+    private String letter;
 
 
     /**

@@ -1,11 +1,14 @@
-# Scrabble GameModel - Java Implementation
+# Scrabble GameModel - Java Implementation with User Interface
 
-A complete Scrabble gameModel implementation in Java that supports multiple players, word validation, and classic Scrabble rules.
+A complete Scrabble gameModel implementation in Java that supports up to 2 players, word validation, and most of the classic Scrabble rules.
 
 ## Project Files
  - `Board.java` # GameModel board management
  - `Dictionary.java` # Word validation system
  - `GameModel.java` # Main gameModel controller
+ - `GameView.java` # Main gameView interface
+ - `GameController.java` # Controlls all button logic for the user interface
+ - `GameFrame.java` # Creates the game window and JFrame
  - `Player.java` # Player logic and actions
  - `Tile.java` # Tile representation
  - `TileBag.java` # Tile distribution and drawing
@@ -15,11 +18,11 @@ A complete Scrabble gameModel implementation in Java that supports multiple play
 ## Features
 
 - **Multiplayer Support**: 2-4 players
-- **Word Validation**: Uses comprehensive dictionary from CSV file
+- **Word Validation**: Uses comprehensive dictionary from CSV file --> Currently csv validation is not working, code tested using manual additions to accepted word list. 
 - **Classic Rules**: 
   - 15×15 gameModel board
   - Standard tile distribution
-  - Valid word placement checks
+  - Valid word placement checks --> Mostly functional but fails in a few specific cases (to be updated later)
   - Scoring system
 - **GameModel Flow**:
   - Turn-based gameplay
@@ -56,7 +59,7 @@ A complete Scrabble gameModel implementation in Java that supports multiple play
 ### End Conditions
 - A player uses all tiles AND the tile bag is empty
 
-- All players unanimously vote to end the gameModel
+- A player closes the window using the X button
 
 ### Class Responsibilities
 **GameModel.java**
@@ -118,6 +121,8 @@ computer
 
 - Blank Tiles: Wildcard tile implementation, also check for empty spaces in a word which isn't allowed
 
+- Fixing some of the errors with tile placement validation
+
 Gameplay Example
 ```
 It is player Player 1's turn.
@@ -136,10 +141,9 @@ Player 1 placed an A at 7,7!
 
 - Maximum 5 players supported
 
-- First word must be at least 2 letters long
 
 ## Contributors
-- Daniel Esenwa  101199099 (Readme)
-- Cole Galway 101302762 (Main code & unit tests)
-- Matthew Gibeault 101323772 (UML and Sequence Diagrams)
-- Taylor Brumwell 101302386 (Main code)
+- Daniel Esenwa  101199099 Milestone 1: (Readme) Milestone 2:
+- Cole Galway 101302762 Milestone 1: (Main code & unit tests) Milestone 2: (Main GUI code, fixed unit tests, Readme)
+- Matthew Gibeault 101323772 Milestone 1: (UML and Sequence Diagrams) Milestone 2: 
+- Taylor Brumwell 101302386 Milestone 1: (Main code) Milestone 2: (UML and Sequence Diagrams)
