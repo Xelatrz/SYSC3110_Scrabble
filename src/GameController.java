@@ -128,7 +128,7 @@ public class GameController implements ActionListener {
         if (valid) {
             model.board.commitTiles(placedTiles);
             p.fillHand(model.bag);
-            nextPlayer();
+            nextPlayer(); //ERROR: when next player is an AI player, the important stuff at the end of this function is never reached. fix this for other turn options as well.
         } else {
             for (PlacedTile pt : placedTiles) {
                 p.addTile(pt.tile);
