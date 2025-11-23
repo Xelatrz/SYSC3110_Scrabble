@@ -36,7 +36,7 @@ public class GameModel {
     public GameModel() {
         players = new ArrayList<>();
         acceptedWords = new Dictionary();
-        acceptedWords.load("scrabblewords.csv");
+        acceptedWords.load("scrabble_acceptedwords.csv");
         bag = new TileBag();
         board = new Board();
     }
