@@ -131,20 +131,28 @@ public class GameFrame extends JFrame implements GameView {
             boolean human = false;
             String name;
 
-            String input = JOptionPane.showInputDialog(this, "Will player " + i + " be human or AI", "Human or AI", JOptionPane.QUESTION_MESSAGE);
-            input = input.toLowerCase();
-            if (input.equals("human")) { //else AI (defaults to AI since it's possible to play with other AI players, but not with extra humans that don't exist)
-                human = true;
-            }
-            if (human) {
-                name = JOptionPane.showInputDialog(this, "Enter the player name " + i + ":" ,"Player Name", JOptionPane.QUESTION_MESSAGE);
+            if (i == 1) {
+                name = JOptionPane.showInputDialog(this, "Player 1 must be human. Enter the player name " + i + ":" ,"Player Name", JOptionPane.QUESTION_MESSAGE);
                 if (name.equals(null) ||  name.isEmpty()) {
                     name = "Player" + i;
                 }
                 model.addPlayer(new Player(name));
             } else {
-                name = "AIPlayer" + i;
-                model.addPlayer(new AIPlayer(name));
+                String input = JOptionPane.showInputDialog(this, "Will player " + i + " be human or AI", "Human or AI", JOptionPane.QUESTION_MESSAGE);
+                input = input.toLowerCase();
+                if (input.equals("human")) { //else AI (defaults to AI since it's possible to play with other AI players, but not with extra humans that don't exist)
+                    human = true;
+                }
+                if (human) {
+                    name = JOptionPane.showInputDialog(this, "Enter the player name " + i + ":" ,"Player Name", JOptionPane.QUESTION_MESSAGE);
+                    if (name.equals(null) ||  name.isEmpty()) {
+                        name = "Player" + i;
+                    }
+                    model.addPlayer(new Player(name));
+                } else {
+                    name = "AIPlayer" + i;
+                    model.addPlayer(new AIPlayer(name));
+                }
             }
         }
 
