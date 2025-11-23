@@ -101,7 +101,7 @@ public class Board {
 
     public String[] extractPattern(int i, boolean horizontal) {
         String[] pattern = new String[SIZE];
-        for (int j = 0; j <= SIZE; j++) {
+        for (int j = 0; j < SIZE; j++) {
             Tile tile;
             if (horizontal) {
                 tile = grid[i][j];
