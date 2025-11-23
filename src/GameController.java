@@ -160,8 +160,8 @@ public class GameController implements ActionListener {
      */
     private void handlePass() {
         placedTiles.clear();
-        nextPlayer();
         clearSelections();
+        nextPlayer();
     }
 
     /**
