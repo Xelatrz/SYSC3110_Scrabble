@@ -38,7 +38,11 @@ public class Board {
             System.out.println("Invalid coordinate");
             return null;
         }
-        return grid[row][col] != null ? grid[row][col] : tempGrid[row][col];
+        return tempGrid[row][col] != null ? tempGrid[row][col] : grid[row][col];
+    }
+
+    public Tile getPermTile(int row, int col) {
+        return grid[row][col];
     }
 
     /**

@@ -25,7 +25,7 @@ public class GameModel {
     public Board board;
 
     /** An integer containing the index of the current player */
-    public int currentPlayerIndex = 0;
+    int currentPlayerIndex = 0;
 
     private List<GameView> views = new ArrayList<>();
     private List<PlacedTile> placedTiles = new ArrayList<>();
@@ -36,9 +36,9 @@ public class GameModel {
     public GameModel() {
         players = new ArrayList<>();
         acceptedWords = new Dictionary();
-        acceptedWords.load("scrabble_acceptedwords.csv");
-        bag = new TileBag(); //does this in setupGame
-        board = new Board(); //does this in setupGame
+        acceptedWords.load("scrabblewords.csv");
+        bag = new TileBag();
+        board = new Board();
     }
 
     /**
@@ -78,18 +78,40 @@ public class GameModel {
         return players.get(currentPlayerIndex);
     }
 
-    //very simple scoring logic, needs to be fully implemented later!
-    private int scorePlacedTiles(ArrayList<PlacedTile> placedTiles, Player p) {
-        int score = placedTiles.size();
-        if (p != null) {
-            p.setScore(score);
-        }
-        return score;
+    /**
+     * Advances to the next player in the game, skipping the current player.
+     */
+    public void nextPlayer() {
+        if (players.isEmpty()) {return;}
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        notifyViews();
     }
 
-    //would be redundant if scorePlacedTiles was public, but that should be private so others can't change their score, only the game can.
-    public int simulateScore(ArrayList<PlacedTile> placedTiles) {
-        return scorePlacedTiles(placedTiles, null);
+    /*
+    public boolean placeTile(Player p, Tile tile, int row, int col) {
+        notifyViews();
+        if (p == null || tile == null || board == null) {
+            return false;
+        }
+        if (row < 0 || col < 0 || row >= Board.SIZE || col >= Board.SIZE) {
+            return false;
+        }
+        if (board.getTile(row, col) != null) {
+            return false;
+        }
+
+        board.placeTile(row, col, tile);
+        placedTiles.add(new PlacedTile(row, col, tile));
+
+        notifyViews();
+        return true;
+    }
+
+     */
+
+    //very simple scoring logic, needs to be fully implemented later!
+    private void scorePlacedTiles(Player p) {
+        p.setScore(placedTiles.size());
     }
 
     //logic for swapping tiles --> needs to be fixed because of a few bugs but almost completed.
@@ -130,7 +152,7 @@ public class GameModel {
     /**
      * Notifies the view of a change in the model/game state
      */
-    public void notifyViews() {
+    void notifyViews() {
         for (GameView view : views) {
             view.update(this);
         }

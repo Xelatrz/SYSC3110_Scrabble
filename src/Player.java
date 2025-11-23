@@ -124,114 +124,180 @@ public class Player {
         if (placedTiles.isEmpty()) {
             return false;
         }
-        int baseRow = placedTiles.getFirst().row;
-        int baseCol = placedTiles.getFirst().col;
-        boolean sameRow = true;
-        boolean sameCol = true;
+        boolean firstTurn = board.isEmpty();
 
-        boolean success = true;
-        StringBuilder word = new StringBuilder();
-        boolean firstTurn = board.isEmpty(); //check before placing tiles
-
-        for (PlacedTile placedTile : placedTiles) {
-            if (placedTile.row != baseRow) {
-                sameRow = false;
-            }
-            if (placedTile.col != baseCol) {
-                sameCol = false;
-            }
+        board.clearTempGrid();
+        for (PlacedTile pt : placedTiles) {
+            board.placeTempTile(pt.row, pt.col, pt.tile);
         }
-        if (!sameRow && !sameCol) {
+
+        boolean sameRow = placedTiles.stream().allMatch(pt -> pt.row == placedTiles.getFirst().row);
+        boolean sameCol = placedTiles.stream().allMatch(pt -> pt.col == placedTiles.getFirst().col);
+
+       if (!sameRow && !sameCol) {
+           clearTemp(board, placedTiles);
+           return false;
+       }
+
+       String mainWord;
+       int startR, endR, startC, endC;
+
+       if (sameRow) {
+           int row = placedTiles.get(0).row;
+           startC = placedTiles.stream().mapToInt(pt -> pt.col).min().getAsInt();
+           endC = placedTiles.stream().mapToInt(pt -> pt.col).max().getAsInt();
+
+           while (startC > 0 && board.getTile(row, startC - 1) != null) {
+               startC -= 1;
+           }
+           while (endC < board.SIZE - 1 && board.getTile(row, endC + 1) != null) {
+               endC += 1;
+           }
+
+           StringBuilder sb = new StringBuilder();
+           for (int c = startC; c <= endC; c++) {
+               Tile t = board.getTile(row, c);
+               if (t == null) {
+                   clearTemp(board, placedTiles);
+                   return false;
+                   }
+               sb.append(t.getLetter());
+               }
+           mainWord = sb.toString();
+           startR = endR = row;
+
+       } else {
+           int col = placedTiles.get(0).col;
+
+           startR = placedTiles.stream().mapToInt(pt -> pt.row).min().getAsInt();
+           endR = placedTiles.stream().mapToInt(pt -> pt.row).max().getAsInt();
+
+           while (startR > 0 && board.getTile(startR - 1, col) != null) {
+               startR -= 1;
+           }
+           while (endR < board.SIZE - 1 && board.getTile(endR + 1, col) != null) {
+               endR += 1;
+           }
+
+           StringBuilder sb = new StringBuilder();
+           for (int r = startR; r <= endR; r++) {
+               Tile t = board.getTile(r, col);
+               if (t == null) {
+                   clearTemp(board, placedTiles);
+                   return false;
+               }
+               sb.append(t.getLetter());
+           }
+           mainWord = sb.toString();
+           startC = endC = col;
+       }
+
+
+        //check dictionary
+        if (!GameModel.acceptedWords.checkWord(mainWord.toLowerCase())) {
+            clearTemp(board, placedTiles);
             return false;
         }
-        if (sameRow) {
-            int startCol = baseCol;
-            int endCol = baseCol;
 
-            for (PlacedTile placed : placedTiles) {
-                if (placed.col < startCol) {
-                    startCol = placed.col;
-                }
-                if (placed.col > endCol) {
-                    endCol = placed.col;
-                }
-            }
-            while (startCol > 0 && board.getTile(baseRow, startCol - 1) != null) {
-                startCol--;
-            }
-            while (endCol < board.SIZE - 1 && board.getTile(baseRow, endCol + 1) != null) {
-                endCol++;
-            }
-
-            //build the word
-            for (int c = startCol; c <= endCol; c++) {
-                Tile t = board.getTile(baseRow, c);
-                if (t != null) {
-                    word.append(t.getLetter());
-                }
-            }
-        } else {
-            int startRow = baseRow;
-            int endRow = baseRow;
-            for (PlacedTile placed : placedTiles) {
-                if (placed.row < startRow) {
-                    startRow = placed.row;
-                }
-                if (placed.row > endRow) {
-                    endRow = placed.row;
-                }
-            }
-            while (startRow > 0 && board.getTile(startRow - 1, baseCol) != null) {
-                startRow--;
-            }
-            while (endRow < board.SIZE - 1 && board.getTile(endRow + 1, baseCol) != null) {
-                endRow++;
-            }
-
-
-            //build the word
-            for (int r = startRow; r <= endRow; r++) {
-                Tile t = board.getTile(r, baseCol);
-                if (t != null) {
-                    word.append(t.getLetter());
-                }
-            }
-        }
-        //check dictionary
-        if (!GameModel.acceptedWords.checkWord(String.valueOf(word).toLowerCase())) {
-            success = false;
-        }
         /*
         //check connected
-        if (!firstTurn){
-            if(word.length() <= placedTiles.size() && word.length() > 1) {
-                success = false;
-
-            } else if (word.length() == 1 && !isConnected(board, placedTiles)) {
-                success = false;
+        if (!firstTurn) {
+            boolean touchesExisitng = touchesExistingTile(board,placedTiles);
+            if (!touchesExisitng) {
+                clearTemp(board, placedTiles);
+                return false;
+            }
+        } else {
+            boolean touchesCenter = placedTiles.stream().anyMatch(pt -> pt.row == Board.CENTER && pt.col == Board.CENTER);
+            if (!touchesCenter) {
+                clearTemp(board, placedTiles);
+                return false;
             }
         }
+        */
 
-        //first has to touch center space
-        if (firstTurn) {
-            boolean touchCenter = false;
-            for (PlacedTile pt : placedTiles) {
-                if (pt.row == Board.CENTER && pt.col == Board.CENTER) {
-                    touchCenter = true;
-                    break;
+        for (PlacedTile pt: placedTiles) {
+            if (sameRow) {
+                String cross = buildWordVertical(board, pt.row, pt.col);
+                if (cross.length() > 1 && !GameModel.acceptedWords.checkWord(cross.toLowerCase())) {
+                    clearTemp(board, placedTiles);
+                    return false;
+                }
+            } else {
+                String cross = buildWordHorizontal(board, pt.row, pt.col);
+                if (cross.length() > 1 && !GameModel.acceptedWords.checkWord(cross.toLowerCase())) {
+                    clearTemp(board, placedTiles);
+                    return false;
                 }
             }
-            if (!touchCenter) {
-                success = false;
+
+        }
+
+        board.commitTiles(placedTiles);
+
+        score += placedTiles.size();
+        return true;
+    }
+
+    private void clearTemp(Board board, ArrayList<PlacedTile> placedTiles) {
+        for (PlacedTile pt: placedTiles) {
+            board.placeTempTile(pt.row, pt.col, null);
+        }
+        board.clearTempGrid();
+    }
+
+    private boolean touchesExistingTile(Board board, ArrayList<PlacedTile> placedTiles) {
+        for (PlacedTile pt: placedTiles) {
+            int r =  pt.row;
+            int c = pt.col;
+
+            if ((r > 0 && board.getPermTile(r-1, c) != null) || (r < board.SIZE - 1 && board.getPermTile(r+1, c) != null) || (c > 0 && board.getPermTile(r, c-1) != null) || (c < board.SIZE - 1 && board.getPermTile(r, c+1) != null)) {
+                return true;
             }
         }
+        return false;
+    }
 
-         */
-
-        if (success) {
-            score += placedTiles.size();
+    private String buildWordVertical(Board board, int row, int col) {
+        int r1 = row;
+        while (r1 > 0 && board.getTile(r1-1, col) != null) {
+            r1 -= 1;
         }
-        return success;
+        int r2 = row;
+        while (r2 < board.SIZE - 1 && board.getTile(r2+1, col) != null) {
+            r2 += 1;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int r = r1; r <= r2; r++) {
+            Tile t = board.getTile(r, col);
+            if (t == null) {
+                continue;
+            }
+            sb.append(t.getLetter());
+        }
+        return sb.toString();
+    }
+
+    private String buildWordHorizontal(Board board, int row, int col) {
+        int c1 = col;
+        while (c1 > 0 && board.getTile(row, c1-1) != null) {
+            c1 -= 1;
+        }
+        int c2 = col;
+        while (c2 < board.SIZE - 1 && board.getTile(row, c2+1) != null) {
+            c2 += 1;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int c = c1; c <= c2; c++) {
+            Tile t =  board.getTile(row, c);
+            if (t == null) {
+                continue;
+            }
+            sb.append(t.getLetter());
+        }
+        return sb.toString();
     }
 
     /**
