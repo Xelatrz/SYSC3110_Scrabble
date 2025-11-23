@@ -25,7 +25,7 @@ public class GameModel {
     public Board board;
 
     /** An integer containing the index of the current player */
-    private int currentPlayerIndex = 0;
+    int currentPlayerIndex = 0;
 
     private List<GameView> views = new ArrayList<>();
     private List<PlacedTile> placedTiles = new ArrayList<>();
@@ -152,7 +152,7 @@ public class GameModel {
     /**
      * Notifies the view of a change in the model/game state
      */
-    private void notifyViews() {
+    void notifyViews() {
         for (GameView view : views) {
             view.update(this);
         }
