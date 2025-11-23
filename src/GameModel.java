@@ -79,8 +79,17 @@ public class GameModel {
     }
 
     //very simple scoring logic, needs to be fully implemented later!
-    private void scorePlacedTiles(Player p) {
-        p.setScore(placedTiles.size());
+    private int scorePlacedTiles(ArrayList<PlacedTile> placedTiles, Player p) {
+        int score = placedTiles.size();
+        if (p != null) {
+            p.setScore(score);
+        }
+        return score;
+    }
+
+    //would be redundant if scorePlacedTiles was public, but that should be private so others can't change their score, only the game can.
+    public int simulateScore(ArrayList<PlacedTile> placedTiles) {
+        return scorePlacedTiles(placedTiles, null);
     }
 
     //logic for swapping tiles --> needs to be fixed because of a few bugs but almost completed.

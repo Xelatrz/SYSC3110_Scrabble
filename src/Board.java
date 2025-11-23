@@ -134,19 +134,4 @@ public class Board {
         }
         return anchors;
     }
-
-    public int simulateScore(List<PlacedTile> placedTiles) {
-        //place temp
-        for (PlacedTile pt : placedTiles) {
-            tempGrid[pt.row][pt.col] = pt.tile;
-        }
-        //test score
-        int score = 1; //temporary so that the rest of the program can run
-        //int score = CALCULATE SCORE (IMPLEMENT THIS)
-        //remove temp
-        for (PlacedTile pt : placedTiles) {
-            tempGrid[pt.row][pt.col] = null;
-        }
-        return score;
-    }
 }

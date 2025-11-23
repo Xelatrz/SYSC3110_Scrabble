@@ -73,7 +73,7 @@ public class AIPlayer extends Player {
                  continue;
              }
 
-             int score = board.simulateScore(placedTiles);
+             int score = GameModel.simulateScore(placedTiles); //REVISE
              if (bestMove == null || score > bestMove.score) {
                  bestMove = new Move(placedTiles, score);
              }
