@@ -87,8 +87,13 @@ public class GameController implements ActionListener {
         if (model.players.isEmpty()) {
             return;
         }
+        model.board.clearTempGrid();
+        placedTiles.clear();
+        clearSelections();
+
         model.currentPlayerIndex = (model.currentPlayerIndex + 1) % model.players.size();
         model.notifyViews();
+
         if (model.getCurrentPlayer() instanceof AIPlayer) {
             handleAITurn();
         }
@@ -130,18 +135,18 @@ public class GameController implements ActionListener {
             p.fillHand(model.bag);
             int score = model.simulateScore(placedTiles);
             p.setScore(p.getScore() + score);
-            model.board.clearTempGrid();
+            view.update(model);
             nextPlayer(); //ERROR: when next player is an AI player, the important stuff at the end of this function is never reached. fix this for other turn options as well.
         } else {
             for (PlacedTile pt : placedTiles) {
                 p.addTile(pt.tile);
             }
             model.board.clearTempGrid();
+            placedTiles.clear();
+            clearSelections();
             view.showError("Invalid word. Please try again.");
+            view.update(model);
         }
-        placedTiles.clear();
-        clearSelections();
-        view.update(model);
     }
 
     /**
@@ -162,8 +167,7 @@ public class GameController implements ActionListener {
      * Handles the logic for what occurs after the "Pass" button is pressed.
      */
     private void handlePass() {
-        placedTiles.clear();
-        clearSelections();
+        //Isn't this supposed to replace hand?
         nextPlayer();
     }
 
@@ -185,19 +189,28 @@ public class GameController implements ActionListener {
             return;
         }
 
+        boolean willPlace = false;
+        for (PlacedTile pt : bestMove.placedTiles) {
+            if (model.board.getTile(pt.row, pt.col) == null) {
+                willPlace = true;
+                break;
+            }
+        }
+
+        if (!willPlace) {
+            handlePass();
+            return;
+        }
+
         for (PlacedTile pt : bestMove.placedTiles) {
             model.board.placeTempTile(pt.row, pt.col, pt.tile);
         }
+        model.board.commitTiles(bestMove.placedTiles);
 
-        model.board.commitTiles(placedTiles);
         ai.fillHand(model.bag);
 
-        //REVISE AFTER EDITS: this will eventually call a method to set the score (most likely, but maybe this will stay the same)
-        int moveScore = bestMove.score;
-        ai.setScore(moveScore);
+        ai.setScore(ai.getScore() + bestMove.score);
 
-        placedTiles.clear();
-        clearSelections(); //probably useless but never hurts to be safe
         view.update(model);
         nextPlayer();
     }

@@ -151,7 +151,7 @@ public class GameFrame extends JFrame implements GameView {
                     model.addPlayer(new Player(name));
                 } else {
                     name = "AIPlayer" + i;
-                    model.addPlayer(new AIPlayer(name));
+                    model.addPlayer(new AIPlayer(name, model));
                 }
             }
         }
