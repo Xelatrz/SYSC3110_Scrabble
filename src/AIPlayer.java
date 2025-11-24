@@ -2,7 +2,7 @@
  * AIPlayer is a player that doesn't take user input and only plays legal words.
  *
  * @author Taylor Brumwell
- * @version 11/20/2025
+ * @version 11/24/2025
  */
 
 import java.util.*;
