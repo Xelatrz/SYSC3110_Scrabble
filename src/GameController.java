@@ -133,7 +133,7 @@ public class GameController implements ActionListener {
         if (valid) {
             model.board.commitTiles(placedTiles);
             p.fillHand(model.bag);
-            int score = model.simulateScore(placedTiles);
+            int score = model.scorePlacedTiles(placedTiles);
             p.setScore(p.getScore() + score);
             view.update(model);
             nextPlayer(); //ERROR: when next player is an AI player, the important stuff at the end of this function is never reached. fix this for other turn options as well.

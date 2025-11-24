@@ -80,14 +80,7 @@ public class GameModel {
         return players.get(currentPlayerIndex);
     }
 
-    //would be redundant if scorePlacedTiles was public, but that should be private so others can't change their score, only the game can.
-    //WILL BE CALLED (only not called yet because of an error)
-    public int simulateScore(ArrayList<PlacedTile> placedTiles) {
-        return scorePlacedTiles(placedTiles, null);
-    }
-
-
-    private int scorePlacedTiles(ArrayList<PlacedTile> placedTiles, Player player) {
+    public int scorePlacedTiles(ArrayList<PlacedTile> placedTiles) {
         boolean sameRow = placedTiles.stream().allMatch(pt -> pt.row == placedTiles.getFirst().row);
         boolean sameCol = placedTiles.stream().allMatch(pt-> pt.col == placedTiles.getFirst().col);
 

@@ -95,7 +95,7 @@ public class AIPlayer extends Player {
                  continue;
              }
 
-             int score = model.simulateScore(placedTiles);
+             int score = model.scorePlacedTiles(placedTiles);
              if (bestMove == null || score > bestMove.score) {
                  bestMove = new Move(placedTiles, score);
              }
