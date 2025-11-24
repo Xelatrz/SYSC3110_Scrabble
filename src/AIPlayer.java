@@ -197,11 +197,21 @@ public class AIPlayer extends Player {
                 endCol++;
             }
             for (int c = startCol; c <= endCol; c++) {
-                Tile tile = model.board.getTile(row, c);
+                Tile tile = model.board.getPermTile(row, c);
                 if (tile != null) {
                     sb.append(tile.getLetter());
                 } else {
-                    sb.append("_");
+                    boolean found = false;
+                    for (PlacedTile pt: placedTiles) {
+                        if (pt.row == row && pt.col == c) {
+                            sb.append(pt.tile.getLetter());
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        return "";
+                    }
                 }
             }
         } else {
@@ -226,7 +236,17 @@ public class AIPlayer extends Player {
                 if (tile != null) {
                     sb.append(tile.getLetter());
                 } else {
-                    sb.append("_");
+                    boolean found = false;
+                    for (PlacedTile pt: placedTiles) {
+                        if (pt.row == r && pt.col == col) {
+                            sb.append(pt.tile.getLetter());
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        return "";
+                    }
                 }
             }
         }

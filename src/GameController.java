@@ -195,16 +195,12 @@ public class GameController implements ActionListener {
         }
 
         placedTiles.clear();
-        boolean willPlace = false;
         for (PlacedTile pt : bestMove.placedTiles) {
             if (model.board.getPermTile(pt.row, pt.col) == null) {
                 placedTiles.add(pt);
-                willPlace = true;
-                break;
             }
         }
-
-        if (!willPlace) {
+        if (placedTiles.isEmpty()) {
             handlePass();
             return;
         }
