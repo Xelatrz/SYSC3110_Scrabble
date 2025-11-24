@@ -88,7 +88,6 @@ public class GameModel {
 
 
     private int scorePlacedTiles(ArrayList<PlacedTile> placedTiles, Player player) {
-        int multiplier;
         boolean sameRow = placedTiles.stream().allMatch(pt -> pt.row == placedTiles.getFirst().row);
         boolean sameCol = placedTiles.stream().allMatch(pt-> pt.col == placedTiles.getFirst().col);
 
