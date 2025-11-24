@@ -310,16 +310,6 @@ public class GameModel {
         return 0;
     }
 
-    public List<PlacedTile> getPlacedBlank(ArrayList<PlacedTile> placedTiles) {
-        List<PlacedTile> placedBlank = new ArrayList<>();
-        for (PlacedTile pt: placedTiles) {
-            if (pt.tile.isBlank()) {
-                placedBlank.add(pt);
-            }
-        }
-        return placedBlank;
-    }
-
     /**
      * Adds the view to the game model to be able to obverse changes.
      * @param v The GameView used for the GUI.

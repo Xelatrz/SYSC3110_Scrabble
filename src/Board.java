@@ -66,15 +66,16 @@ public class Board {
      * @param col An integer with the column where the tile is to be placed
      * @param tile The tile that is to be placed on the temporary grid.
      */
-    public void placeTempTile(int row, int col, Tile tile) {
+    public boolean placeTempTile(int row, int col, Tile tile) {
         if (row < 0 || col < 0 || row >= SIZE || col >= SIZE) {
-            return;
+            return false;
         }
         //space is already occupied
         if (grid[row][col] != null) {
-            return;
+            return false;
         }
         tempGrid[row][col] = tile;
+        return true;
     }
 
     /**

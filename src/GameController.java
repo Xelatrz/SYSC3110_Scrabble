@@ -110,7 +110,13 @@ public class GameController implements ActionListener {
             return;
         }
         Tile tile = p.getHand().get(selectedTileIndex);
-        model.board.placeTempTile(selectedRow, selectedCol, tile);
+
+        boolean ok = model.board.placeTempTile(selectedRow, selectedCol, tile);
+        if (!ok) {
+            view.showError("Select an unoccupied space!");
+            return;
+        }
+
         placedTiles.add(new PlacedTile(selectedRow, selectedCol, tile));
         p.removeTileByIndex(selectedTileIndex);
 
