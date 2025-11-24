@@ -11,6 +11,7 @@ public class Tile {
     private String letter;
     private int score;
     private boolean isBlank;
+    private String assignedLetter;
 
 
     /**
@@ -31,6 +32,9 @@ public class Tile {
      * @return A string of letter of a specified tile.
      */
     public String getLetter() {
+        if (isBlank) {
+            return assignedLetter;
+        }
         return letter;
     }
 
@@ -39,8 +43,16 @@ public class Tile {
     }
 
     public boolean isBlank() {
-        return this.isBlank;
+        if (this.letter.equals("-")) {
+            isBlank = true;
+        }
+        return isBlank;
     }
 
-    public void setLetter(String letter) {}
+    public void setLetter(String letter) {
+        if (isBlank) {
+            assignedLetter = letter;
+        }
+        this.letter = letter;
+    }
 }

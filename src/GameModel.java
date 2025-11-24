@@ -310,34 +310,6 @@ public class GameModel {
         return 0;
     }
 
-
-    //logic for swapping tiles --> needs to be fixed because of a few bugs but almost completed.
-    /*
-    public void swapTiles(Player p, int tileIndex){
-        if (bag.tiles.isEmpty()) {
-            return f
-        }
-        if (p == null || tilesToSwap == null || tilesToSwap.isEmpty()) {return;}
-        Collections.sort(tilesToSwap, Collections.reverseOrder());
-        int removed = 0;
-        for (int index : tilesToSwap) {
-            if (index >= 0 && index < p.hand.size()) {
-                Tile t = p.removeTileByIndex(index);
-                if (t != null) {
-                    bag.addTiles(t.getLetter(), 1);
-                    removed++;
-                }
-            }
-        }
-        for (int i = 0; i < removed; i++) {
-            Tile t = bag.drawTile();
-            if (t == null) {break;}
-            p.addTile(t);
-        }
-    }
-
-     */
-
     /**
      * Adds the view to the game model to be able to obverse changes.
      * @param v The GameView used for the GUI.

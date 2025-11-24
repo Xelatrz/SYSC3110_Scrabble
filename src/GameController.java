@@ -110,7 +110,13 @@ public class GameController implements ActionListener {
             return;
         }
         Tile tile = p.getHand().get(selectedTileIndex);
-        model.board.placeTempTile(selectedRow, selectedCol, tile);
+
+        boolean ok = model.board.placeTempTile(selectedRow, selectedCol, tile);
+        if (!ok) {
+            view.showError("Select an unoccupied space!");
+            return;
+        }
+
         placedTiles.add(new PlacedTile(selectedRow, selectedCol, tile));
         p.removeTileByIndex(selectedTileIndex);
 
@@ -128,6 +134,14 @@ public class GameController implements ActionListener {
             return;
         }
         Player p = model.getCurrentPlayer();
+
+        for (PlacedTile pt: placedTiles) {
+            if (pt.tile.isBlank()) {
+                char chosen = view.promptBlankLetter();
+                pt.tile.setLetter(String.valueOf(chosen).toUpperCase());
+            }
+        }
+
         boolean valid = p.playWord(model.board, placedTiles);
 
         if (valid) {

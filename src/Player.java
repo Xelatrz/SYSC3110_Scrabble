@@ -128,11 +128,8 @@ public class Player {
         boolean firstTurn = board.isEmpty();
 
         board.clearTempGrid();
+
         for (PlacedTile pt : placedTiles) {
-            if (pt.tile.isBlank()) {
-                char chosen = frame.promptBlankLetter();
-                pt.tile.setLetter(String.valueOf(chosen).toUpperCase());
-            }
             board.placeTempTile(pt.row, pt.col, pt.tile);
         }
 

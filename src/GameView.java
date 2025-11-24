@@ -7,4 +7,5 @@
 public interface GameView {
     void update(GameModel model);
     void showError(String error);
+    char promptBlankLetter();
 }
