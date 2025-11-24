@@ -312,7 +312,7 @@ public class GameFrame extends JFrame implements GameView {
     public char promptBlankLetter() {
         String input;
         do {
-            input = JOptionPane.showInputDialog(null, "Please enter a letter for the blank tile:  ");
+            input = JOptionPane.showInputDialog(this, "Please enter a letter for the blank tile:  ");
             if (input == null) {
                 return 'A';
             }

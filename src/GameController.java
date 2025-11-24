@@ -128,6 +128,14 @@ public class GameController implements ActionListener {
             return;
         }
         Player p = model.getCurrentPlayer();
+
+        for (PlacedTile pt: placedTiles) {
+            if (pt.tile.isBlank()) {
+                char chosen = view.promptBlankLetter();
+                pt.tile.setLetter(String.valueOf(chosen).toUpperCase());
+            }
+        }
+
         boolean valid = p.playWord(model.board, placedTiles);
 
         if (valid) {
