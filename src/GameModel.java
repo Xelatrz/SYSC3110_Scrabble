@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Taylor Brumwell
  * @author Cole Galway
- * @version 11/10/2025
+ * @version 11/24/2025
  */
 public class GameModel {
     /**
@@ -80,6 +80,11 @@ public class GameModel {
         return players.get(currentPlayerIndex);
     }
 
+    /**
+     * Returns the score for tiles placed on the gameboard.
+     * @param placedTiles An ArrayList of tiles placed on the board during the turn
+     * @return An integer containing the total score, including premium tile multipliers
+     */
     public int scorePlacedTiles(ArrayList<PlacedTile> placedTiles) {
         boolean sameRow = placedTiles.stream().allMatch(pt -> pt.row == placedTiles.getFirst().row);
         boolean sameCol = placedTiles.stream().allMatch(pt-> pt.col == placedTiles.getFirst().col);
@@ -277,7 +282,19 @@ public class GameModel {
     }
 
     //a bit of duplicated code, but I think it's necessary
-    private int getPremiumType(int row, int col) {
+
+    /**
+     * Returns an integer determining which premium tile is in which location.
+     * 4 = triple word
+     * 3 = double word
+     * 2 = triple letter
+     * 1 = double letter
+     * 0 = normal tile
+     * @param row The row of the tile of interest
+     * @param col The column of the tile of interest
+     * @return An integer value between 0-4 corresponding to the various premium tiles.
+     */
+    public int getPremiumType(int row, int col) {
         //triple word
         if ((row == 0 || row == 7 || row == 14) && (col == 0 || col == 7 || col == 14)) {
             //center space

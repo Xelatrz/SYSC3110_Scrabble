@@ -5,7 +5,7 @@ import java.util.*;
  *
  * @author Cole Galway
  * @author Taylor Brumwell
- * @version 11/10/2025
+ * @version 11/24/2025
  */
 public class Player {
     /**
@@ -24,7 +24,6 @@ public class Player {
      * A List of tiles which is the hand of the player.
      */
     public ArrayList<Tile> hand; //changed to public for testing
-    private GameFrame frame;
 
     /**
      * Constructs a new Player.
@@ -240,6 +239,11 @@ public class Player {
         return true;
     }
 
+    /**
+     * Clears the tiles placed on the temporary grid
+     * @param board the gameboard
+     * @param placedTiles An arraylist of tiles that have been placed on the board.
+     */
     private void clearTemp(Board board, ArrayList<PlacedTile> placedTiles) {
         for (PlacedTile pt: placedTiles) {
             board.placeTempTile(pt.row, pt.col, null);
@@ -247,6 +251,12 @@ public class Player {
         board.clearTempGrid();
     }
 
+    /**
+     * Determines if the word placed is connected to an existing word
+     * @param board the game board
+     * @param placedTiles An arraylist of tiles that have been placed on the board
+     * @return true if the word is connected to another word, false otherwise
+     */
     private boolean touchesExistingTile(Board board, ArrayList<PlacedTile> placedTiles) {
         for (PlacedTile pt: placedTiles) {
             int r =  pt.row;
@@ -259,6 +269,13 @@ public class Player {
         return false;
     }
 
+    /**
+     * Builds the word in the vertical direction based off of placed tiles
+     * @param board the game board
+     * @param row the row where the word was placed
+     * @param col the column where the word was placed
+     * @return A String containing the built word
+     */
     private String buildWordVertical(Board board, int row, int col) {
         int r1 = row;
         while (r1 > 0 && board.getTile(r1-1, col) != null) {
@@ -280,6 +297,13 @@ public class Player {
         return sb.toString();
     }
 
+    /**
+     * Builds the word in the horiztonal word based off placed tiles
+     * @param board the game board
+     * @param row the row where the word was placed
+     * @param col the column where the word was placed
+     * @return A String containing the word that was created from placed tiles
+     */
     private String buildWordHorizontal(Board board, int row, int col) {
         int c1 = col;
         while (c1 > 0 && board.getTile(row, c1-1) != null) {

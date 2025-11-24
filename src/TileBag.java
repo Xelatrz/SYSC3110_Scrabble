@@ -92,7 +92,7 @@ public class TileBag {
         }
     }
 
-    private int scoreLetter(String letter) {
+    public int scoreLetter(String letter) {
         switch (letter) {
             case "A": case "E": case "I": case "O": case "U": case "L": case "N": case "S": case "T": case "R":
                 return 1;

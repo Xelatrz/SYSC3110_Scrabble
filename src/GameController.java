@@ -3,7 +3,7 @@
  *
  * @author Cole Galway
  * @author Taylor Brumwell
- * @version 11/10/2025
+ * @version 11/24/2025
  */
 
 import java.awt.*;
@@ -164,7 +164,7 @@ public class GameController implements ActionListener {
     }
 
     /**
-     * Handles the "Swap" button logic.
+     * The logic that executes once the "Swap" button has been pressed.
      */
     private void handleSwap() {
         Player p = model.getCurrentPlayer();
@@ -199,6 +199,9 @@ public class GameController implements ActionListener {
         selectedCol = -1;
     }
 
+    /**
+     * The logic for handling the turns of AI players in the scrabble game.
+     */
     private void handleAITurn() {
         AIPlayer ai = (AIPlayer) model.getCurrentPlayer();
         Move bestMove = ai.findBestMove();
