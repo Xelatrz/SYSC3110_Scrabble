@@ -24,6 +24,7 @@ public class Player {
      * A List of tiles which is the hand of the player.
      */
     public ArrayList<Tile> hand; //changed to public for testing
+    private GameFrame frame;
 
     /**
      * Constructs a new Player.
@@ -128,6 +129,10 @@ public class Player {
 
         board.clearTempGrid();
         for (PlacedTile pt : placedTiles) {
+            if (pt.tile.isBlank()) {
+                char chosen = frame.promptBlankLetter();
+                pt.tile.setLetter(String.valueOf(chosen).toUpperCase());
+            }
             board.placeTempTile(pt.row, pt.col, pt.tile);
         }
 

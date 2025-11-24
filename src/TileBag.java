@@ -47,6 +47,7 @@ public class TileBag {
         addTiles("J", 1);
         addTiles("Q", 1);
         addTiles("Z", 1);
+        addTiles("-", 2);
     }
 
     /**

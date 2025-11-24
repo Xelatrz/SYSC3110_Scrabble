@@ -10,6 +10,7 @@ public class Tile {
      */
     private String letter;
     private int score;
+    private boolean isBlank;
 
 
     /**
@@ -36,4 +37,10 @@ public class Tile {
     public int getScore() {
         return score;
     }
+
+    public boolean isBlank() {
+        return this.isBlank;
+    }
+
+    public void setLetter(String letter) {}
 }
