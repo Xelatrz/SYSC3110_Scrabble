@@ -83,6 +83,8 @@ public class GameFrame extends JFrame implements GameView {
                 button.addActionListener(controller);
                 panel.add(button);
 
+                button.setBackground(getPremium(row, col));
+
             }
         }
         setUpPlayerInfo();
@@ -317,7 +319,40 @@ public class GameFrame extends JFrame implements GameView {
             input = input.trim().toUpperCase();
         } while (input.length() != 1 || !Character.isLetter(input.charAt(0)));
         return  input.charAt(0);
+    }
+
+    private Color getPremium(int row, int col) {
+        //triple word
+        if ((row == 0 || row == 7 || row == 14) && (col == 0 || col == 7 || col == 14)) {
+            //center space
+            if (row == 7 && col == 7) {
+                return Color.PINK;
+            }
+            return Color.RED;
         }
+
+        //double word
+        if (row == col || row + col == 14) {
+            return Color.PINK;
+        }
+
+        //triple letter
+        int[][] tripleLetter = {{1,5}, {1,9}, {5, 1}, {5,5}, {5,9}, {5, 13}, {9, 1}, {9, 5}, {9,9}, {9, 13}, {13, 5}, {13,9}};
+        for (int[] p:  tripleLetter) {
+            if (p[0] == row && p[1] == col) {
+                return Color.BLUE;
+            }
+        }
+        //double letter
+        int[][] doubleLetter = {{0,3}, {0,11}, {2,6}, {2,8}, {3,0}, {3,7}, {3, 14}, {6,2}, {6,6}, {6,8}, {6, 12}, {7,3}
+        ,{7,11}, {8,2}, {8,6}, {8,12}, {11, 0}, {11,7}, {11,14}, {12,6}, {12,8}, {14,3}, {14,11}};
+        for (int[] p:doubleLetter) {
+            if (p[0] == row && p[1] == col) {
+                return Color.CYAN;
+            }
+        }
+        return Color.WHITE;
+    }
 
 
     public static void main(String[] args) {
