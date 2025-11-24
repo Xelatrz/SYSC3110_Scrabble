@@ -171,36 +171,36 @@ public class GameModel {
                         cross.append(t.getLetter());
                         crossScore += t.getScore();
                     }
-                    if (!acceptedWords.checkWord(cross.toString())) {
-                        return 0;
+                    if (cross.length() > 1) {
+                        if (!acceptedWords.checkWord(cross.toString())) {
+                            return 0;
+                        }
                     }
                     totalScore +=  crossScore;
                 }
             } else {
-                int c = pt.col;
-                int start = c;
+                int start = pt.col;
                 while (start > 0 && board.getTile(pt.row, start - 1) != null) {
                     start -= 1;
                 }
-                int end = c;
-                while(end < board.SIZE - 1 && board.getTile(end + 1, c) != null) {
+                int end = pt.col;
+                while(end < board.SIZE - 1 && board.getTile(pt.row, end + 1) != null) {
                     end += 1;
                 }
                 if (end - start >= 1) {
-                    for (int row = start; row <= end; row++) {
-                        Tile t = board.getTile(row, c);
+                    for (int col = start; col <= end; col++) {
+                        Tile t = board.getTile(pt.row, col);
                         cross.append(t.getLetter());
                         crossScore += t.getScore();
                     }
                 }
-                if (!acceptedWords.checkWord(cross.toString())) {
-                    return 0;
+                if (cross.length() > 1) {
+                    if (!acceptedWords.checkWord(cross.toString())) {
+                        return 0;
+                    }
                 }
                 totalScore +=  crossScore;
             }
-        }
-        if (player != null) {
-            player.setScore(player.getScore() + totalScore);
         }
         return totalScore;
     }

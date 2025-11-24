@@ -235,7 +235,6 @@ public class Player {
 
         board.commitTiles(placedTiles);
 
-        score += placedTiles.size();
         return true;
     }
 
