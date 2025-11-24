@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class DictionaryTest {
- /*
+
     @Test
     @DisplayName ("Testing checkWord")
     void checkWord() {
@@ -21,5 +21,5 @@ class DictionaryTest {
         //word isn't in the acceptedwords
         org.junit.jupiter.api.Assertions.assertFalse(d.checkWord("pizza"));
     }
- */
+
 }

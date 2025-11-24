@@ -3,7 +3,7 @@
  *
  * @author Cole Galway
  * @author Taylor Brumwell
- * @version November 10th, 2025
+ * @version 11/24/2025
  */
 
 import java.awt.*;
@@ -309,6 +309,11 @@ public class GameFrame extends JFrame implements GameView {
 
     }
 
+    /**
+     * Returns a char that the player will assign to a blank tile, prompts the user to type in
+     * a value for the blank tile. defaults to A if no letter is typed.
+     * @return A char which contains the new letter for the blank tile.
+     */
     public char promptBlankLetter() {
         String input;
         do {

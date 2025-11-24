@@ -6,7 +6,7 @@ import java.util.*;
  *
  * @author Cole Galway
  * @author Taylor Brumwell
- * @version 11/10/2025
+ * @version 11/24/2025
  */
 public class Board {
     /** The size of the grid */
@@ -41,6 +41,12 @@ public class Board {
         return tempGrid[row][col] != null ? tempGrid[row][col] : grid[row][col];
     }
 
+    /**
+     * Return the tile commited to the game board at a specified location
+     * @param row The row of the placed tile
+     * @param col The column of the placed tile
+     * @return The tile placed at the specified location
+     */
     public Tile getPermTile(int row, int col) {
         return grid[row][col];
     }
@@ -100,6 +106,12 @@ public class Board {
         }
     }
 
+    /**
+     *
+     * @param i
+     * @param horizontal
+     * @return
+     */
     public String[] extractPattern(int i, boolean horizontal) {
         String[] pattern = new String[SIZE];
         for (int j = 0; j < SIZE; j++) {
@@ -119,6 +131,9 @@ public class Board {
         return pattern;
     }
 
+    /**
+     *
+     */
     public List<Integer> findAnchors(String[] pattern) {
         List<Integer> anchors = new ArrayList<>();
 

@@ -13,7 +13,7 @@ public class Dictionary {
     /**
      * A list of strings which are the accepted words for the game.
      */
-    private ArrayList<String> acceptedWords;
+    ArrayList<String> acceptedWords;
 
     /**
      * Constructs a new Dictionary, taking no parameters.

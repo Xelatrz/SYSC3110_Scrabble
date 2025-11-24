@@ -22,6 +22,11 @@ public class Tile {
         this.letter = letter;
     }
 
+    /**
+     * Constructs a new Tile with a specified letter and a specified score.
+     * @param letter A string dictating the letter which the tile will have
+     * @param score An integer dictating the letter which the tile will have
+     */
     public Tile(String letter, int score) {
         this.letter = letter;
         this.score = score;
@@ -38,10 +43,18 @@ public class Tile {
         return letter;
     }
 
+    /**
+     * Returns the score of the tile
+     * @return An integer which is the score of a specified tile
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * Returns if the tile is a blank tile ("-")
+     * @return true if the tile is blank, false otherwise
+     */
     public boolean isBlank() {
         if (this.letter.equals("-")) {
             isBlank = true;
@@ -49,6 +62,11 @@ public class Tile {
         return isBlank;
     }
 
+    /**
+     * Sets the letter of a tile to be a specified value. Will set a secondary parameter for blank tiles, to avoid
+     * overwriting the blank tile entirely for scoring purposes.
+     * @param letter A string containing the letter which you want to replace
+     */
     public void setLetter(String letter) {
         if (isBlank) {
             assignedLetter = letter;

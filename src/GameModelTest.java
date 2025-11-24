@@ -8,8 +8,10 @@
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 class GameModelTest {
- /*
+
     @Test
     @DisplayName("Testing adding a new player")
     void addPlayer() {
@@ -22,5 +24,23 @@ class GameModelTest {
 
         org.junit.jupiter.api.Assertions.assertEquals(game.players.size(), 2);
     }
- */
+
+    @Test
+    @DisplayName("Testing premium square locations")
+    void testPremiumSquareLocations() {
+        GameModel game = new GameModel();
+        int rowTW = 0;
+        int colTW= 14;
+        int rowDW = 6;
+        int colDW = 6;
+        int rowTL = 1;
+        int colTL = 5;
+        int rowDL = 0;
+        int colDL = 3;
+
+        org.junit.jupiter.api.Assertions.assertEquals(4, game.getPremiumType(rowTW, colTW));
+        org.junit.jupiter.api.Assertions.assertEquals(3, game.getPremiumType(rowDW, colDW));
+        org.junit.jupiter.api.Assertions.assertEquals(2, game.getPremiumType(rowTL, colTL));
+        org.junit.jupiter.api.Assertions.assertEquals(1, game.getPremiumType(rowDL, colDL));
+    }
 }
