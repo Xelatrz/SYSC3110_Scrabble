@@ -150,7 +150,7 @@ public class GameController implements ActionListener {
             int score = model.scorePlacedTiles(placedTiles);
             p.setScore(p.getScore() + score);
             view.update(model);
-            nextPlayer(); //ERROR: when next player is an AI player, the important stuff at the end of this function is never reached. fix this for other turn options as well.
+            nextPlayer();
         } else {
             for (PlacedTile pt : placedTiles) {
                 p.addTile(pt.tile);
@@ -231,7 +231,7 @@ public class GameController implements ActionListener {
         for (PlacedTile pt : placedTiles) {
             model.board.placeTempTile(pt.row, pt.col, pt.tile);
         }
-        model.board.commitTiles(bestMove.placedTiles);
+        model.board.commitTiles(placedTiles);
         model.board.clearTempGrid();
 
         ArrayList<String> removeLetters = new ArrayList<>();
@@ -250,7 +250,8 @@ public class GameController implements ActionListener {
 
         ai.fillHand(model.bag);
 
-        ai.setScore(ai.getScore() + bestMove.score);
+        int turnScore = model.scorePlacedTiles(placedTiles);
+        ai.setScore(ai.getScore() + turnScore);
 
         placedTiles.clear();
         clearSelections();
