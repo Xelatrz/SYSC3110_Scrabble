@@ -9,9 +9,11 @@ import java.util.*;
 
 public class AIPlayer extends Player {
 
-    public AIPlayer(String name) {
-        super(name);
+    private GameModel model;
 
+    public AIPlayer(String name, GameModel model) {
+        super(name);
+        this.model = model;
     }
 
      public Move findBestMove(Board board) {
@@ -45,6 +47,10 @@ public class AIPlayer extends Player {
          List<Integer> anchors = board.findAnchors(pattern);
          Move bestMove = null;
 
+         if (anchors.isEmpty()) {
+             return null;
+         }
+
          for (int anchor: anchors) {
              Move move = tryBuildWords(board, pattern, anchor, lineIndex, horizontal);
              if (move != null && (bestMove == null || move.score > bestMove.score)) {
@@ -67,15 +73,29 @@ public class AIPlayer extends Player {
                  continue;
              }
              String primaryWord = buildPrimaryWord(placedTiles, board, horizontal);
-             if (!GameModel.acceptedWords.checkWord(primaryWord)) {
+             if (primaryWord.isEmpty()) {
+                 continue;
+             }
+             if (!GameModel.acceptedWords.checkWord(primaryWord.toLowerCase())) {
                  continue;
              }
              if (!validateCrossWords(placedTiles, board, horizontal)) {
                  continue;
              }
 
-             int score = 1; //TEMP FILLER FOR BELOW WHICH HAS ERROR
-             //int score = GameModel.simulateScore(placedTiles); //REVISE
+             //make sure at least one tile is placeable
+             boolean placedTile = false;
+             for (PlacedTile pt: placedTiles) {
+                 if (board.getTile(pt.row, pt.col) == null) {
+                     placedTile = true;
+                     break;
+                 }
+             }
+             if (!placedTile) {
+                 continue;
+             }
+
+             int score = model.simulateScore(placedTiles);
              if (bestMove == null || score > bestMove.score) {
                  bestMove = new Move(placedTiles, score);
              }
@@ -85,11 +105,18 @@ public class AIPlayer extends Player {
 
      //major word validity check.
      private ArrayList<PlacedTile> fitWordToPattern(String word, String[] pattern, int lineIndex, boolean horizontal) {
-        for (int start = 0; start <= Board.SIZE - word.length(); start++) {
+        int maxStart = Board.SIZE - word.length();
+        for (int start = 0; start <= maxStart; start++) {
             boolean conflict = false;
             ArrayList<PlacedTile> tempPlacedTiles = new ArrayList<>();
+
             for (int i = 0; i < word.length(); i++) {
                 int position = start + i;
+                if (position < 0 || position >= pattern.length) {
+                    conflict = true;
+                    break;
+                }
+
                 String boardChar = pattern[position];
                 String wordChar = String.valueOf(word.charAt(i));
                 if (!boardChar.equals("_")) {
@@ -208,7 +235,10 @@ public class AIPlayer extends Player {
                     endRow++;
                 }
                 for (int r  = startRow; r <= endRow; r++) {
-                    sb.append(board.getTile(r, col).getLetter());
+                    Tile tile = board.getTile(r, col);
+                    if (tile != null) {
+                        sb.append(tile.getLetter());
+                    }
                 }
             } else {
                 int startCol = col;
@@ -216,21 +246,24 @@ public class AIPlayer extends Player {
                 while (startCol > 0 && board.getTile(row, startCol - 1) != null) {
                     startCol--;
                 }
-                while (endCol < Board.SIZE && board.getTile(row, endCol) != null) {
+                while (endCol < Board.SIZE - 1 && board.getTile(row, endCol + 1) != null) {
                     endCol++;
                 }
                 for (int c = startCol; c <= endCol; c++) {
-                    sb.append(board.getTile(row, c).getLetter());
+                    Tile tile = board.getTile(row, c);
+                    if (tile != null) {
+                        sb.append(tile.getLetter());
+                    }
                 }
             }
             String crossWord = sb.toString();
             if (crossWord.length() <= 1) {
                 continue;
             }
-            if (!GameModel.acceptedWords.checkWord(crossWord.toLowerCase())) {
-                return false;
+            if (GameModel.acceptedWords.checkWord(crossWord.toLowerCase())) {
+                return true;
             }
         }
-        return true;
-     }
+        return false;
+    }
 }

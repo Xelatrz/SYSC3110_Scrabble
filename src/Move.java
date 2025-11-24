@@ -9,10 +9,10 @@
 import java.util.*;
 
 public class Move {
-    public List<PlacedTile> placedTiles;
+    public ArrayList<PlacedTile> placedTiles;
     public int score;
 
-    public Move(List<PlacedTile> placedTiles, int score) {
+    public Move(ArrayList<PlacedTile> placedTiles, int score) {
         this.placedTiles = placedTiles;
         this.score = score;
     }
