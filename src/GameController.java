@@ -186,7 +186,13 @@ public class GameController implements ActionListener {
      * Handles the logic for what occurs after the "Pass" button is pressed.
      */
     private void handlePass() {
-        //Isn't this supposed to replace hand?
+        Player p = model.getCurrentPlayer();
+        for (Tile t: p.hand) {
+            model.bag.addTile(t);
+        }
+        p.hand.clear();
+        p.fillHand(model.bag);
+        view.update(model);
         nextPlayer();
     }
 
