@@ -78,28 +78,6 @@ public class GameModel {
         return players.get(currentPlayerIndex);
     }
 
-    /*
-    public boolean placeTile(Player p, Tile tile, int row, int col) {
-        notifyViews();
-        if (p == null || tile == null || board == null) {
-            return false;
-        }
-        if (row < 0 || col < 0 || row >= Board.SIZE || col >= Board.SIZE) {
-            return false;
-        }
-        if (board.getTile(row, col) != null) {
-            return false;
-        }
-
-        board.placeTile(row, col, tile);
-        placedTiles.add(new PlacedTile(row, col, tile));
-
-        notifyViews();
-        return true;
-    }
-
-     */
-
     //would be redundant if scorePlacedTiles was public, but that should be private so others can't change their score, only the game can.
     //WILL BE CALLED (only not called yet because of an error)
     public int simulateScore(ArrayList<PlacedTile> placedTiles) {
