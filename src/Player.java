@@ -247,7 +247,7 @@ public class Player {
         board.clearTempGrid();
     }
 
-    private boolean touchesExistingTile(Board board, ArrayList<PlacedTile> placedTiles) {
+    protected boolean touchesExistingTile(Board board, ArrayList<PlacedTile> placedTiles) {
         for (PlacedTile pt: placedTiles) {
             int r =  pt.row;
             int c = pt.col;

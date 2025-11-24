@@ -51,8 +51,8 @@ public class AIPlayer extends Player {
              return null;
          }
 
-         for (int anchor: anchors) {
-             Move move = tryBuildWords(pattern, anchor, lineIndex, horizontal);
+         for (int anchor : anchors) {
+             Move move = tryBuildWords(pattern, lineIndex, horizontal);
              if (move != null && (bestMove == null || move.score > bestMove.score)) {
                  bestMove = move;
              }
@@ -61,7 +61,7 @@ public class AIPlayer extends Player {
      }
 
      //build valid words in the given area.
-     private Move tryBuildWords(String[] pattern, int anchor, int lineIndex, boolean horizontal) {
+     private Move tryBuildWords(String[] pattern, int lineIndex, boolean horizontal) {
          Move bestMove = null;
          for (int i = 0; i < GameModel.acceptedWords.size(); i++) {
              String word = GameModel.acceptedWords.getWord(i);
@@ -69,7 +69,7 @@ public class AIPlayer extends Player {
              if (placedTiles ==  null || placedTiles.isEmpty()) {
                  continue;
              }
-             if (!isAnchored(word, anchor)) {
+             if (!super.touchesExistingTile(model.board, placedTiles)) {
                  continue;
              }
              String primaryWord = buildPrimaryWord(placedTiles, horizontal);
@@ -157,16 +157,6 @@ public class AIPlayer extends Player {
         }
         return null;
      }
-
-    //check if word is connected to an anchor.
-    private boolean isAnchored(String word, int anchor) {
-        for (int start = 0; start <= Board.SIZE - word.length(); start++) { // do this based on pattern fit start point
-            if (anchor >= start && anchor < start + word.length()) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     //build primary word as a string.
     private String buildPrimaryWord(ArrayList<PlacedTile> placedTiles, boolean horizontal) {
