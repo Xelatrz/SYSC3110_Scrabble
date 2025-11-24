@@ -150,17 +150,22 @@ public class GameController implements ActionListener {
     }
 
     /**
-     * Handles the "Swap" button logic, needs to be properly implemented.
+     * Handles the "Swap" button logic.
      */
     private void handleSwap() {
         Player p = model.getCurrentPlayer();
+        ArrayList<Tile> tilesToSwap = new ArrayList<>();
         if (selectedTileIndex == null) {
             view.showError("Select a tile first!");
             return;
         }
-        /*
-        boolean ok = model.swapTiles(p, );
-        */
+        Tile t = p.removeTileByIndex(selectedTileIndex);
+        if (t != null) {
+            model.bag.addTile(t);
+            p.fillHand(model.bag);
+            selectedTileIndex = null;
+            view.update(model);
+        }
     }
 
     /**

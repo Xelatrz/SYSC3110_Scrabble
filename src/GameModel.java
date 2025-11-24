@@ -1,4 +1,6 @@
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * Models the game of Scrabble.
@@ -97,6 +99,7 @@ public class GameModel {
         int totalScore = 0;
 
         StringBuilder word = new StringBuilder();
+        int wordMultiplier = 1;
         int wordScore = 0;
 
         if (sameRow) {
@@ -118,7 +121,25 @@ public class GameModel {
                     return 0; //shouldn't happen but there for safety
                 }
                 word.append(t.getLetter());
-                wordScore += t.getScore();
+
+                int letterScore = t.getScore();
+                int finalC = c;
+
+                boolean newTile = placedTiles.stream().anyMatch(pt -> pt.row == row && pt.col == finalC);
+                int premium = getPremiumType(row, c);
+
+                if (newTile) {
+                    if (premium == 1) {
+                        letterScore *= 2;
+                    } else if (premium == 2) {
+                        letterScore *= 3;
+                    } else if (premium == 3) {
+                        wordMultiplier *= 2;
+                    } else if (premium == 4) {
+                        wordMultiplier *= 3;
+                    }
+                }
+                wordScore += letterScore;
             }
         } else {
             int col = placedTiles.getFirst().col;
@@ -139,22 +160,42 @@ public class GameModel {
                     return 0;
                 }
                 word.append(t.getLetter());
-                wordScore += t.getScore();
+                int letterScore = t.getScore();
+                int finalR = r;
+
+                boolean newTile = placedTiles.stream().anyMatch(pt -> pt.row == finalR && pt.col == col);
+                int premium = getPremiumType(r, col);
+
+                if (newTile) {
+                    if (premium == 1) {
+                        letterScore *= 2;
+                    } else if (premium == 2) {
+                        letterScore *= 3;
+                    } else if (premium == 3) {
+                        wordMultiplier *= 2;
+                    } else if (premium == 4) {
+                        wordMultiplier *= 3;
+                    }
+                }
+                wordScore += letterScore;
             }
         }
         //should only happen in the case of checking the perpendicular words.
         if (!acceptedWords.checkWord(word.toString())) {
             return 0;
         }
+        wordScore *= wordMultiplier;
         totalScore += wordScore;
 
         //checking the perpendicular word
         for (PlacedTile pt: placedTiles) {
             StringBuilder cross = new StringBuilder();
+            int crossWordMultiplier = 1;
             int crossScore = 0;
 
             if (sameRow) {
                 int r =  pt.row;
+                int col = pt.col;
                 int start = r;
                 while (start > 0 && board.getTile(start - 1, pt.col)!= null) {
                     start -= 1;
@@ -169,16 +210,35 @@ public class GameModel {
                     for (int row = start; row <= end; row++) {
                         Tile t = board.getTile(row, pt.col);
                         cross.append(t.getLetter());
-                        crossScore += t.getScore();
+                        int letterScore = t.getScore();
+
+                        int finalRow = row;
+                        boolean newTile = placedTiles.stream().anyMatch(p-> p.row == finalRow && p.col == col);
+                        int premium = getPremiumType(row, col);
+
+                        if (newTile) {
+                            if (premium == 1) {
+                                letterScore *= 2;
+                            } else if (premium == 2) {
+                                letterScore *= 3;
+                            } else if (premium == 3) {
+                                crossWordMultiplier *= 2;
+                            } else if (premium == 4) {
+                                crossWordMultiplier *= 3;
+                            }
+                        }
+                        crossScore += letterScore;
                     }
                     if (cross.length() > 1) {
                         if (!acceptedWords.checkWord(cross.toString())) {
                             return 0;
                         }
                     }
-                    totalScore +=  crossScore;
+                    crossScore *= crossWordMultiplier;
+                    totalScore += crossScore;
                 }
             } else {
+                int row = pt.row;
                 int start = pt.col;
                 while (start > 0 && board.getTile(pt.row, start - 1) != null) {
                     start -= 1;
@@ -191,7 +251,24 @@ public class GameModel {
                     for (int col = start; col <= end; col++) {
                         Tile t = board.getTile(pt.row, col);
                         cross.append(t.getLetter());
-                        crossScore += t.getScore();
+                        int letterScore = t.getScore();
+
+                        int finalCol = col;
+                        boolean newTile = placedTiles.stream().anyMatch(p -> p.row == row && p.col == finalCol);
+                        int premium = getPremiumType(row, col);
+
+                        if (newTile) {
+                            if (premium == 1) {
+                                letterScore *= 2;
+                            } else if (premium == 2) {
+                                letterScore *= 3;
+                            } else if (premium == 3) {
+                                crossWordMultiplier *= 2;
+                            } else if (premium == 4) {
+                                crossWordMultiplier *= 3;
+                            }
+                        }
+                        crossScore += letterScore;
                     }
                 }
                 if (cross.length() > 1) {
@@ -199,10 +276,45 @@ public class GameModel {
                         return 0;
                     }
                 }
-                totalScore +=  crossScore;
+                crossScore *= crossWordMultiplier;
+                totalScore += crossScore;
             }
         }
         return totalScore;
+    }
+
+    //a bit of duplicated code, but I think it's necessary
+    private int getPremiumType(int row, int col) {
+        //triple word
+        if ((row == 0 || row == 7 || row == 14) && (col == 0 || col == 7 || col == 14)) {
+            //center space
+            if (row == 7 && col == 7) {
+                return 3;
+            }
+            return 4;
+        }
+
+        //double word
+        if (row == col || row + col == 14) {
+            return 3;
+        }
+
+        //triple letter
+        int[][] tripleLetter = {{1,5}, {1,9}, {5, 1}, {5,5}, {5,9}, {5, 13}, {9, 1}, {9, 5}, {9,9}, {9, 13}, {13, 5}, {13,9}};
+        for (int[] p:  tripleLetter) {
+            if (p[0] == row && p[1] == col) {
+                return 2;
+            }
+        }
+        //double letter
+        int[][] doubleLetter = {{0,3}, {0,11}, {2,6}, {2,8}, {3,0}, {3,7}, {3, 14}, {6,2}, {6,6}, {6,8}, {6, 12}, {7,3}
+                ,{7,11}, {8,2}, {8,6}, {8,8}, {8,12}, {11, 0}, {11,7}, {11,14}, {12,6}, {12,8}, {14,3}, {14,11}};
+        for (int[] p:doubleLetter) {
+            if (p[0] == row && p[1] == col) {
+                return 1;
+            }
+        }
+        return 0;
     }
 
 

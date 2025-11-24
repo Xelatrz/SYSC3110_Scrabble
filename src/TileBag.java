@@ -86,6 +86,12 @@ public class TileBag {
         return TILES.size();
     }
 
+    public void addTile(Tile t) {
+        if (t != null && t.getLetter() != null) {
+            TILES.add(t.getLetter());
+        }
+    }
+
     private int scoreLetter(String letter) {
         switch (letter) {
             case "A": case "E": case "I": case "O": case "U": case "L": case "N": case "S": case "T": case "R":
