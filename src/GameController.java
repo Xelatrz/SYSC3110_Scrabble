@@ -182,16 +182,18 @@ public class GameController implements ActionListener {
 
     private void handleAITurn() {
         AIPlayer ai = (AIPlayer) model.getCurrentPlayer();
-        Move bestMove = ai.findBestMove(model.board);
+        Move bestMove = ai.findBestMove();
 
         if (bestMove == null) {
             handlePass();
             return;
         }
 
+        placedTiles.clear();
         boolean willPlace = false;
         for (PlacedTile pt : bestMove.placedTiles) {
-            if (model.board.getTile(pt.row, pt.col) == null) {
+            if (model.board.getPermTile(pt.row, pt.col) == null) {
+                placedTiles.add(pt);
                 willPlace = true;
                 break;
             }
@@ -202,16 +204,34 @@ public class GameController implements ActionListener {
             return;
         }
 
-        for (PlacedTile pt : bestMove.placedTiles) {
+        for (PlacedTile pt : placedTiles) {
             model.board.placeTempTile(pt.row, pt.col, pt.tile);
         }
         model.board.commitTiles(bestMove.placedTiles);
+        model.board.clearTempGrid();
+
+        ArrayList<String> removeLetters = new ArrayList<>();
+        for (PlacedTile pt : placedTiles) {
+            removeLetters.add(pt.tile.getLetter().toUpperCase());
+        }
+        for (int letter = 0; letter < removeLetters.size(); letter++) {
+            String letterToRemove = removeLetters.get(letter);
+            for (int i = 0; i < ai.getHand().size(); i++) {
+                if (ai.getHand().get(i).getLetter().equalsIgnoreCase(letterToRemove)) {
+                    ai.removeTileByIndex(i);
+                    break;
+                }
+            }
+        }
 
         ai.fillHand(model.bag);
 
         ai.setScore(ai.getScore() + bestMove.score);
 
+        placedTiles.clear();
+        clearSelections();
         view.update(model);
+
         nextPlayer();
     }
 }

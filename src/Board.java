@@ -104,11 +104,11 @@ public class Board {
         for (int j = 0; j < SIZE; j++) {
             Tile tile;
             if (horizontal) {
-                tile = grid[i][j];
+                tile = getTile(i, j);
             } else {
-                tile = grid[j][i];
+                tile = getTile(j, i);
             }
-            //turn it into string now that indexes are properly filled? (or use array of strings?)
+
             if (tile == null) {
                 pattern[j] = "_";
             } else {

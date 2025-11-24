@@ -16,13 +16,13 @@ public class AIPlayer extends Player {
         this.model = model;
     }
 
-     public Move findBestMove(Board board) {
+     public Move findBestMove() {
          Move bestMove = null;
 
          //horizontal
          boolean horizontal = true;
-         for (int row = 0; row < board.SIZE; row++) {
-             Move move = tryLine(board, row, horizontal);
+         for (int row = 0; row < Board.SIZE; row++) {
+             Move move = tryLine(row, horizontal);
              if (move != null && (bestMove == null || move.score > bestMove.score)) {
                  bestMove = move;
              }
@@ -30,8 +30,8 @@ public class AIPlayer extends Player {
 
          //vertical
          horizontal = false;
-         for (int col = 0; col < board.SIZE; col++) {
-             Move move = tryLine(board, col, horizontal);
+         for (int col = 0; col < Board.SIZE; col++) {
+             Move move = tryLine(col, horizontal);
              if (move != null && (bestMove == null || move.score > bestMove.score)) {
                  bestMove = move;
              }
@@ -41,10 +41,10 @@ public class AIPlayer extends Player {
      }
 
      //try all words connected to anchors on individual rows/columns of the board.
-     private Move tryLine(Board board, int lineIndex, boolean horizontal) {
+     private Move tryLine(int lineIndex, boolean horizontal) {
          //might not want the following functions in board, but rather in one of the Game files.
-         String[] pattern = board.extractPattern(lineIndex, horizontal);
-         List<Integer> anchors = board.findAnchors(pattern);
+         String[] pattern = model.board.extractPattern(lineIndex, horizontal);
+         List<Integer> anchors = model.board.findAnchors(pattern);
          Move bestMove = null;
 
          if (anchors.isEmpty()) {
@@ -52,7 +52,7 @@ public class AIPlayer extends Player {
          }
 
          for (int anchor: anchors) {
-             Move move = tryBuildWords(board, pattern, anchor, lineIndex, horizontal);
+             Move move = tryBuildWords(pattern, anchor, lineIndex, horizontal);
              if (move != null && (bestMove == null || move.score > bestMove.score)) {
                  bestMove = move;
              }
@@ -61,7 +61,7 @@ public class AIPlayer extends Player {
      }
 
      //build valid words in the given area.
-     private Move tryBuildWords(Board board, String[] pattern, int anchor, int lineIndex, boolean horizontal) {
+     private Move tryBuildWords(String[] pattern, int anchor, int lineIndex, boolean horizontal) {
          Move bestMove = null;
          for (int i = 0; i < GameModel.acceptedWords.size(); i++) {
              String word = GameModel.acceptedWords.getWord(i);
@@ -72,21 +72,21 @@ public class AIPlayer extends Player {
              if (!isAnchored(word, anchor)) {
                  continue;
              }
-             String primaryWord = buildPrimaryWord(placedTiles, board, horizontal);
+             String primaryWord = buildPrimaryWord(placedTiles, horizontal);
              if (primaryWord.isEmpty()) {
                  continue;
              }
              if (!GameModel.acceptedWords.checkWord(primaryWord.toLowerCase())) {
                  continue;
              }
-             if (!validateCrossWords(placedTiles, board, horizontal)) {
+             if (!validateCrossWords(placedTiles, horizontal)) {
                  continue;
              }
 
              //make sure at least one tile is placeable
              boolean placedTile = false;
              for (PlacedTile pt: placedTiles) {
-                 if (board.getTile(pt.row, pt.col) == null) {
+                 if (model.board.getPermTile(pt.row, pt.col) == null) {
                      placedTile = true;
                      break;
                  }
@@ -109,6 +109,7 @@ public class AIPlayer extends Player {
         for (int start = 0; start <= maxStart; start++) {
             boolean conflict = false;
             ArrayList<PlacedTile> tempPlacedTiles = new ArrayList<>();
+            ArrayList<Tile> handCopy = new ArrayList<>(this.getHand());
 
             for (int i = 0; i < word.length(); i++) {
                 int position = start + i;
@@ -125,6 +126,19 @@ public class AIPlayer extends Player {
                         break;
                     }
                 } else {
+                    Tile tile = null;
+                    for (Iterator<Tile> it = handCopy.iterator(); it.hasNext(); ) {
+                        Tile t = it.next();
+                        if (t.getLetter().equalsIgnoreCase(wordChar)) {
+                            tile = t;
+                            it.remove();
+                            break;
+                        }
+                    }
+                    if (tile == null) {
+                        conflict = true;
+                        break;
+                    }
                     int row;
                     int col;
                     if (horizontal) {
@@ -134,7 +148,7 @@ public class AIPlayer extends Player {
                         row = position;
                         col = lineIndex;
                     }
-                    tempPlacedTiles.add(new PlacedTile(row, col, new Tile(wordChar)));
+                    tempPlacedTiles.add(new PlacedTile(row, col, tile));
                 }
             }
             if (!conflict) {
@@ -155,7 +169,7 @@ public class AIPlayer extends Player {
     }
 
     //build primary word as a string.
-    private String buildPrimaryWord(ArrayList<PlacedTile> placedTiles, Board board, boolean horizontal) {
+    private String buildPrimaryWord(ArrayList<PlacedTile> placedTiles, boolean horizontal) {
         if (placedTiles.isEmpty()) {
             return "";
         }
@@ -176,14 +190,14 @@ public class AIPlayer extends Player {
                     endCol = pt.col;
                 }
             }
-            while (startCol > 0 && board.getTile(row, startCol - 1) != null) {
+            while (startCol > 0 && model.board.getTile(row, startCol - 1) != null) {
                 startCol--;
             }
-            while (endCol < Board.SIZE - 1 && board.getTile(row, endCol + 1) != null) {
+            while (endCol < Board.SIZE - 1 && model.board.getTile(row, endCol + 1) != null) {
                 endCol++;
             }
             for (int c = startCol; c <= endCol; c++) {
-                Tile tile = board.getTile(row, c);
+                Tile tile = model.board.getTile(row, c);
                 if (tile != null) {
                     sb.append(tile.getLetter());
                 } else {
@@ -201,14 +215,14 @@ public class AIPlayer extends Player {
                     endRow = pt.row;
                 }
             }
-            while (startRow > 0 && board.getTile(startRow - 1, col) != null) {
+            while (startRow > 0 && model.board.getTile(startRow - 1, col) != null) {
                 startRow--;
             }
-            while (endRow < Board.SIZE - 1 && board.getTile(endRow + 1, col) != null) {
+            while (endRow < Board.SIZE - 1 && model.board.getTile(endRow + 1, col) != null) {
                 endRow++;
             }
             for (int r = startRow; r <= endRow; r++) {
-                Tile tile = board.getTile(r, col);
+                Tile tile = model.board.getTile(r, col);
                 if (tile != null) {
                     sb.append(tile.getLetter());
                 } else {
@@ -219,7 +233,7 @@ public class AIPlayer extends Player {
         return sb.toString();
     }
 
-    private boolean validateCrossWords(ArrayList<PlacedTile> placedTiles, Board board, boolean horizontal) {
+    private boolean validateCrossWords(ArrayList<PlacedTile> placedTiles, boolean horizontal) {
         for (PlacedTile pt : placedTiles) {
             StringBuilder sb =  new StringBuilder();
             int row = pt.row;
@@ -228,14 +242,14 @@ public class AIPlayer extends Player {
             if (horizontal) {
                 int startRow = row;
                 int endRow =  row;
-                while (startRow > 0 && board.getTile(startRow - 1, col) != null) {
+                while (startRow > 0 && model.board.getTile(startRow - 1, col) != null) {
                     startRow--;
                 }
-                while (endRow < Board.SIZE - 1 && board.getTile(endRow + 1, col) != null) {
+                while (endRow < Board.SIZE - 1 && model.board.getTile(endRow + 1, col) != null) {
                     endRow++;
                 }
                 for (int r  = startRow; r <= endRow; r++) {
-                    Tile tile = board.getTile(r, col);
+                    Tile tile = model.board.getTile(r, col);
                     if (tile != null) {
                         sb.append(tile.getLetter());
                     }
@@ -243,14 +257,14 @@ public class AIPlayer extends Player {
             } else {
                 int startCol = col;
                 int endCol =  col;
-                while (startCol > 0 && board.getTile(row, startCol - 1) != null) {
+                while (startCol > 0 && model.board.getTile(row, startCol - 1) != null) {
                     startCol--;
                 }
-                while (endCol < Board.SIZE - 1 && board.getTile(row, endCol + 1) != null) {
+                while (endCol < Board.SIZE - 1 && model.board.getTile(row, endCol + 1) != null) {
                     endCol++;
                 }
                 for (int c = startCol; c <= endCol; c++) {
-                    Tile tile = board.getTile(row, c);
+                    Tile tile = model.board.getTile(row, c);
                     if (tile != null) {
                         sb.append(tile.getLetter());
                     }
@@ -260,10 +274,10 @@ public class AIPlayer extends Player {
             if (crossWord.length() <= 1) {
                 continue;
             }
-            if (GameModel.acceptedWords.checkWord(crossWord.toLowerCase())) {
-                return true;
+            if (!GameModel.acceptedWords.checkWord(crossWord.toLowerCase())) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 }
