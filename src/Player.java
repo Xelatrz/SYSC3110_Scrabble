@@ -204,7 +204,7 @@ public class Player {
             return false;
         }
 
-        /*
+
         //check connected
         if (!firstTurn) {
             boolean touchesExisitng = touchesExistingTile(board,placedTiles);
@@ -213,13 +213,13 @@ public class Player {
                 return false;
             }
         } else {
-            boolean touchesCenter = placedTiles.stream().anyMatch(pt -> pt.row == Board.CENTER && pt.col == Board.CENTER);
+            boolean touchesCenter = placedTiles.stream().anyMatch(pt -> pt.row == 7 && pt.col == 7);
             if (!touchesCenter) {
                 clearTemp(board, placedTiles);
                 return false;
             }
         }
-        */
+
 
         for (PlacedTile pt: placedTiles) {
             if (sameRow) {
