@@ -257,7 +257,7 @@ public class Player {
      * @param placedTiles An arraylist of tiles that have been placed on the board
      * @return true if the word is connected to another word, false otherwise
      */
-    private boolean touchesExistingTile(Board board, ArrayList<PlacedTile> placedTiles) {
+    protected boolean touchesExistingTile(Board board, ArrayList<PlacedTile> placedTiles) {
         for (PlacedTile pt: placedTiles) {
             int r =  pt.row;
             int c = pt.col;
