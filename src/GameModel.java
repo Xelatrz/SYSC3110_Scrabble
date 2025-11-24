@@ -100,20 +100,133 @@ public class GameModel {
 
      */
 
-    //very simple scoring logic, needs to be fully implemented later!
-    private int scorePlacedTiles(ArrayList<PlacedTile> placedTiles, Player p) {
-        int score = placedTiles.size();
-        if (p != null) {
-            p.setScore(score);
-        }
-        return score;
-    }
-
     //would be redundant if scorePlacedTiles was public, but that should be private so others can't change their score, only the game can.
     //WILL BE CALLED (only not called yet because of an error)
     public int simulateScore(ArrayList<PlacedTile> placedTiles) {
         return scorePlacedTiles(placedTiles, null);
     }
+
+
+    private int scorePlacedTiles(ArrayList<PlacedTile> placedTiles, Player player) {
+        boolean sameRow = placedTiles.stream().allMatch(pt -> pt.row == placedTiles.getFirst().row);
+        boolean sameCol = placedTiles.stream().allMatch(pt-> pt.col == placedTiles.getFirst().col);
+
+        //invalid move (should never be called, but to be caught in case
+        if (!sameRow && !sameCol) {
+            return 0;
+        }
+
+        int totalScore = 0;
+
+        StringBuilder word = new StringBuilder();
+        int wordScore = 0;
+
+        if (sameRow) {
+            int row = placedTiles.getFirst().row;
+            int col = placedTiles.getFirst().col;
+
+            int start = col;
+            while (start > 0 && board.getTile(row, start - 1) != null ) {
+                start -= 1;
+            }
+
+            int end = col;
+            while (end < board.SIZE - 1 && board.getTile(row, end + 1) != null) {
+                end += 1;
+            }
+            for (int c = start; c <= end; c++) {
+                Tile t = board.getTile(row, c);
+                if (t == null) {
+                    return 0; //shouldn't happen but there for safety
+                }
+                word.append(t.getLetter());
+                wordScore += t.getScore();
+            }
+        } else {
+            int col = placedTiles.getFirst().col;
+            int row =  placedTiles.getFirst().row;
+
+            int start = row;
+            while (start > 0 && board.getTile(start - 1, col) != null) {
+                start -= 1;
+            }
+            int end = row;
+            while (end < board.SIZE - 1 && board.getTile(end + 1, col) != null) {
+                end += 1;
+            }
+
+            for (int r = start; r <= end; r++) {
+                Tile t = board.getTile(r, col);
+                if (t == null) {
+                    return 0;
+                }
+                word.append(t.getLetter());
+                wordScore += t.getScore();
+            }
+        }
+        //should only happen in the case of checking the perpendicular words.
+        if (!acceptedWords.checkWord(word.toString())) {
+            return 0;
+        }
+        totalScore += wordScore;
+
+        //checking the perpendicular word
+        for (PlacedTile pt: placedTiles) {
+            StringBuilder cross = new StringBuilder();
+            int crossScore = 0;
+
+            if (sameRow) {
+                int r =  pt.row;
+                int start = r;
+                while (start > 0 && board.getTile(start - 1, pt.col)!= null) {
+                    start -= 1;
+                }
+                int end = r;
+                while (end < board.SIZE - 1 && board.getTile(end + 1, pt.col)!= null) {
+                    end += 1;
+                }
+
+                //cross word is only 1 tile long
+                if (end - start >= 1) {
+                    for (int row = start; row <= end; row++) {
+                        Tile t = board.getTile(row, pt.col);
+                        cross.append(t.getLetter());
+                        crossScore += t.getScore();
+                    }
+                    if (!acceptedWords.checkWord(cross.toString())) {
+                        return 0;
+                    }
+                    totalScore +=  crossScore;
+                }
+            } else {
+                int c = pt.col;
+                int start = c;
+                while (start > 0 && board.getTile(pt.row, start - 1) != null) {
+                    start -= 1;
+                }
+                int end = c;
+                while(end < board.SIZE - 1 && board.getTile(end + 1, c) != null) {
+                    end += 1;
+                }
+                if (end - start >= 1) {
+                    for (int row = start; row <= end; row++) {
+                        Tile t = board.getTile(row, c);
+                        cross.append(t.getLetter());
+                        crossScore += t.getScore();
+                    }
+                }
+                if (!acceptedWords.checkWord(cross.toString())) {
+                    return 0;
+                }
+                totalScore +=  crossScore;
+            }
+        }
+        if (player != null) {
+            player.setScore(player.getScore() + totalScore);
+        }
+        return totalScore;
+    }
+
 
     //logic for swapping tiles --> needs to be fixed because of a few bugs but almost completed.
     /*

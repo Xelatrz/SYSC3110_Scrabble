@@ -9,6 +9,7 @@ public class Tile {
      * The letter which will be assigned to the specific tile.
      */
     private String letter;
+    private int score;
 
 
     /**
@@ -19,11 +20,20 @@ public class Tile {
         this.letter = letter;
     }
 
+    public Tile(String letter, int score) {
+        this.letter = letter;
+        this.score = score;
+    }
+
     /**
      * Returns the letter of any tile.
      * @return A string of letter of a specified tile.
      */
     public String getLetter() {
         return letter;
+    }
+
+    public int getScore() {
+        return score;
     }
 }
