@@ -70,42 +70,37 @@ A complete Scrabble gameModel implementation in Java that supports up to 2 playe
 **GameModel.java**
 - Main gameModel loop and flow control
 - Player management
+- Handle AIPlayer turn
 - End gameModel conditions and scoring
 - Premium tile logic and score calculations
 
 **Board.java**
 - 15×15 grid management
-
 - Tile placement/removal
-
 - Board state validation
 
 **Player.java**
 - Hand management (7 tile limit)
-
 - Tile placement logic
-
 - Word formation and validation
-
 - Scoring calculation
+
+**AIPlayer.java**
+- AIPlayer strategy
+- Validation AI plays
 
 **Dictionary.java**
 - Loads words from CSV file
-
 - Validates word existence
-
 - Case-insensitive checking
 
 **TileBag.java**
 - Standard Scrabble tile distribution
-
 - Random tile drawing
-
 - Empty state detection
 
 **Tile.java** & **PlacedTile.java**
 - Tile representation and tracking
-
 - Coordinate management for placed tiles
 
 ## File Format
