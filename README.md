@@ -142,6 +142,14 @@ Player 1 placed an A at 7,7!
 - Maximum 5 players supported
 
 
+## AI Player Strategy
+- AIPlayer checks all possible plays
+- AIPlayer makes sure they are capable of placing tiles in the necessary locations
+- AIPlayer accepts only legal plays
+- Out of the resulting legal plays, AIPlayer chooses the play that will result in the highest score
+- If there are no legal moves, AI passes turn
+
+
 ## Contributors
 - Daniel Esenwa  101199099 Milestone 1: (Readme) Milestone 2:
 - Cole Galway 101302762 Milestone 1: (Main code & unit tests) Milestone 2: (Main GUI code, fixed unit tests, Readme)
