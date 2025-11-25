@@ -107,10 +107,10 @@ public class Board {
     }
 
     /**
-     *
-     * @param i
-     * @param horizontal
-     * @return
+     * Find the current board pattern for a given line.
+     * @param i the index of the line being scanned.
+     * @param horizontal Whether the line is horizontal or not.
+     * @return An array of Strings containing the pattern of the line on the board.
      */
     public String[] extractPattern(int i, boolean horizontal) {
         String[] pattern = new String[SIZE];
@@ -132,13 +132,16 @@ public class Board {
     }
 
     /**
-     *
+     * Find all possible anchors on the line for a word to connect to.
+     * Improvements would include making an anchor at the centre tile if the earlier players passed on their first turn (even though AIPlayer never plays first).
+     * @param pattern The line pattern (including empty tiles).
+     * @return A list of all anchors found (if any).
      */
     public List<Integer> findAnchors(String[] pattern) {
         List<Integer> anchors = new ArrayList<>();
 
         for (int i = 0; i < pattern.length; i++) {
-            if (!pattern[i].equals("_")) {  //CHECK DETAILS, this may need to be null rather than "_" (probably defined in pattern[])
+            if (!pattern[i].equals("_")) {
                 continue; //cannot place on existing tiles
             }
 

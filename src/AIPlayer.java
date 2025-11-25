@@ -11,11 +11,20 @@ public class AIPlayer extends Player {
 
     private GameModel model;
 
+    /**
+     * AIPlayer constructor.
+     * @param name the AIPlayer name.
+     * @param model the GameModel accessed by the AIPlayer.
+     */
     public AIPlayer(String name, GameModel model) {
         super(name);
         this.model = model;
     }
 
+    /**
+     * Finds the ideal play on the AIPlayer's turn.
+     * @return the Move corresponding to the ideal play.
+     */
      public Move findBestMove() {
          Move bestMove = null;
 
@@ -40,9 +49,13 @@ public class AIPlayer extends Player {
          return bestMove;
      }
 
-     //try all words connected to anchors on individual rows/columns of the board.
+    /**
+     * Checks an individual line for available word plays.
+     * @param lineIndex The index of the line being checked.
+     * @param horizontal Whether the line is horizontal or not.
+     * @return A Move corresponding to the ideal play (if any are available)
+     */
      private Move tryLine(int lineIndex, boolean horizontal) {
-         //might not want the following functions in board, but rather in one of the Game files.
          String[] pattern = model.board.extractPattern(lineIndex, horizontal);
          List<Integer> anchors = model.board.findAnchors(pattern);
          Move bestMove = null;
@@ -60,7 +73,13 @@ public class AIPlayer extends Player {
          return bestMove;
      }
 
-     //build valid words in the given area.
+    /**
+     * Attempt to build valid words on the board.
+     * @param pattern The line pattern (including empty tiles).
+     * @param lineIndex The index of the line being checked.
+     * @param horizontal Whether the line is horizontal or not.
+     * @return A Move corresponding to the ideal play (if any are available)
+     */
      private Move tryBuildWords(String[] pattern, int lineIndex, boolean horizontal) {
          Move bestMove = null;
          for (int i = 0; i < GameModel.acceptedWords.size(); i++) {
@@ -103,7 +122,14 @@ public class AIPlayer extends Player {
          return bestMove;
      }
 
-     //major word validity check.
+    /**
+     * Attempt to fit a word from the dictionary into the pattern of the line being checked.
+     * @param word Valid dictionary word.
+     * @param pattern The line pattern (including empty tiles).
+     * @param lineIndex The index of the line being checked.
+     * @param horizontal Whether the line is horizontal or not.
+     * @return An arraylist containing the pattern of the line after fitting the word into the line (if successful).
+     */
      private ArrayList<PlacedTile> fitWordToPattern(String word, String[] pattern, int lineIndex, boolean horizontal) {
         int maxStart = Board.SIZE - word.length();
         for (int start = 0; start <= maxStart; start++) {
@@ -158,7 +184,12 @@ public class AIPlayer extends Player {
         return null;
      }
 
-    //build primary word as a string.
+    /**
+     * Attempt to turn the pattern for the primary word being placed into a String.
+     * @param placedTiles The line pattern (including empty tiles, and the ideal move).
+     * @param horizontal Whether the line is horizontal or not.
+     * @return A String containing the word that is attempting to be played.
+     */
     private String buildPrimaryWord(ArrayList<PlacedTile> placedTiles, boolean horizontal) {
         if (placedTiles.isEmpty()) {
             return "";
@@ -168,7 +199,6 @@ public class AIPlayer extends Player {
         int col = placedTiles.getFirst().col;
         StringBuilder sb = new StringBuilder();
 
-        //REVISE THIS: a lot of code here duplicates Player code. once i'm done logic, see if i can fix this duplication
         if (horizontal) {
             int startCol = col;
             int endCol =  col;
@@ -243,6 +273,12 @@ public class AIPlayer extends Player {
         return sb.toString();
     }
 
+    /**
+     * Check for perpendicular words and make sure they're valid.
+     * @param placedTiles The line pattern (including empty tiles, and the ideal move).
+     * @param horizontal Whether the line is horizontal or not.
+     * @return True if all crosswords (if there are any) are valid, false if there's any invalid crosswords.
+     */
     private boolean validateCrossWords(ArrayList<PlacedTile> placedTiles, boolean horizontal) {
         for (PlacedTile pt : placedTiles) {
             StringBuilder sb =  new StringBuilder();
