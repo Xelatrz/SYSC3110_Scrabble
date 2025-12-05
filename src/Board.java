@@ -9,7 +9,7 @@ import java.io.Serializable;
  *
  * @author Cole Galway
  * @author Taylor Brumwell
- * @version 11/24/2025
+ * @version 12/05/2025
  */
 public class Board implements Serializable {
     /** The size of the grid */
@@ -168,14 +168,29 @@ public class Board implements Serializable {
         return anchors;
     }
 
+    /**
+     * Sets the premium tiles on the scrabble game board.
+     * @param row The row of the premium tile to be set
+     * @param col The column of the premium tile to be set
+     * @param type The type of premium tile
+     */
     public void setPremium(int row, int col, Premium type) {
         premiums[row][col] = type;
     }
 
+    /**
+     * Return the type of premium tile at a specified location
+     * @param row The row of the premium tile to be set
+     * @param col The column of the premium tile to be set
+     * @return The premium type of the specified tile
+     */
     public Premium getPremium(int row, int col) {
         return premiums[row][col];
     }
 
+    /**
+     * Initializes the default scrabble game board.
+     */
     public void setDefaultBoard() {
         // setting the default gameboard
         for (int i = 0; i < Board.SIZE; i++) {
