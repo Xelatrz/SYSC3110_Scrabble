@@ -38,9 +38,24 @@ public class GameFrame extends JFrame implements GameView {
         int numPlayers = askPlayerCount();
         askPlayerInfo(model, numPlayers);
 
+        String[] choices = {"Standard", "Custom 1", "Custom 2"};
+        String choice = (String) JOptionPane.showInputDialog(this, "Select a game board:", "Board Selection", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+
         model.setupGame();
         gameBoard = model.board;
 
+        for (int r = 0; r < Board.SIZE; r++) {
+            for (int c = 0; c < Board.SIZE; c++) {
+                gameBoard.setPremium(r, c, Board.Premium.NORMAL);
+            }
+        }
+        if ("Standard".equals(choice)) {
+            gameBoard.setDefaultBoard();
+        } else if ("Custom 1".equals(choice)) {
+            BoardLoader.importBoardXML(gameBoard, "custom_board1.xml");
+        } else {
+            BoardLoader.importBoardXML(gameBoard, "custom_board2.xml");
+        }
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel panel =  new JPanel();
@@ -327,36 +342,14 @@ public class GameFrame extends JFrame implements GameView {
     }
 
     private Color getPremium(int row, int col) {
-        //triple word
-        if ((row == 0 || row == 7 || row == 14) && (col == 0 || col == 7 || col == 14)) {
-            //center space
-            if (row == 7 && col == 7) {
-                return Color.PINK;
-            }
-            return Color.RED;
-        }
-
-        //double word
-        if (row == col || row + col == 14) {
-            return Color.PINK;
-        }
-
-        //triple letter
-        int[][] tripleLetter = {{1,5}, {1,9}, {5, 1}, {5,5}, {5,9}, {5, 13}, {9, 1}, {9, 5}, {9,9}, {9, 13}, {13, 5}, {13,9}};
-        for (int[] p:  tripleLetter) {
-            if (p[0] == row && p[1] == col) {
-                return Color.BLUE;
-            }
-        }
-        //double letter
-        int[][] doubleLetter = {{0,3}, {0,11}, {2,6}, {2,8}, {3,0}, {3,7}, {3, 14}, {6,2}, {6,6}, {6,8}, {6, 12}, {7,3}
-        ,{7,11}, {8,2}, {8,6}, {8,8}, {8,12}, {11, 0}, {11,7}, {11,14}, {12,6}, {12,8}, {14,3}, {14,11}};
-        for (int[] p:doubleLetter) {
-            if (p[0] == row && p[1] == col) {
-                return Color.CYAN;
-            }
-        }
-        return Color.WHITE;
+        Board.Premium p = gameBoard.getPremium(row, col);
+        return switch(p) {
+            case TRIPLE_WORD -> Color.RED;
+            case DOUBLE_WORD, CENTER -> Color.PINK;
+            case TRIPLE_LETTER -> Color.BLUE;
+            case DOUBLE_LETTER -> Color.CYAN;
+            default -> Color.WHITE;
+        };
     }
 
 

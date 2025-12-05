@@ -124,16 +124,16 @@ public class GameModel {
                 int finalC = c;
 
                 boolean newTile = placedTiles.stream().anyMatch(pt -> pt.row == row && pt.col == finalC);
-                int premium = getPremiumType(row, c);
+                Board.Premium premium = board.getPremium(row, c);
 
                 if (newTile) {
-                    if (premium == 1) {
+                    if (premium == Board.Premium.DOUBLE_LETTER) {
                         letterScore *= 2;
-                    } else if (premium == 2) {
+                    } else if (premium == Board.Premium.TRIPLE_LETTER) {
                         letterScore *= 3;
-                    } else if (premium == 3) {
+                    } else if (premium == Board.Premium.DOUBLE_WORD) {
                         wordMultiplier *= 2;
-                    } else if (premium == 4) {
+                    } else if (premium == Board.Premium.TRIPLE_WORD) {
                         wordMultiplier *= 3;
                     }
                 }
@@ -162,16 +162,16 @@ public class GameModel {
                 int finalR = r;
 
                 boolean newTile = placedTiles.stream().anyMatch(pt -> pt.row == finalR && pt.col == col);
-                int premium = getPremiumType(r, col);
+                Board.Premium premium = board.getPremium(r, col);
 
                 if (newTile) {
-                    if (premium == 1) {
+                    if (premium == Board.Premium.DOUBLE_LETTER) {
                         letterScore *= 2;
-                    } else if (premium == 2) {
+                    } else if (premium == Board.Premium.TRIPLE_LETTER) {
                         letterScore *= 3;
-                    } else if (premium == 3) {
+                    } else if (premium == Board.Premium.DOUBLE_WORD) {
                         wordMultiplier *= 2;
-                    } else if (premium == 4) {
+                    } else if (premium == Board.Premium.TRIPLE_WORD) {
                         wordMultiplier *= 3;
                     }
                 }
@@ -212,16 +212,16 @@ public class GameModel {
 
                         int finalRow = row;
                         boolean newTile = placedTiles.stream().anyMatch(p-> p.row == finalRow && p.col == col);
-                        int premium = getPremiumType(row, col);
+                        Board.Premium premium = board.getPremium(row, col);
 
                         if (newTile) {
-                            if (premium == 1) {
+                            if (premium == Board.Premium.DOUBLE_LETTER) {
                                 letterScore *= 2;
-                            } else if (premium == 2) {
+                            } else if (premium == Board.Premium.TRIPLE_LETTER) {
                                 letterScore *= 3;
-                            } else if (premium == 3) {
+                            } else if (premium == Board.Premium.DOUBLE_WORD) {
                                 crossWordMultiplier *= 2;
-                            } else if (premium == 4) {
+                            } else if (premium == Board.Premium.TRIPLE_WORD) {
                                 crossWordMultiplier *= 3;
                             }
                         }
@@ -253,16 +253,16 @@ public class GameModel {
 
                         int finalCol = col;
                         boolean newTile = placedTiles.stream().anyMatch(p -> p.row == row && p.col == finalCol);
-                        int premium = getPremiumType(row, col);
+                        Board.Premium premium = board.getPremium(row, col);
 
                         if (newTile) {
-                            if (premium == 1) {
+                            if (premium == Board.Premium.DOUBLE_LETTER) {
                                 letterScore *= 2;
-                            } else if (premium == 2) {
+                            } else if (premium == Board.Premium.TRIPLE_LETTER) {
                                 letterScore *= 3;
-                            } else if (premium == 3) {
+                            } else if (premium == Board.Premium.DOUBLE_WORD) {
                                 crossWordMultiplier *= 2;
-                            } else if (premium == 4) {
+                            } else if (premium == Board.Premium.TRIPLE_WORD) {
                                 crossWordMultiplier *= 3;
                             }
                         }
