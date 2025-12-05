@@ -1,17 +1,30 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.util.ArrayList;
+/**
+ * A BoardLoader which will load XML board files into the scrabble game, allowing players
+ * to create and implement their own custom boards.
+ *
+ * @author Cole Galway
+ * @version 12/5/2025
+ */
 
+import java.io.File;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.*;
-
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+/**
+ * Constructs a new BoardLoader, taking no parameters.
+ */
 public class BoardLoader {
     public BoardLoader() {
     }
+
+    /**
+     * Imports an XML file into usable data for the scrabble game.
+     * @param board The GameBoard which will be used for the game.
+     * @param fileName The name of the file to be loaded containing the XML data.
+     */
     public static void importBoardXML(Board board, String fileName) {
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();

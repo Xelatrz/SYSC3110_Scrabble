@@ -5,7 +5,7 @@ import java.io.Serializable;
  * and tile information.
  *
  * @author Taylor Brumwell
- * @version 10/26/2025
+ * @version 12/05/2025
  */
 public class PlacedTile implements Serializable {
     /**

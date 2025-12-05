@@ -3,7 +3,7 @@ import java.io.Serializable;
  * Models a tile from scrabble.
  *
  * @author Cole Galway
- * @version 10/26/2025
+ * @version 12/05/2025
  */
 public class Tile implements Serializable {
     /**

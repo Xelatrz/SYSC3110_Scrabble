@@ -6,7 +6,7 @@ import java.io.Serializable;
  *
  * @author Cole Galway
  * @author Taylor Brumwell
- * @version 11/24/2025
+ * @version 12/05/2025
  */
 public class Player implements Serializable {
     /**

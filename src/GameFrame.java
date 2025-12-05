@@ -3,7 +3,7 @@
  *
  * @author Cole Galway
  * @author Taylor Brumwell
- * @version 11/24/2025
+ * @version 12/05/2025
  */
 
 import java.awt.*;
@@ -365,6 +365,12 @@ public class GameFrame extends JFrame implements GameView {
         return  input.charAt(0);
     }
 
+    /**
+     * Return the background colour for any tile.
+     * @param row The row of the tile
+     * @param col The column of the tile
+     * @return The Colour which the background of the tile will be.
+     */
     private Color getPremium(int row, int col) {
         Board.Premium p = gameBoard.getPremium(row, col);
         return switch(p) {
@@ -376,6 +382,10 @@ public class GameFrame extends JFrame implements GameView {
         };
     }
 
+    /**
+     * Sets up a new game of scrabble, prompting the user to choose number of players
+     * and other details
+     */
     private void setupNewGame() {
         model = new GameModel();
         int numPlayers = askPlayerCount();

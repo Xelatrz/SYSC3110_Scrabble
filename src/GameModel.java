@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Taylor Brumwell
  * @author Cole Galway
- * @version 11/24/2025
+ * @version 12/05/2025
  */
 public class GameModel implements Serializable {
     /**
@@ -286,6 +286,7 @@ public class GameModel implements Serializable {
 
     /**
      * Returns an integer determining which premium tile is in which location.
+     * ONLY USED FOR TESTING PURPOSES!
      * 4 = triple word
      * 3 = double word
      * 2 = triple letter
@@ -304,12 +305,10 @@ public class GameModel implements Serializable {
             }
             return 4;
         }
-
         //double word
         if (row == col || row + col == 14) {
             return 3;
         }
-
         //triple letter
         int[][] tripleLetter = {{1,5}, {1,9}, {5, 1}, {5,5}, {5,9}, {5, 13}, {9, 1}, {9, 5}, {9,9}, {9, 13}, {13, 5}, {13,9}};
         for (int[] p:  tripleLetter) {
@@ -345,6 +344,10 @@ public class GameModel implements Serializable {
         }
     }
 
+    /**
+     * Saves the current game to a specified filename.
+     * @param fileName the name of the file where the game data will be stored
+     */
     public void saveGame(String fileName) {
         try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
             out.writeObject(this);
@@ -354,6 +357,11 @@ public class GameModel implements Serializable {
         }
     }
 
+    /**
+     * Loads a game from a specified filename
+     * @param fileName the name of the file containing the game data to be loaded
+     * @return the gamemodel which was loaded from the data.
+     */
     public static GameModel loadGame(String fileName) {
         try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
             GameModel loaded = (GameModel) in.readObject();
