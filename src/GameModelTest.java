@@ -7,6 +7,7 @@
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestTemplate;
 
 import java.util.ArrayList;
 
@@ -42,5 +43,21 @@ class GameModelTest {
         org.junit.jupiter.api.Assertions.assertEquals(3, game.getPremiumType(rowDW, colDW));
         org.junit.jupiter.api.Assertions.assertEquals(2, game.getPremiumType(rowTL, colTL));
         org.junit.jupiter.api.Assertions.assertEquals(1, game.getPremiumType(rowDL, colDL));
+    }
+
+    @Test
+    @DisplayName("Testing saving the game")
+    void testSaveGame() {
+        GameModel model = new GameModel();
+        model.saveGame("saved.ser");
+        org.junit.jupiter.api.Assertions.assertEquals(1, model.test);
+    }
+
+    @Test
+    @DisplayName("Test loading the game")
+    void testLoadGame() {
+        GameModel model = new GameModel();
+        String filename = "saved.ser";
+        org.junit.jupiter.api.Assertions.assertFalse(model.loadGame("saved.ser") == null);
     }
 }
