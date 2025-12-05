@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * A Board models a scrabble game board, taking a 15 x 15 grid shape to allow players to
@@ -10,7 +11,7 @@ import java.util.List;
  * @author Taylor Brumwell
  * @version 11/24/2025
  */
-public class Board {
+public class Board implements Serializable {
     /** The size of the grid */
     public static final int SIZE = 15;
     /** A 2-dimensional list of tiles, which is the specified grid size */
@@ -22,9 +23,7 @@ public class Board {
         NORMAL, DOUBLE_LETTER, TRIPLE_LETTER, DOUBLE_WORD, TRIPLE_WORD, CENTER
     }
 
-    private Premium[][] premiums = new Premium[SIZE][SIZE];
-
-
+    private transient Premium[][] premiums = new Premium[SIZE][SIZE];
 
     /**
      * Constructs a new Board with no parameters, builds the empty grid.

@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 /**
  * PlacedTile models a specific tile once it has been placed on the board, storing the row, column
  * and tile information.
@@ -5,7 +7,7 @@
  * @author Taylor Brumwell
  * @version 10/26/2025
  */
-public class PlacedTile {
+public class PlacedTile implements Serializable {
     /**
      * An integer representing the row where the tile is located.
      */

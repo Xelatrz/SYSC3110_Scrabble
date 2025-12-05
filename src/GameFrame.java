@@ -58,6 +58,35 @@ public class GameFrame extends JFrame implements GameView {
         }
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("File");
+        JMenuItem saveOption = new JMenuItem("Save Game");
+        JMenuItem loadOption = new JMenuItem("Load Game");
+
+        fileMenu.add(saveOption);
+        fileMenu.add(loadOption);
+        menuBar.add(fileMenu);
+        setJMenuBar(menuBar);
+
+        saveOption.addActionListener(e-> {model.saveGame("saved_game.ser");
+        JOptionPane.showMessageDialog(this, "Game saved successfully!", "Save Game", JOptionPane.INFORMATION_MESSAGE);});
+        loadOption.addActionListener(e-> {GameModel loaded = GameModel.loadGame("saved_game.ser");
+        if (loaded != null) {
+            this.model = loaded;
+            if (model.views == null) {
+                model.views = new ArrayList<>();
+            }
+            model.addView(this);
+            model.notifyViews();
+            updateRemainingTiles();
+            updateTilePanel(model);
+            JOptionPane.showMessageDialog(this, "Game loaded successfully!", "Load Game", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to load game.", "Load Game", JOptionPane.ERROR_MESSAGE);
+        }
+        });
+
         JPanel panel =  new JPanel();
         panel.setSize(800, 600);
         panel.setLayout(new GridLayout(gameBoard.SIZE + 1, gameBoard.SIZE + 1));
