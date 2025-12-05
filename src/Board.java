@@ -105,7 +105,7 @@ public class Board implements Serializable {
             return false;
         }
         //space is already empty
-        if (grid[row][col] == null) {
+        if (tempGrid[row][col] == null) {
             return false;
         }
         tempGrid[row][col] = null;

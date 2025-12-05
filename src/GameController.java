@@ -104,6 +104,7 @@ public class GameController implements ActionListener {
             model.getCurrentPlayer().hand.add(tile.tile);
         }
         stack1.remove(tile);
+        view.update(model);
     }
 
     /**
