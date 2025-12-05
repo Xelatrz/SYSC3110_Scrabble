@@ -23,12 +23,13 @@ public class Board implements Serializable {
         NORMAL, DOUBLE_LETTER, TRIPLE_LETTER, DOUBLE_WORD, TRIPLE_WORD, CENTER
     }
 
-    private transient Premium[][] premiums = new Premium[SIZE][SIZE];
+    private Premium[][] premiums = new Premium[SIZE][SIZE];
 
     /**
      * Constructs a new Board with no parameters, builds the empty grid.
      */
     public Board() {
+        premiums = new Premium[SIZE][SIZE];
         for (int i = 0; i < Board.SIZE; i++) {
             for (int j = 0; j < Board.SIZE; j++) {
                 premiums[i][j] = Premium.NORMAL;

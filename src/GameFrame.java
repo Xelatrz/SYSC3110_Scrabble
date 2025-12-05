@@ -35,57 +35,42 @@ public class GameFrame extends JFrame implements GameView {
         model.acceptedWords.load("scrabble_acceptedwords.csv"); //are we able to remove this (happens in model already)
         this.setLayout(new BorderLayout());
 
-        int numPlayers = askPlayerCount();
-        askPlayerInfo(model, numPlayers);
-
-        String[] choices = {"Standard", "Custom 1", "Custom 2"};
-        String choice = (String) JOptionPane.showInputDialog(this, "Select a game board:", "Board Selection", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
-
-        model.setupGame();
-        gameBoard = model.board;
-
-        for (int r = 0; r < Board.SIZE; r++) {
-            for (int c = 0; c < Board.SIZE; c++) {
-                gameBoard.setPremium(r, c, Board.Premium.NORMAL);
+        String[] options = {"New Game", "Load Game"};
+        int option = JOptionPane.showOptionDialog(this,"Start a new game or load a saved game?", "Start Game", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+        if (option == 1) {
+            GameModel loaded = GameModel.loadGame("saved_game.ser");
+            if (loaded != null) {
+                model = loaded;
+                gameBoard = model.board;
+                JOptionPane.showMessageDialog(this,"Game has been loaded!", "Load Game", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to load game, starting new game", "Load Game", JOptionPane.ERROR_MESSAGE);
+                setupNewGame();
             }
-        }
-        if ("Standard".equals(choice)) {
-            gameBoard.setDefaultBoard();
-        } else if ("Custom 1".equals(choice)) {
-            BoardLoader.importBoardXML(gameBoard, "custom_board1.xml");
         } else {
-            BoardLoader.importBoardXML(gameBoard, "custom_board2.xml");
+            setupNewGame();
         }
+
+        gameBoard = model.board;
+        if (model.views == null) {
+            model.views = new ArrayList<>();
+        }
+        model.addView(this);
+
+        controller = new GameController(model, this);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
         JMenuItem saveOption = new JMenuItem("Save Game");
-        JMenuItem loadOption = new JMenuItem("Load Game");
 
         fileMenu.add(saveOption);
-        fileMenu.add(loadOption);
         menuBar.add(fileMenu);
         setJMenuBar(menuBar);
 
         saveOption.addActionListener(e-> {model.saveGame("saved_game.ser");
         JOptionPane.showMessageDialog(this, "Game saved successfully!", "Save Game", JOptionPane.INFORMATION_MESSAGE);});
-        loadOption.addActionListener(e-> {GameModel loaded = GameModel.loadGame("saved_game.ser");
-        if (loaded != null) {
-            this.model = loaded;
-            if (model.views == null) {
-                model.views = new ArrayList<>();
-            }
-            model.addView(this);
-            model.notifyViews();
-            updateRemainingTiles();
-            updateTilePanel(model);
-            JOptionPane.showMessageDialog(this, "Game loaded successfully!", "Load Game", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "Failed to load game.", "Load Game", JOptionPane.ERROR_MESSAGE);
-        }
-        });
 
         JPanel panel =  new JPanel();
         panel.setSize(800, 600);
@@ -128,9 +113,9 @@ public class GameFrame extends JFrame implements GameView {
                 panel.add(button);
 
                 button.setBackground(getPremium(row, col));
-
             }
         }
+        updateBoard(model);
         setUpPlayerInfo();
         this.add(playerInfo, BorderLayout.EAST);
         setUpPlayerOptions();
@@ -379,6 +364,32 @@ public class GameFrame extends JFrame implements GameView {
             case DOUBLE_LETTER -> Color.CYAN;
             default -> Color.WHITE;
         };
+    }
+
+    private void setupNewGame() {
+        model = new GameModel();
+        int numPlayers = askPlayerCount();
+        askPlayerInfo(model, numPlayers);
+
+        String[] choices = {"Standard", "Custom 1", "Custom 2"};
+        String choice = (String) JOptionPane.showInputDialog(this, "Select a game board:", "Board Selection", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+
+        model.setupGame();
+        gameBoard = model.board;
+
+        for (int r = 0; r < Board.SIZE; r++) {
+            for (int c = 0; c < Board.SIZE; c++) {
+                gameBoard.setPremium(r, c, Board.Premium.NORMAL);
+            }
+        }
+        if ("Standard".equals(choice)) {
+            gameBoard.setDefaultBoard();
+        } else if ("Custom 1".equals(choice)) {
+            BoardLoader.importBoardXML(gameBoard, "custom_board1.xml");
+        } else {
+            BoardLoader.importBoardXML(gameBoard, "custom_board2.xml");
+        }
+
     }
 
 
