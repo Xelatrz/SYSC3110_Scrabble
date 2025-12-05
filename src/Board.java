@@ -95,6 +95,24 @@ public class Board implements Serializable {
     }
 
     /**
+     * Removes a tile from the temporary grid
+     * @param row An integer with the row where the tile is to be placed
+     * @param col An integer with the column where the tile is to be placed
+     * @param tile The tile that is to be placed on the temporary grid.
+     */
+    public boolean removeTempTile(int row, int col, Tile tile) {
+        if (row < 0 || col < 0 || row >= SIZE || col >= SIZE) {
+            return false;
+        }
+        //space is already empty
+        if (grid[row][col] == null) {
+            return false;
+        }
+        tempGrid[row][col] = null;
+        return true;
+    }
+
+    /**
      * Places the tiles from the temporary grid into the main game grid.
      * @param placedTiles An arraylist of tiles placed in the turn.
      */
