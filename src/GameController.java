@@ -70,10 +70,10 @@ public class GameController implements ActionListener {
         }
         switch (command) {
             case "Undo":
-                revertAction(undoStack, redoStack);
+                handleUndo();
                 break;
             case "Redo":
-                revertAction(redoStack, undoStack);
+                handleRedo();
                 break;
             case "Play":
                 handlePlay();
@@ -88,22 +88,18 @@ public class GameController implements ActionListener {
     }
 
     /**
-     * Handles a player undo/redo while it's still their turn.
+     * Handles an undo button click
      */
-    private void revertAction(ArrayList<PlacedTile> stack1, ArrayList<PlacedTile> stack2) {
-        if (stack1.isEmpty()) {
-            return;
-        }
-        PlacedTile tile = stack1.getLast();
-        stack2.add(tile);
-        if (model.board.getTile(tile.row, tile.col) == null) {
-            model.board.placeTempTile(tile.row, tile.col, tile.tile);
-            model.getCurrentPlayer().hand.remove(tile.tile);
-        } else {
-            model.board.removeTempTile(tile.row, tile.col, tile.tile);
-            model.getCurrentPlayer().hand.add(tile.tile);
-        }
-        stack1.remove(tile);
+    private void handleUndo() {
+        model.revertAction(undoStack, redoStack);
+        view.update(model);
+    }
+
+    /**
+     * Handles a redo button click
+     */
+    private void handleRedo() {
+        model.revertAction(redoStack, undoStack);
         view.update(model);
     }
 
