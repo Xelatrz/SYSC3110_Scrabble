@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.Serializable;
 
 /**
  * Models a player from a game of scrabble, storing the player name, score, and their hand of tiles.
@@ -7,7 +8,7 @@ import java.util.*;
  * @author Taylor Brumwell
  * @version 11/24/2025
  */
-public class Player {
+public class Player implements Serializable {
     /**
      * The player's name, representing as a string.
      */

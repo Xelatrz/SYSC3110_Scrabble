@@ -1,10 +1,11 @@
+import java.io.Serializable;
 /**
  * Models a tile from scrabble.
  *
  * @author Cole Galway
  * @version 10/26/2025
  */
-public class Tile {
+public class Tile implements Serializable {
     /**
      * The letter which will be assigned to the specific tile.
      */

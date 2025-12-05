@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * @author Cole Galway
  * @version 11/24/2025
  */
-public class GameModel {
+public class GameModel implements Serializable {
     /**
      * The list of players who will be participating in the game.
      */
@@ -29,8 +30,8 @@ public class GameModel {
     /** An integer containing the index of the current player */
     public int currentPlayerIndex = 0;
 
-    private List<GameView> views = new ArrayList<>();
-    private List<PlacedTile> placedTiles = new ArrayList<>();
+    public transient List<GameView> views = new ArrayList<>();
+    private transient List<PlacedTile> placedTiles = new ArrayList<>();
 
     /**
      * Constructs a new Game.
@@ -124,16 +125,16 @@ public class GameModel {
                 int finalC = c;
 
                 boolean newTile = placedTiles.stream().anyMatch(pt -> pt.row == row && pt.col == finalC);
-                int premium = getPremiumType(row, c);
+                Board.Premium premium = board.getPremium(row, c);
 
                 if (newTile) {
-                    if (premium == 1) {
+                    if (premium == Board.Premium.DOUBLE_LETTER) {
                         letterScore *= 2;
-                    } else if (premium == 2) {
+                    } else if (premium == Board.Premium.TRIPLE_LETTER) {
                         letterScore *= 3;
-                    } else if (premium == 3) {
+                    } else if (premium == Board.Premium.DOUBLE_WORD) {
                         wordMultiplier *= 2;
-                    } else if (premium == 4) {
+                    } else if (premium == Board.Premium.TRIPLE_WORD) {
                         wordMultiplier *= 3;
                     }
                 }
@@ -162,16 +163,16 @@ public class GameModel {
                 int finalR = r;
 
                 boolean newTile = placedTiles.stream().anyMatch(pt -> pt.row == finalR && pt.col == col);
-                int premium = getPremiumType(r, col);
+                Board.Premium premium = board.getPremium(r, col);
 
                 if (newTile) {
-                    if (premium == 1) {
+                    if (premium == Board.Premium.DOUBLE_LETTER) {
                         letterScore *= 2;
-                    } else if (premium == 2) {
+                    } else if (premium == Board.Premium.TRIPLE_LETTER) {
                         letterScore *= 3;
-                    } else if (premium == 3) {
+                    } else if (premium == Board.Premium.DOUBLE_WORD) {
                         wordMultiplier *= 2;
-                    } else if (premium == 4) {
+                    } else if (premium == Board.Premium.TRIPLE_WORD) {
                         wordMultiplier *= 3;
                     }
                 }
@@ -212,16 +213,16 @@ public class GameModel {
 
                         int finalRow = row;
                         boolean newTile = placedTiles.stream().anyMatch(p-> p.row == finalRow && p.col == col);
-                        int premium = getPremiumType(row, col);
+                        Board.Premium premium = board.getPremium(row, col);
 
                         if (newTile) {
-                            if (premium == 1) {
+                            if (premium == Board.Premium.DOUBLE_LETTER) {
                                 letterScore *= 2;
-                            } else if (premium == 2) {
+                            } else if (premium == Board.Premium.TRIPLE_LETTER) {
                                 letterScore *= 3;
-                            } else if (premium == 3) {
+                            } else if (premium == Board.Premium.DOUBLE_WORD) {
                                 crossWordMultiplier *= 2;
-                            } else if (premium == 4) {
+                            } else if (premium == Board.Premium.TRIPLE_WORD) {
                                 crossWordMultiplier *= 3;
                             }
                         }
@@ -253,16 +254,16 @@ public class GameModel {
 
                         int finalCol = col;
                         boolean newTile = placedTiles.stream().anyMatch(p -> p.row == row && p.col == finalCol);
-                        int premium = getPremiumType(row, col);
+                        Board.Premium premium = board.getPremium(row, col);
 
                         if (newTile) {
-                            if (premium == 1) {
+                            if (premium == Board.Premium.DOUBLE_LETTER) {
                                 letterScore *= 2;
-                            } else if (premium == 2) {
+                            } else if (premium == Board.Premium.TRIPLE_LETTER) {
                                 letterScore *= 3;
-                            } else if (premium == 3) {
+                            } else if (premium == Board.Premium.DOUBLE_WORD) {
                                 crossWordMultiplier *= 2;
-                            } else if (premium == 4) {
+                            } else if (premium == Board.Premium.TRIPLE_WORD) {
                                 crossWordMultiplier *= 3;
                             }
                         }
@@ -341,6 +342,26 @@ public class GameModel {
     void notifyViews() {
         for (GameView view : views) {
             view.update(this);
+        }
+    }
+
+    public void saveGame(String fileName) {
+        try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            out.writeObject(this);
+            System.out.println("Game saved successfully!");
+        } catch(Exception e){
+            System.err.println("Error saving game: " + e.getMessage());
+        }
+    }
+
+    public static GameModel loadGame(String fileName) {
+        try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
+            GameModel loaded = (GameModel) in.readObject();
+            System.out.println("Game loaded successfully!");
+            return loaded;
+        } catch (Exception e){
+            System.err.println("Error loading game: " + e.getMessage());
+            return null;
         }
     }
 }

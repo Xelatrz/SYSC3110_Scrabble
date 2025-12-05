@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.Serializable;
 
 /**
  * This class models the bag of tiles in a standard scrabble game.
@@ -7,7 +8,7 @@ import java.util.*;
  * @author Taylor Brumwell
  * @version 10/26/2025
  */
-public class TileBag {
+public class TileBag implements Serializable {
     /**
      * A list of characters with each of the tiles and the number of them inside the bag.
      */
