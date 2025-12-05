@@ -66,8 +66,6 @@ public class GameController implements ActionListener {
             selectedRow = Integer.parseInt(coord[0]);
             selectedCol = Integer.parseInt(coord[1]);
             placeTileTemporarily();
-            undoStack.add(new PlacedTile(selectedRow, selectedCol, model.getCurrentPlayer().hand.get(selectedTileIndex)));
-            redoStack.clear();
             return;
         }
         switch (command) {
@@ -134,11 +132,11 @@ public class GameController implements ActionListener {
      * play button.
      */
     private void placeTileTemporarily() {
-        Player p = model.getCurrentPlayer();
         if (selectedTileIndex == null || selectedRow < 0 || selectedCol < 0) {
             view.showError("Select a tile and a board space!");
             return;
         }
+        Player p = model.getCurrentPlayer();
         Tile tile = p.getHand().get(selectedTileIndex);
 
         boolean ok = model.board.placeTempTile(selectedRow, selectedCol, tile);
@@ -146,6 +144,9 @@ public class GameController implements ActionListener {
             view.showError("Select an unoccupied space!");
             return;
         }
+
+        undoStack.add(new PlacedTile(selectedRow, selectedCol, tile));
+        redoStack.clear();
 
         placedTiles.add(new PlacedTile(selectedRow, selectedCol, tile));
         p.removeTileByIndex(selectedTileIndex);
