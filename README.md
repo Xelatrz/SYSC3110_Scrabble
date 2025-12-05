@@ -136,7 +136,7 @@ computer
 
 
 ## Contributors
-- Daniel Esenwa  101199099 Milestone 1: (Readme) Milestone 2:  Milestone 3: (Sequence Diagrams) Milestone 4:
-- Cole Galway 101302762 Milestone 1: (Main code & unit tests) Milestone 2: (Main GUI code, fixed unit tests, Readme) Milestone 3: (Blank tile code implementation, premium tiles code implementation, score code implementation, Unit tests, Readme + JavaDoc comments + Data Structures Explanation document) Milestone 4: (Serilization/deserialization code implementation, Custom board functionality code implementation, ReadMe, User Manual, Sequence Diagrams, Data structures docuemnt, JUnit Testing, JavaDoc + Code comments)
+- Daniel Esenwa  101199099 Milestone 1: (Readme) Milestone 2:  Milestone 3: (Sequence Diagrams) Milestone 4: UML Class Diagram
+- Cole Galway 101302762 Milestone 1: (Main code & unit tests) Milestone 2: (Main GUI code, fixed unit tests, Readme) Milestone 3: (Blank tile code implementation, premium tiles code implementation, score code implementation, Unit tests, Readme + JavaDoc comments + Data Structures Explanation document) Milestone 4: (Serilization/deserialization code implementation, Custom board functionality code implementation, ReadMe, User Manual, Sequence Diagram, Data structures document, JUnit Testing, JavaDoc + Code comments)
 - Matthew Gibeault 101323772 Milestone 1: (UML and Sequence Diagrams) Milestone 2:  Milestone 3: (UML Diagrams) Milestone 4:
-- Taylor Brumwell 101302386 Milestone 1: (Main code) Milestone 2: (UML and Sequence Diagrams) Milestone 3: (AI player code implementation, bug fixes, AI player unit tests, AI player strategy README explanation, JavaDoc comments) Milestone 4: (Undo/Redo functionalilty code implementation, JavaDoc comments, UML diagram, Sequence Diagram, Junit testing)
+- Taylor Brumwell 101302386 Milestone 1: (Main code) Milestone 2: (UML and Sequence Diagrams) Milestone 3: (AI player code implementation, bug fixes, AI player unit tests, AI player strategy README explanation, JavaDoc comments) Milestone 4: (Undo/Redo functionalilty code implementation, Sequence Diagram, Data structures document, JUnit Testing, JavaDoc + Code comments)
