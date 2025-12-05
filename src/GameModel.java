@@ -372,4 +372,25 @@ public class GameModel implements Serializable {
             return null;
         }
     }
+
+    /**
+     * Handles a player undo/redo while it's still their turn.
+     * @param stack1 The stack correlating to the operation being run (undo or redo).
+     * @param stack2 The stack correlating to the opposite of the operation being run (undo or redo).
+     */
+    public void revertAction(ArrayList<PlacedTile> stack1, ArrayList<PlacedTile> stack2) {
+        if (stack1.isEmpty()) {
+            return;
+        }
+        PlacedTile tile = stack1.getLast();
+        stack2.add(tile);
+        if (board.getTile(tile.row, tile.col) == null) {
+            board.placeTempTile(tile.row, tile.col, tile.tile);
+            getCurrentPlayer().hand.remove(tile.tile);
+        } else {
+            board.removeTempTile(tile.row, tile.col, tile.tile);
+            getCurrentPlayer().hand.add(tile.tile);
+        }
+        stack1.remove(tile);
+    }
 }
