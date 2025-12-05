@@ -98,18 +98,16 @@ public class Board implements Serializable {
      * Removes a tile from the temporary grid
      * @param row An integer with the row where the tile is to be placed
      * @param col An integer with the column where the tile is to be placed
-     * @param tile The tile that is to be placed on the temporary grid.
      */
-    public boolean removeTempTile(int row, int col, Tile tile) {
+    public void removeTempTile(int row, int col) {
         if (row < 0 || col < 0 || row >= SIZE || col >= SIZE) {
-            return false;
+            return;
         }
         //space is already empty
         if (tempGrid[row][col] == null) {
-            return false;
+            return;
         }
         tempGrid[row][col] = null;
-        return true;
     }
 
     /**

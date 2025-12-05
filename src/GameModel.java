@@ -390,7 +390,7 @@ public class GameModel implements Serializable {
             board.placeTempTile(tile.row, tile.col, tile.tile);
             getCurrentPlayer().hand.remove(tile.tile);
         } else {
-            board.removeTempTile(tile.row, tile.col, tile.tile);
+            board.removeTempTile(tile.row, tile.col);
             getCurrentPlayer().hand.add(tile.tile);
         }
         stack1.remove(tile);
