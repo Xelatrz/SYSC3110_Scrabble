@@ -15,17 +15,18 @@ public class GameController implements ActionListener {
     private GameModel model;
     private GameView view;
 
-    /**
-     * The tile selected by the user
-     */
+    /** The tile selected by the user */
     private Integer selectedTileIndex = null;
     private int selectedRow = -1;
     private int selectedCol = -1;
 
-    /**
-     * An array of tiles that have been placed by a player in their turn
-     */
+    /** An array of tiles that have been placed by a player in their turn */
     private ArrayList<PlacedTile> placedTiles = new ArrayList<>();
+
+    /** stack of undo operations */
+    private ArrayList<PlacedTile> undoStack = new ArrayList<>();
+    /** stack of redo operations */
+    private ArrayList<PlacedTile> redoStack = new ArrayList<>();
 
     /**
      * Constructs a new GameController, taking the Model and View as parameters
@@ -65,9 +66,17 @@ public class GameController implements ActionListener {
             selectedRow = Integer.parseInt(coord[0]);
             selectedCol = Integer.parseInt(coord[1]);
             placeTileTemporarily();
+            undoStack.add(new PlacedTile(selectedRow, selectedCol, model.getCurrentPlayer().hand.get(selectedTileIndex)));
+            redoStack.clear();
             return;
         }
         switch (command) {
+            case "Undo":
+                revertAction(undoStack, redoStack);
+                break;
+            case "Redo":
+                revertAction(redoStack, undoStack);
+                break;
             case "Play":
                 handlePlay();
                 break;
@@ -81,12 +90,33 @@ public class GameController implements ActionListener {
     }
 
     /**
+     * Handles a player undo/redo while it's still their turn.
+     */
+    private void revertAction(ArrayList<PlacedTile> stack1, ArrayList<PlacedTile> stack2) {
+        if (stack1.isEmpty()) {
+            return;
+        }
+        PlacedTile tile = stack1.getLast();
+        stack2.add(tile);
+        if (model.board.getTile(tile.row, tile.col) == null) {
+            model.board.placeTempTile(tile.row, tile.col, tile.tile);
+            model.getCurrentPlayer().hand.remove(tile.tile);
+        } else {
+            model.board.removeTempTile(tile.row, tile.col, tile.tile);
+            model.getCurrentPlayer().hand.add(tile.tile);
+        }
+        stack1.remove(tile);
+    }
+
+    /**
      * Advances to the next player in the game, skipping the current player.
      */
     public void nextPlayer() {
         if (model.players.isEmpty()) {
             return;
         }
+        undoStack.clear();
+        redoStack.clear();
         model.board.clearTempGrid();
         placedTiles.clear();
         clearSelections();

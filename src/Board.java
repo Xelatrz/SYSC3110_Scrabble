@@ -15,9 +15,7 @@ public class Board {
     private Tile[][] grid =  new Tile[SIZE][SIZE];
     /** A 2-dimensional list of temporary tiles. */
     private Tile[][] tempGrid = new Tile[SIZE][SIZE];
-    /**
-     * Center of the board.
-     */
+    /** Center of the board. */
     public static final int CENTRE = 8;
 
 
@@ -81,6 +79,24 @@ public class Board {
             return false;
         }
         tempGrid[row][col] = tile;
+        return true;
+    }
+
+    /**
+     * Removes a tile from the temporary grid
+     * @param row An integer with the row where the tile is to be placed
+     * @param col An integer with the column where the tile is to be placed
+     * @param tile The tile that is to be placed on the temporary grid.
+     */
+    public boolean removeTempTile(int row, int col, Tile tile) {
+        if (row < 0 || col < 0 || row >= SIZE || col >= SIZE) {
+            return false;
+        }
+        //space is already empty
+        if (grid[row][col] == null) {
+            return false;
+        }
+        tempGrid[row][col] = null;
         return true;
     }
 

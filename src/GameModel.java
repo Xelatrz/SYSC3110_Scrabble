@@ -27,7 +27,7 @@ public class GameModel {
     public Board board;
 
     /** An integer containing the index of the current player */
-    int currentPlayerIndex = 0;
+    public int currentPlayerIndex = 0;
 
     private List<GameView> views = new ArrayList<>();
     private List<PlacedTile> placedTiles = new ArrayList<>();

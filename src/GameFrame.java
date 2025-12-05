@@ -208,21 +208,31 @@ public class GameFrame extends JFrame implements GameView {
         JButton play = new JButton("Play");
         JButton swap = new JButton("Swap");
         JButton pass = new JButton("Pass");
+        JButton undo = new JButton("Undo");
+        JButton redo = new JButton("Redo");
         play.setBackground(Color.GREEN);
         swap.setBackground(Color.YELLOW);
         pass.setBackground(Color.RED);
+        undo.setBackground(Color.PINK);
+        redo.setBackground(Color.PINK);
 
         play.setActionCommand("Play");
         swap.setActionCommand("Swap");
         pass.setActionCommand("Pass");
+        undo.setActionCommand("Undo");
+        redo.setActionCommand("Redo");
 
         play.addActionListener(controller);
         swap.addActionListener(controller);
         pass.addActionListener(controller);
+        undo.addActionListener(controller);
+        redo.addActionListener(controller);
 
         buttonPanel.add(play);
         buttonPanel.add(swap);
         buttonPanel.add(pass);
+        buttonPanel.add(undo);
+        buttonPanel.add(redo);
 
         bottom.add(buttonPanel, BorderLayout.WEST);
     }
