@@ -26,6 +26,7 @@ public class GameModel implements Serializable {
 
     public TileBag bag;
     public Board board;
+    public int test;
 
     /** An integer containing the index of the current player */
     public int currentPlayerIndex = 0;
@@ -351,6 +352,7 @@ public class GameModel implements Serializable {
     public void saveGame(String fileName) {
         try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
             out.writeObject(this);
+            test = 1;
             System.out.println("Game saved successfully!");
         } catch(Exception e){
             System.err.println("Error saving game: " + e.getMessage());
