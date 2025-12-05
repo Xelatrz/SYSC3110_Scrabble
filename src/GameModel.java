@@ -28,7 +28,7 @@ public class GameModel implements Serializable {
     public Board board;
 
     /** An integer containing the index of the current player */
-    int currentPlayerIndex = 0;
+    public int currentPlayerIndex = 0;
 
     public transient List<GameView> views = new ArrayList<>();
     private transient List<PlacedTile> placedTiles = new ArrayList<>();
